@@ -76,10 +76,11 @@ function verifyToken(token) {
 }
 
 async function requirePlayer(request) {
+  const customToken = request.headers.get('x-porra-token') || '';
   const header = request.headers.get('authorization') || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : '';
+  const bearerToken = header.startsWith('Bearer ') ? header.slice(7) : '';
+  const token = customToken || bearerToken;
   const decoded = verifyToken(token);
-  const player = await getEntity('player', decoded.sub);
   if (!player) {
     const error = new Error('Jugador no encontrado.');
     error.status = 401;
