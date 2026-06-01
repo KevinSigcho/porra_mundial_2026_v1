@@ -41,14 +41,15 @@ app.http('savePredictions', {
       }
       const body = await readJson(request);
       const predictions = normalizeScores(body.predictions);
+    
       await upsertEntity({
         partitionKey: 'prediction',
-        rowKey: player.rowKey,
-        playerName: player.name,
+        rowKey: String(player.rowKey),
+        playerName: String(player.name || ''),
         predictions: JSON.stringify(predictions),
-        completeCount: countComplete(predictions),
+        completeCount: Number(countComplete(predictions)),
         updatedAt: new Date().toISOString()
-      }, 'Replace');
+     }, 'Merge');
       return ok({ saved: true, completeCount: countComplete(predictions), predictions });
     } catch (error) {
       return errorResponse(error);
