@@ -28,9 +28,10 @@ function fail(status, message) {
   return json(status, { error: message });
 }
 
+
 function errorResponse(error) {
   const status = error.status || error.statusCode || 500;
-  const message = status >= 500 ? 'Error interno del servidor.' : error.message;
+  const message = error.message || 'Error interno del servidor.';
   return fail(status, message);
 }
 
