@@ -50,16 +50,14 @@ app.http('savePredictions', {
       const predictions = normalizeScores(body?.predictions || {});
       const completeCount = countComplete(predictions);
 
-      const entity = {
+      await upsertEntity({
         partitionKey: 'prediction',
         rowKey: String(currentPlayer.rowKey),
         playerName: String(currentPlayer.name || ''),
         predictions: JSON.stringify(predictions),
         completeCount: Number(completeCount),
         updatedAt: new Date().toISOString()
-      };
-
-      await upsertEntity(entity, 'Merge');
+      }, 'Merge');
 
       return ok({
         saved: true,
