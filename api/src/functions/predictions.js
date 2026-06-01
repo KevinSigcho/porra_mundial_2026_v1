@@ -14,12 +14,17 @@ app.http('getPredictions', {
     try {
       const player = await requirePlayer(request);
       const settings = await getSettings();
-      const entity = await getEntity('prediction', player.rowKey);
+
+      const entity = await getEntity('prediction', String(player.rowKey));
       const predictions = parseJson(entity?.predictions, {});
+
       return ok({
-        player: { id: player.rowKey, name: player.name },
+        player: {
+          id: String(player.rowKey),
+          name: String(player.name || '')
+        },
         predictions,
-        locked: settings.locked,
+        locked: Boolean(settings.locked),
         updatedAt: entity?.updatedAt || null
       });
     } catch (error) {
@@ -36,21 +41,29 @@ app.http('savePredictions', {
     try {
       const player = await requirePlayer(request);
       const settings = await getSettings();
+
       if (settings.locked) {
         return fail(423, 'La porra está cerrada. Pide al admin que la reabra si necesitas corregir algo.');
       }
+
       const body = await readJson(request);
-      const predictions = normalizeScores(body.predictions);
-    
+      const predictions = normalizeScores(body.predictions || {});
+      const completeCount = countComplete(predictions);
+
       await upsertEntity({
         partitionKey: 'prediction',
         rowKey: String(player.rowKey),
         playerName: String(player.name || ''),
         predictions: JSON.stringify(predictions),
-        completeCount: Number(countComplete(predictions)),
+        completeCount: Number(completeCount),
         updatedAt: new Date().toISOString()
-     }, 'Merge');
-      return ok({ saved: true, completeCount: countComplete(predictions), predictions });
+      }, 'Merge');
+
+      return ok({
+        saved: true,
+        completeCount,
+        predictions
+      });
     } catch (error) {
       return errorResponse(error);
     }
