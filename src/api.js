@@ -2,7 +2,7 @@ export async function apiFetch(path, { method = 'GET', token, adminCode, body } 
   const headers = { Accept: 'application/json' };
   const options = { method, headers };
 
-  if (token) headers.Authorization = `Bearer ${token}`;
+  if (token) headers['x-porra-token'] = token;
   if (adminCode) headers['x-admin-code'] = adminCode;
   if (body !== undefined) {
     headers['Content-Type'] = 'application/json';
