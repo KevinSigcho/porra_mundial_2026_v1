@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "PUBLIC_JOIN_CODE": "amigos2026",
+    "ADMIN_CODE": "admin2026-cambialo",
+    "TOKEN_SECRET": "cambia-este-secreto-largo-en-local-y-azure",
+    "TABLE_NAME": "PorraMundial2026",
+    "STORAGE_CONNECTION_STRING": ""
+  }
+}

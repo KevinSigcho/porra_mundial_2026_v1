@@ -1,0 +1,25 @@
+{
+  "name": "porra-mundial-2026-grupos",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "swa": "swa start http://localhost:5173 --api-location api",
+    "install:api": "cd api && npm install"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@azure/static-web-apps-cli": "^1.1.9"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

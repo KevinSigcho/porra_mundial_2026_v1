@@ -1,0 +1,17 @@
+{
+  "name": "porra-mundial-2026-api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/functions/*.js",
+  "scripts": {
+    "start": "func start",
+    "lint:syntax": "node --check src/functions/login.js && node --check src/functions/predictions.js && node --check src/functions/leaderboard.js && node --check src/functions/results.js && node --check src/functions/settings.js && node --check src/functions/fixtures.js"
+  },
+  "dependencies": {
+    "@azure/data-tables": "^13.3.1",
+    "@azure/functions": "^4.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
