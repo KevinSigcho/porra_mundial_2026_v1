@@ -12,16 +12,16 @@ app.http('getPredictions', {
   route: 'predictions',
   handler: async (request) => {
     try {
-      const player = await requirePlayer(request);
+      const currentPlayer = await requirePlayer(request);
       const settings = await getSettings();
 
-      const entity = await getEntity('prediction', String(player.rowKey));
+      const entity = await getEntity('prediction', String(currentPlayer.rowKey));
       const predictions = parseJson(entity?.predictions, {});
 
       return ok({
         player: {
-          id: String(player.rowKey),
-          name: String(player.name || '')
+          id: String(currentPlayer.rowKey),
+          name: String(currentPlayer.name || '')
         },
         predictions,
         locked: Boolean(settings.locked),
@@ -39,7 +39,7 @@ app.http('savePredictions', {
   route: 'predictions',
   handler: async (request) => {
     try {
-      const player = await requirePlayer(request);
+      const currentPlayer = await requirePlayer(request);
       const settings = await getSettings();
 
       if (settings.locked) {
@@ -47,17 +47,19 @@ app.http('savePredictions', {
       }
 
       const body = await readJson(request);
-      const predictions = normalizeScores(body.predictions || {});
+      const predictions = normalizeScores(body?.predictions || {});
       const completeCount = countComplete(predictions);
 
-      await upsertEntity({
+      const entity = {
         partitionKey: 'prediction',
-        rowKey: String(player.rowKey),
-        playerName: String(player.name || ''),
+        rowKey: String(currentPlayer.rowKey),
+        playerName: String(currentPlayer.name || ''),
         predictions: JSON.stringify(predictions),
         completeCount: Number(completeCount),
         updatedAt: new Date().toISOString()
-      }, 'Merge');
+      };
+
+      await upsertEntity(entity, 'Merge');
 
       return ok({
         saved: true,
