@@ -22,7 +22,7 @@ app.http('getResults', {
 app.http('saveResults', {
   methods: ['POST'],
   authLevel: 'anonymous',
-  route: 'admin/results',
+  route: 'admin-results',
   handler: async (request) => {
     try {
       requireAdmin(request);
