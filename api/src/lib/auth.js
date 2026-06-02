@@ -48,30 +48,37 @@ function createToken(player) {
     name: player.name,
     exp: Date.now() + 1000 * 60 * 60 * 24 * 45
   })).toString('base64url');
+
   return `${payload}.${signPayload(payload)}`;
 }
 
 function verifyToken(token) {
   const [payload, signature] = String(token || '').split('.');
+
   if (!payload || !signature) {
     const error = new Error('Sesión no válida.');
     error.status = 401;
     throw error;
   }
+
   const expected = signPayload(payload);
   const a = Buffer.from(signature);
   const b = Buffer.from(expected);
+
   if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
     const error = new Error('Sesión no válida.');
     error.status = 401;
     throw error;
   }
+
   const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+
   if (!decoded.exp || decoded.exp < Date.now()) {
     const error = new Error('Sesión caducada. Vuelve a entrar.');
     error.status = 401;
     throw error;
   }
+
   return decoded;
 }
 
@@ -80,18 +87,24 @@ async function requirePlayer(request) {
   const header = request.headers.get('authorization') || '';
   const bearerToken = header.startsWith('Bearer ') ? header.slice(7) : '';
   const token = customToken || bearerToken;
+
   const decoded = verifyToken(token);
+
+  const player = await getEntity('player', decoded.sub);
+
   if (!player) {
     const error = new Error('Jugador no encontrado.');
     error.status = 401;
     throw error;
   }
+
   return player;
 }
 
 function requireAdmin(request) {
   const adminCode = process.env.ADMIN_CODE || 'admin2026-cambialo';
   const supplied = request.headers.get('x-admin-code') || '';
+
   if (!supplied || supplied !== adminCode) {
     const error = new Error('Código admin incorrecto.');
     error.status = 401;
