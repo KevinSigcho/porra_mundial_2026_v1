@@ -416,7 +416,7 @@ function AdminPanel({ fixtures, initialResults, locked, onStatus, onSaved }) {
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
       const payload = normalizeForSave(results);
-      const data = await apiFetch('/api/admin/results', {
+      const data = await apiFetch('/api/admin-results', {
         method: 'POST',
         adminCode,
         body: { results: payload }
@@ -435,7 +435,7 @@ function AdminPanel({ fixtures, initialResults, locked, onStatus, onSaved }) {
     onStatus('');
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-      await apiFetch('/api/admin/settings', {
+      await apiFetch('/api/admin-settings', {
         method: 'POST',
         adminCode,
         body: { locked: nextLocked }
