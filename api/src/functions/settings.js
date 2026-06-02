@@ -20,7 +20,7 @@ app.http('getSettingsPublic', {
 app.http('saveSettings', {
   methods: ['POST'],
   authLevel: 'anonymous',
-  route: 'admin/settings',
+  route: 'admin-settings',
   handler: async (request) => {
     try {
       requireAdmin(request);
