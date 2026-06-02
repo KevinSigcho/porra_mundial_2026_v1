@@ -416,11 +416,15 @@ function AdminPanel({ fixtures, initialResults, locked, onStatus, onSaved }) {
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
       const payload = normalizeForSave(results);
-      const data = await apiFetch('/api/admin-results', {
+      const data = await apiFetch('/api/admin', {
         method: 'POST',
         adminCode,
-        body: { results: payload }
+        body: {
+          action: 'saveResults',
+          results: payload
+       }
       });
+      
       onStatus(`Resultados guardados: ${data.completeCount}/${fixtures.length}.`);
       await onSaved();
     } catch (error) {
@@ -435,10 +439,13 @@ function AdminPanel({ fixtures, initialResults, locked, onStatus, onSaved }) {
     onStatus('');
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-      await apiFetch('/api/admin-settings', {
+      await apiFetch('/api/admin', {
         method: 'POST',
         adminCode,
-        body: { locked: nextLocked }
+        body: {
+          action: 'setLocked',
+          locked: nextLocked
+        }
       });
       onStatus(nextLocked ? 'Porra cerrada.' : 'Porra abierta.');
       await onSaved();
