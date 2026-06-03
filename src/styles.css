@@ -327,3 +327,125 @@ th {
     grid-template-columns: 1fr;
   }
 }
+
+/* Mejoras visuales: grupos y banderas */
+.groupBlock {
+  border: 1px solid #d7e3f0;
+  border-radius: 22px;
+  padding: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 12px 32px rgba(15, 35, 60, 0.06);
+}
+
+.groupBlock + .groupBlock {
+  margin-top: 22px;
+}
+
+.groupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.groupHeader h3 {
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.35;
+  color: #18324f;
+}
+
+.groupCount {
+  white-space: nowrap;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #e8f0fb;
+  color: #20486f;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.teamStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.teamBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #dbe6f2;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: white;
+  color: #17324f;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35em;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.groupMatches {
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+.matchCardEnhanced {
+  background: white;
+  border-color: #d9e5f2;
+}
+
+.scoreRowEnhanced {
+  grid-template-columns: minmax(120px, 1fr) 58px 10px 58px minmax(120px, 1fr);
+}
+
+.scoreRowEnhanced .team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scoreRowEnhanced .team.home {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.scoreRowEnhanced .team.away {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.teamName {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+  .groupHeader {
+    flex-direction: column;
+  }
+
+  .groupCount {
+    white-space: normal;
+  }
+
+  .groupMatches {
+    grid-template-columns: 1fr;
+  }
+
+  .scoreRowEnhanced {
+    grid-template-columns: 1fr 48px 10px 48px 1fr;
+  }
+
+  .scoreRowEnhanced .flag {
+    font-size: 1.05rem;
+  }
+}

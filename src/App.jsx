@@ -5,6 +5,62 @@ const STORAGE_TOKEN = 'porra2026.token';
 const STORAGE_PLAYER = 'porra2026.player';
 const STORAGE_ADMIN = 'porra2026.adminCode';
 
+const TEAM_FLAGS = {
+  'México': '🇲🇽',
+  'Corea del Sur': '🇰🇷',
+  'Chequia': '🇨🇿',
+  'Sudáfrica': '🇿🇦',
+  'Canadá': '🇨🇦',
+  'Bosnia y Herzegovina': '🇧🇦',
+  'Qatar': '🇶🇦',
+  'Suiza': '🇨🇭',
+  'Brasil': '🇧🇷',
+  'Marruecos': '🇲🇦',
+  'Haití': '🇭🇹',
+  'Escocia': '🏴',
+  'Estados Unidos': '🇺🇸',
+  'Turquía': '🇹🇷',
+  'Australia': '🇦🇺',
+  'Paraguay': '🇵🇾',
+  'Alemania': '🇩🇪',
+  'Ecuador': '🇪🇨',
+  'Costa de Marfil': '🇨🇮',
+  'Curazao': '🇨🇼',
+  'Países Bajos': '🇳🇱',
+  'Japón': '🇯🇵',
+  'Suecia': '🇸🇪',
+  'Túnez': '🇹🇳',
+  'Bélgica': '🇧🇪',
+  'Egipto': '🇪🇬',
+  'Irán': '🇮🇷',
+  'Nueva Zelanda': '🇳🇿',
+  'España': '🇪🇸',
+  'Cabo Verde': '🇨🇻',
+  'Arabia Saudí': '🇸🇦',
+  'Uruguay': '🇺🇾',
+  'Francia': '🇫🇷',
+  'Senegal': '🇸🇳',
+  'Irak': '🇮🇶',
+  'Noruega': '🇳🇴',
+  'Argentina': '🇦🇷',
+  'Argelia': '🇩🇿',
+  'Austria': '🇦🇹',
+  'Jordania': '🇯🇴',
+  'Portugal': '🇵🇹',
+  'RD Congo': '🇨🇩',
+  'Uzbekistán': '🇺🇿',
+  'Colombia': '🇨🇴',
+  'Inglaterra': '🏴',
+  'Croacia': '🇭🇷',
+  'Ghana': '🇬🇭',
+  'Panamá': '🇵🇦'
+};
+
+function flagFor(team) {
+  return TEAM_FLAGS[team] || '🏳️';
+}
+
+
 function formatDate(date) {
   return new Intl.DateTimeFormat('es-ES', {
     weekday: 'short',
@@ -193,6 +249,7 @@ export default function App() {
             fixtures={filteredFixtures}
             scores={predictions}
             results={results}
+            groups={groups}
             onChange={(matchId, field, value) => updateScore(setPredictions, matchId, field, value)}
             disabled={settings.locked}
           />
@@ -211,6 +268,7 @@ export default function App() {
       {tab === 'admin' && (
         <AdminPanel
           fixtures={fixtures}
+          groups={groups}
           initialResults={results}
           locked={settings.locked}
           onStatus={setStatus}
@@ -284,42 +342,76 @@ function LoginForm({ onLoggedIn }) {
   );
 }
 
-function FixtureList({ fixtures, scores, results, onChange, disabled }) {
-  const byDate = fixtures.reduce((acc, fixture) => {
-    acc[fixture.date] ||= [];
-    acc[fixture.date].push(fixture);
+function FixtureList({ fixtures, scores, results, onChange, disabled, groups = {} }) {
+  const groupOrder = Object.keys(groups).length
+    ? Object.keys(groups)
+    : [...new Set(fixtures.map((fixture) => fixture.group))].sort();
+
+  const fixturesByGroup = fixtures.reduce((acc, fixture) => {
+    acc[fixture.group] ||= [];
+    acc[fixture.group].push(fixture);
     return acc;
   }, {});
 
-  return Object.entries(byDate).map(([date, dayFixtures]) => (
-    <div className="dayBlock" key={date}>
-      <h3>{formatDate(date)}</h3>
-      <div className="matches">
-        {dayFixtures.map((fixture) => (
-          <MatchCard
-            key={fixture.id}
-            fixture={fixture}
-            score={scores[fixture.id] || {}}
-            result={results[fixture.id]}
-            onChange={onChange}
-            disabled={disabled}
-          />
-        ))}
-      </div>
-    </div>
-  ));
+  return groupOrder
+    .filter((group) => fixturesByGroup[group]?.length)
+    .map((group) => (
+      <section className="groupBlock" key={group}>
+        <div className="groupHeader">
+          <div>
+            <p className="eyebrow">Grupo {group}</p>
+            <h3>{groups[group]?.map((team) => `${flagFor(team)} ${team}`).join(' · ')}</h3>
+          </div>
+          <span className="groupCount">{fixturesByGroup[group].length} partidos</span>
+        </div>
+
+        <div className="teamStrip">
+          {(groups[group] || []).map((team) => (
+            <TeamBadge key={team} team={team} />
+          ))}
+        </div>
+
+        <div className="matches groupMatches">
+          {fixturesByGroup[group]
+            .slice()
+            .sort((a, b) => a.date.localeCompare(b.date) || a.matchNo - b.matchNo)
+            .map((fixture) => (
+              <MatchCard
+                key={fixture.id}
+                fixture={fixture}
+                score={scores[fixture.id] || {}}
+                result={results[fixture.id]}
+                onChange={onChange}
+                disabled={disabled}
+              />
+            ))}
+        </div>
+      </section>
+    ));
+}
+
+function TeamBadge({ team }) {
+  return (
+    <span className="teamBadge">
+      <span className="flag" aria-hidden="true">{flagFor(team)}</span>
+      <span>{team}</span>
+    </span>
+  );
 }
 
 function MatchCard({ fixture, score, result, onChange, disabled }) {
   return (
-    <article className="matchCard">
+    <article className="matchCard matchCardEnhanced">
       <div className="matchMeta">
         <span>#{fixture.matchNo}</span>
-        <span>Grupo {fixture.group}</span>
+        <span>{formatDate(fixture.date)}</span>
         <span>{fixture.venue}</span>
       </div>
-      <div className="scoreRow">
-        <span className="team home">{fixture.home}</span>
+      <div className="scoreRow scoreRowEnhanced">
+        <span className="team home">
+          <span className="teamName">{fixture.home}</span>
+          <span className="flag" aria-hidden="true">{flagFor(fixture.home)}</span>
+        </span>
         <input
           type="number"
           min="0"
@@ -341,7 +433,10 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
           disabled={disabled}
           aria-label={`Goles de ${fixture.away}`}
         />
-        <span className="team away">{fixture.away}</span>
+        <span className="team away">
+          <span className="flag" aria-hidden="true">{flagFor(fixture.away)}</span>
+          <span className="teamName">{fixture.away}</span>
+        </span>
       </div>
       {result && <p className="actualResult">Resultado real: {result.homeGoals}-{result.awayGoals}</p>}
     </article>
@@ -388,7 +483,7 @@ function Leaderboard({ data, onRefresh }) {
   );
 }
 
-function AdminPanel({ fixtures, initialResults, locked, onStatus, onSaved }) {
+function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSaved }) {
   const [adminCode, setAdminCode] = useState(localStorage.getItem(STORAGE_ADMIN) || '');
   const [results, setResults] = useState(initialResults || {});
   const [busy, setBusy] = useState(false);
@@ -468,7 +563,7 @@ function AdminPanel({ fixtures, initialResults, locked, onStatus, onSaved }) {
         <span className={locked ? 'locked pill' : 'pill'}>{locked ? 'Cerrada' : 'Abierta'}</span>
       </div>
 
-      <FixtureList fixtures={fixtures} scores={results} results={{}} onChange={updateResult} disabled={false} />
+      <FixtureList fixtures={fixtures} scores={results} results={{}} groups={groups} onChange={updateResult} disabled={false} />
 
       <div className="stickyActions">
         <button onClick={saveResults} disabled={busy}>{busy ? 'Guardando...' : 'Guardar resultados reales'}</button>
