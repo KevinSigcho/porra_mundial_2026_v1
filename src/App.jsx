@@ -5,59 +5,77 @@ const STORAGE_TOKEN = 'porra2026.token';
 const STORAGE_PLAYER = 'porra2026.player';
 const STORAGE_ADMIN = 'porra2026.adminCode';
 
-const TEAM_FLAGS = {
-  'México': '🇲🇽',
-  'Corea del Sur': '🇰🇷',
-  'Chequia': '🇨🇿',
-  'Sudáfrica': '🇿🇦',
-  'Canadá': '🇨🇦',
-  'Bosnia y Herzegovina': '🇧🇦',
-  'Qatar': '🇶🇦',
-  'Suiza': '🇨🇭',
-  'Brasil': '🇧🇷',
-  'Marruecos': '🇲🇦',
-  'Haití': '🇭🇹',
-  'Escocia': '🏴',
-  'Estados Unidos': '🇺🇸',
-  'Turquía': '🇹🇷',
-  'Australia': '🇦🇺',
-  'Paraguay': '🇵🇾',
-  'Alemania': '🇩🇪',
-  'Ecuador': '🇪🇨',
-  'Costa de Marfil': '🇨🇮',
-  'Curazao': '🇨🇼',
-  'Países Bajos': '🇳🇱',
-  'Japón': '🇯🇵',
-  'Suecia': '🇸🇪',
-  'Túnez': '🇹🇳',
-  'Bélgica': '🇧🇪',
-  'Egipto': '🇪🇬',
-  'Irán': '🇮🇷',
-  'Nueva Zelanda': '🇳🇿',
-  'España': '🇪🇸',
-  'Cabo Verde': '🇨🇻',
-  'Arabia Saudí': '🇸🇦',
-  'Uruguay': '🇺🇾',
-  'Francia': '🇫🇷',
-  'Senegal': '🇸🇳',
-  'Irak': '🇮🇶',
-  'Noruega': '🇳🇴',
-  'Argentina': '🇦🇷',
-  'Argelia': '🇩🇿',
-  'Austria': '🇦🇹',
-  'Jordania': '🇯🇴',
-  'Portugal': '🇵🇹',
-  'RD Congo': '🇨🇩',
-  'Uzbekistán': '🇺🇿',
-  'Colombia': '🇨🇴',
-  'Inglaterra': '🏴',
-  'Croacia': '🇭🇷',
-  'Ghana': '🇬🇭',
-  'Panamá': '🇵🇦'
+const TEAM_FLAG_CODES = {
+  'México': 'mx',
+  'Corea del Sur': 'kr',
+  'Chequia': 'cz',
+  'Sudáfrica': 'za',
+  'Canadá': 'ca',
+  'Bosnia y Herzegovina': 'ba',
+  'Qatar': 'qa',
+  'Suiza': 'ch',
+  'Brasil': 'br',
+  'Marruecos': 'ma',
+  'Haití': 'ht',
+  'Escocia': 'gb-sct',
+  'Estados Unidos': 'us',
+  'Turquía': 'tr',
+  'Australia': 'au',
+  'Paraguay': 'py',
+  'Alemania': 'de',
+  'Ecuador': 'ec',
+  'Costa de Marfil': 'ci',
+  'Curazao': 'cw',
+  'Países Bajos': 'nl',
+  'Japón': 'jp',
+  'Suecia': 'se',
+  'Túnez': 'tn',
+  'Bélgica': 'be',
+  'Egipto': 'eg',
+  'Irán': 'ir',
+  'Nueva Zelanda': 'nz',
+  'España': 'es',
+  'Cabo Verde': 'cv',
+  'Arabia Saudí': 'sa',
+  'Uruguay': 'uy',
+  'Francia': 'fr',
+  'Senegal': 'sn',
+  'Irak': 'iq',
+  'Noruega': 'no',
+  'Argentina': 'ar',
+  'Argelia': 'dz',
+  'Austria': 'at',
+  'Jordania': 'jo',
+  'Portugal': 'pt',
+  'RD Congo': 'cd',
+  'Uzbekistán': 'uz',
+  'Colombia': 'co',
+  'Inglaterra': 'gb-eng',
+  'Croacia': 'hr',
+  'Ghana': 'gh',
+  'Panamá': 'pa'
 };
 
-function flagFor(team) {
-  return TEAM_FLAGS[team] || '🏳️';
+function flagSrc(team) {
+  const code = TEAM_FLAG_CODES[team];
+  return code ? `https://flagcdn.com/${code}.svg` : '';
+}
+
+function TeamFlag({ team }) {
+  const src = flagSrc(team);
+  if (!src) {
+    return <span className="flagFallback" aria-hidden="true">🏳️</span>;
+  }
+
+  return (
+    <img
+      className="flagImg"
+      src={src}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+    />
+  );
 }
 
 
@@ -360,7 +378,14 @@ function FixtureList({ fixtures, scores, results, onChange, disabled, groups = {
         <div className="groupHeader">
           <div>
             <p className="eyebrow">Grupo {group}</p>
-            <h3>{groups[group]?.map((team) => `${flagFor(team)} ${team}`).join(' · ')}</h3>
+            <div className="groupTeamsSummary">
+              {(groups[group] || []).map((team) => (
+                <span className="groupTeamName" key={team}>
+                  <TeamFlag team={team} />
+                  <span>{team}</span>
+                </span>
+              ))}
+            </div>
           </div>
           <span className="groupCount">{fixturesByGroup[group].length} partidos</span>
         </div>
@@ -393,7 +418,7 @@ function FixtureList({ fixtures, scores, results, onChange, disabled, groups = {
 function TeamBadge({ team }) {
   return (
     <span className="teamBadge">
-      <span className="flag" aria-hidden="true">{flagFor(team)}</span>
+      <TeamFlag team={team} />
       <span>{team}</span>
     </span>
   );
@@ -410,7 +435,7 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
       <div className="scoreRow scoreRowEnhanced">
         <span className="team home">
           <span className="teamName">{fixture.home}</span>
-          <span className="flag" aria-hidden="true">{flagFor(fixture.home)}</span>
+          <TeamFlag team={fixture.home} />
         </span>
         <input
           type="number"
@@ -434,7 +459,7 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
           aria-label={`Goles de ${fixture.away}`}
         />
         <span className="team away">
-          <span className="flag" aria-hidden="true">{flagFor(fixture.away)}</span>
+          <TeamFlag team={fixture.away} />
           <span className="teamName">{fixture.away}</span>
         </span>
       </div>

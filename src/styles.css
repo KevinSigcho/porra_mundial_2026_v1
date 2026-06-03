@@ -349,11 +349,28 @@ th {
   margin-bottom: 14px;
 }
 
-.groupHeader h3 {
-  margin: 0.15rem 0 0;
+.groupTeamsSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.groupTeamName {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: clamp(1.05rem, 2vw, 1.35rem);
   line-height: 1.35;
   color: #18324f;
+  font-weight: 900;
+}
+
+.groupTeamName + .groupTeamName::before {
+  content: '•';
+  color: #607894;
+  margin-right: 2px;
 }
 
 .groupCount {
@@ -386,12 +403,23 @@ th {
   font-size: 0.9rem;
 }
 
-.flag {
+.flagImg {
+  width: 28px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(15, 35, 60, 0.14);
+  flex: 0 0 auto;
+  background: #f3f6fb;
+}
+
+.flagFallback {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.35em;
-  font-size: 1.25rem;
+  width: 28px;
+  height: 20px;
+  font-size: 1rem;
   line-height: 1;
 }
 
@@ -445,7 +473,9 @@ th {
     grid-template-columns: 1fr 48px 10px 48px 1fr;
   }
 
-  .scoreRowEnhanced .flag {
-    font-size: 1.05rem;
+  .flagImg,
+  .flagFallback {
+    width: 24px;
+    height: 17px;
   }
 }
