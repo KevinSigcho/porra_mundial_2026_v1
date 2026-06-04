@@ -479,3 +479,251 @@ th {
     height: 17px;
   }
 }
+
+/* Evolucion: tablas de grupos y cuadro de eliminatorias */
+.softNotice {
+  margin-bottom: 18px;
+  background: #eef6ff;
+  border-color: #cfe2ff;
+  color: #224e78;
+}
+
+.bracketWarning {
+  margin-bottom: 14px;
+  background: #fff4d8;
+  border-color: #f2d27a;
+  color: #6b4b00;
+  font-weight: 700;
+}
+
+.standingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.standingCard {
+  border: 1px solid #dce5ef;
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 16px;
+  box-shadow: 0 10px 26px rgba(15, 35, 60, 0.05);
+}
+
+.standingHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.standingHeader .eyebrow {
+  margin: 0;
+}
+
+.qualificationHint {
+  color: #60758b;
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.standingsTableWrap {
+  border: 1px solid #e4edf7;
+  border-radius: 14px;
+}
+
+.standingsTable th,
+.standingsTable td {
+  padding: 9px 8px;
+  font-size: 0.88rem;
+}
+
+.standingsTable tr.qualifiedRow {
+  background: #f0fff4;
+}
+
+.standingsTable tr.thirdRow {
+  background: #fff9e8;
+}
+
+.standingTeam {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 160px;
+  font-weight: 800;
+}
+
+.bracketSummary {
+  margin: 18px 0;
+}
+
+.qualifiedLists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.qualifiedList {
+  border: 1px solid #e4edf7;
+  border-radius: 16px;
+  padding: 12px;
+  background: #fbfdff;
+}
+
+.qualifiedList h3 {
+  margin: 0 0 10px;
+  color: #1a3552;
+  font-size: 1rem;
+}
+
+.qualifiedItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-weight: 800;
+  color: #17324f;
+}
+
+.seedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 24px;
+  border-radius: 999px;
+  background: #e8f0fb;
+  color: #20486f;
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 0 7px;
+}
+
+.bracketBoard {
+  margin: 18px 0;
+  padding: 18px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #b80f3f 0%, #d81b55 100%);
+  color: white;
+  box-shadow: 0 18px 42px rgba(150, 0, 45, 0.18);
+  overflow: hidden;
+  position: relative;
+}
+
+.bracketBoard::before {
+  content: '';
+  position: absolute;
+  inset: -50px;
+  background:
+    linear-gradient(35deg, transparent 0 44%, rgba(255,255,255,0.08) 45% 47%, transparent 48% 100%),
+    linear-gradient(145deg, transparent 0 50%, rgba(255,255,255,0.06) 51% 53%, transparent 54% 100%);
+  pointer-events: none;
+}
+
+.bracketTitle {
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 1000;
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  margin-bottom: 18px;
+}
+
+.bracketColumns {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.bracketSide {
+  display: grid;
+  gap: 10px;
+}
+
+.bracketCenter {
+  min-height: 220px;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-left: 0;
+  border-right: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: 8px;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bracketCenter small {
+  max-width: 180px;
+  color: rgba(255,255,255,0.75);
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bracketMatch {
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 14px;
+  padding: 8px;
+  background: rgba(255,255,255,0.14);
+  backdrop-filter: blur(4px);
+}
+
+.bracketLine {
+  height: 1px;
+  background: rgba(255,255,255,0.45);
+  margin: 6px 0;
+}
+
+.bracketTeam {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  font-weight: 900;
+}
+
+.bracketTeam .seedBadge {
+  background: rgba(255,255,255,0.9);
+  color: #9b1238;
+}
+
+.pendingTeam {
+  opacity: 0.72;
+}
+
+@media (max-width: 900px) {
+  .bracketColumns {
+    grid-template-columns: 1fr;
+  }
+
+  .bracketCenter {
+    min-height: auto;
+    padding: 18px 0;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 720px) {
+  .standingsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .standingHeader {
+    flex-direction: column;
+  }
+
+  .qualificationHint {
+    text-align: left;
+  }
+}

@@ -113,6 +113,148 @@ function normalizeForSave(scores) {
   return out;
 }
 
+function isCompleteScore(score) {
+  if (!score) return false;
+  const homeGoals = Number(score.homeGoals);
+  const awayGoals = Number(score.awayGoals);
+  return Number.isInteger(homeGoals) && Number.isInteger(awayGoals) && homeGoals >= 0 && awayGoals >= 0;
+}
+
+function emptyStanding(team) {
+  return {
+    team,
+    played: 0,
+    won: 0,
+    drawn: 0,
+    lost: 0,
+    goalsFor: 0,
+    goalsAgainst: 0,
+    goalDifference: 0,
+    points: 0
+  };
+}
+
+function buildGroupTables(fixtures, groups, scoreMap) {
+  const tables = {};
+
+  for (const [group, teams] of Object.entries(groups || {})) {
+    tables[group] = teams.map(emptyStanding);
+  }
+
+  const byTeam = {};
+  for (const [group, rows] of Object.entries(tables)) {
+    byTeam[group] = Object.fromEntries(rows.map((row) => [row.team, row]));
+  }
+
+  for (const fixture of fixtures || []) {
+    const score = scoreMap?.[fixture.id];
+    if (!isCompleteScore(score)) continue;
+
+    const home = byTeam[fixture.group]?.[fixture.home];
+    const away = byTeam[fixture.group]?.[fixture.away];
+    if (!home || !away) continue;
+
+    const homeGoals = Number(score.homeGoals);
+    const awayGoals = Number(score.awayGoals);
+
+    home.played += 1;
+    away.played += 1;
+    home.goalsFor += homeGoals;
+    home.goalsAgainst += awayGoals;
+    away.goalsFor += awayGoals;
+    away.goalsAgainst += homeGoals;
+
+    if (homeGoals > awayGoals) {
+      home.won += 1;
+      away.lost += 1;
+      home.points += 3;
+    } else if (homeGoals < awayGoals) {
+      away.won += 1;
+      home.lost += 1;
+      away.points += 3;
+    } else {
+      home.drawn += 1;
+      away.drawn += 1;
+      home.points += 1;
+      away.points += 1;
+    }
+
+    home.goalDifference = home.goalsFor - home.goalsAgainst;
+    away.goalDifference = away.goalsFor - away.goalsAgainst;
+  }
+
+  for (const group of Object.keys(tables)) {
+    tables[group].sort((a, b) =>
+      b.points - a.points ||
+      b.goalDifference - a.goalDifference ||
+      b.goalsFor - a.goalsFor ||
+      a.team.localeCompare(b.team, 'es')
+    );
+  }
+
+  return tables;
+}
+
+function countCompletedScores(scoreMap) {
+  return Object.values(scoreMap || {}).filter(isCompleteScore).length;
+}
+
+function getQualifiedTeams(groupTables) {
+  const groupEntries = Object.entries(groupTables || {}).sort(([a], [b]) => a.localeCompare(b));
+  const winners = [];
+  const runners = [];
+  const thirds = [];
+
+  for (const [group, rows] of groupEntries) {
+    if (rows[0]) winners.push({ ...rows[0], group, seed: `1${group}`, label: `1º Grupo ${group}` });
+    if (rows[1]) runners.push({ ...rows[1], group, seed: `2${group}`, label: `2º Grupo ${group}` });
+    if (rows[2]) thirds.push({ ...rows[2], group, seed: `3${group}`, label: `3º Grupo ${group}` });
+  }
+
+  thirds.sort((a, b) =>
+    b.points - a.points ||
+    b.goalDifference - a.goalDifference ||
+    b.goalsFor - a.goalsFor ||
+    a.team.localeCompare(b.team, 'es')
+  );
+
+  return {
+    winners,
+    runners,
+    thirds: thirds.slice(0, 8),
+    allThirds: thirds,
+    qualified: [...winners, ...runners, ...thirds.slice(0, 8)]
+  };
+}
+
+function makeKnockoutPairings(qualifiedData) {
+  const bySeed = {};
+  for (const team of [...qualifiedData.winners, ...qualifiedData.runners]) {
+    bySeed[team.seed] = team;
+  }
+  qualifiedData.thirds.forEach((team, index) => {
+    bySeed[`T${index + 1}`] = {
+      ...team,
+      label: `${index + 1}º mejor tercero, Grupo ${team.group}`
+    };
+  });
+
+  const seedPairs = [
+    ['1A', 'T8'], ['2B', '2C'], ['1D', 'T7'], ['1E', '2F'],
+    ['1G', 'T6'], ['2H', '2I'], ['1J', 'T5'], ['1K', '2L'],
+    ['1B', 'T4'], ['2A', '2D'], ['1C', 'T3'], ['1F', '2E'],
+    ['1H', 'T2'], ['2G', '2J'], ['1I', 'T1'], ['1L', '2K']
+  ];
+
+  return seedPairs.map(([homeSeed, awaySeed], index) => ({
+    id: `R32-${index + 1}`,
+    homeSeed,
+    awaySeed,
+    home: bySeed[homeSeed] || null,
+    away: bySeed[awaySeed] || null
+  }));
+}
+
 export default function App() {
   const [fixtureData, setFixtureData] = useState(null);
   const [token, setToken] = useState(localStorage.getItem(STORAGE_TOKEN) || '');
@@ -242,7 +384,9 @@ export default function App() {
 
       <nav className="tabs" aria-label="Secciones">
         <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Mis pronósticos</button>
-        <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación</button>
+        <button className={tab === 'liveGroups' ? 'active' : ''} onClick={() => { setTab('liveGroups'); refreshPrivateData(); }}>Grupos actualizados</button>
+        <button className={tab === 'myBracket' ? 'active' : ''} onClick={() => { setTab('myBracket'); refreshPrivateData(); }}>Mi eliminatoria</button>
+        <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'admin' ? 'active' : ''} onClick={() => setTab('admin')}>Admin</button>
       </nav>
 
@@ -277,6 +421,26 @@ export default function App() {
             <button className="secondary" onClick={refreshPrivateData}>Recargar</button>
           </div>
         </section>
+      )}
+
+      {tab === 'liveGroups' && (
+        <GroupStandingsPanel
+          title="Grupos actualizados"
+          description="Clasificación temporal calculada con los resultados reales que el admin haya cargado. Mientras falten partidos, es provisional."
+          fixtures={fixtures}
+          groups={groups}
+          scores={results}
+          emptyMessage="Todavía no hay resultados reales cargados."
+        />
+      )}
+
+      {tab === 'myBracket' && (
+        <MyKnockoutPanel
+          fixtures={fixtures}
+          groups={groups}
+          predictions={predictions}
+          fixtureCount={fixtures.length}
+        />
       )}
 
       {tab === 'leaderboard' && (
@@ -465,6 +629,180 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
       </div>
       {result && <p className="actualResult">Resultado real: {result.homeGoals}-{result.awayGoals}</p>}
     </article>
+  );
+}
+
+
+function GroupStandingsPanel({ title, description, fixtures, groups, scores, emptyMessage }) {
+  const groupTables = useMemo(() => buildGroupTables(fixtures, groups, scores), [fixtures, groups, scores]);
+  const completed = countCompletedScores(scores);
+
+  return (
+    <section className="panel">
+      <div className="toolbar">
+        <div>
+          <h2>{title}</h2>
+          <p className="muted">{description}</p>
+          <p className="muted small">Partidos con marcador: {completed}/{fixtures.length}</p>
+        </div>
+      </div>
+
+      {completed === 0 && <div className="notice softNotice">{emptyMessage}</div>}
+
+      <div className="standingsGrid">
+        {Object.entries(groupTables).map(([group, rows]) => (
+          <section className="standingCard" key={group}>
+            <div className="standingHeader">
+              <p className="eyebrow">Grupo {group}</p>
+              <span className="qualificationHint">1º y 2º avanzan · 3º pendiente de ranking</span>
+            </div>
+            <StandingsTable rows={rows} />
+          </section>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function StandingsTable({ rows }) {
+  return (
+    <div className="tableWrap standingsTableWrap">
+      <table className="standingsTable">
+        <thead>
+          <tr>
+            <th>Pos</th>
+            <th>Equipo</th>
+            <th>Pts</th>
+            <th>PJ</th>
+            <th>DG</th>
+            <th>GF</th>
+            <th>GC</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={row.team} className={index < 2 ? 'qualifiedRow' : index === 2 ? 'thirdRow' : ''}>
+              <td>{index + 1}</td>
+              <td>
+                <span className="standingTeam">
+                  <TeamFlag team={row.team} />
+                  <span>{row.team}</span>
+                </span>
+              </td>
+              <td><strong>{row.points}</strong></td>
+              <td>{row.played}</td>
+              <td>{row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}</td>
+              <td>{row.goalsFor}</td>
+              <td>{row.goalsAgainst}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function MyKnockoutPanel({ fixtures, groups, predictions, fixtureCount }) {
+  const groupTables = useMemo(() => buildGroupTables(fixtures, groups, predictions), [fixtures, groups, predictions]);
+  const qualifiedData = useMemo(() => getQualifiedTeams(groupTables), [groupTables]);
+  const pairings = useMemo(() => makeKnockoutPairings(qualifiedData), [qualifiedData]);
+  const completed = countCompletedScores(predictions);
+  const isComplete = completed === fixtureCount;
+
+  return (
+    <section className="panel">
+      <div className="toolbar">
+        <div>
+          <h2>Mi eliminatoria proyectada</h2>
+          <p className="muted">Cuadro calculado con tus marcadores de fase de grupos. Si aciertas todo, esta sería tu foto estimada de clasificados.</p>
+          <p className="muted small">Pronósticos completos: {completed}/{fixtureCount}</p>
+        </div>
+      </div>
+
+      <div className="notice bracketWarning">
+        Aviso: este cuadro no es oficial. Es una proyección privada basada en tus pronósticos y puede cambiar hasta que se disputen y carguen todos los partidos de la fase de grupos. Los cruces son orientativos para visualizar la porra.
+      </div>
+
+      {!isComplete && (
+        <div className="notice softNotice">
+          Todavía te faltan {fixtureCount - completed} partidos por pronosticar. El cuadro se irá rellenando mejor cuando completes todos los marcadores.
+        </div>
+      )}
+
+      <div className="bracketSummary">
+        <section className="standingCard">
+          <div className="standingHeader">
+            <p className="eyebrow">Clasificados por tu porra</p>
+            <span className="qualificationHint">Primeros, segundos y mejores terceros</span>
+          </div>
+          <div className="qualifiedLists">
+            <QualifiedList title="Primeros" teams={qualifiedData.winners} />
+            <QualifiedList title="Segundos" teams={qualifiedData.runners} />
+            <QualifiedList title="Mejores terceros" teams={qualifiedData.thirds} />
+          </div>
+        </section>
+      </div>
+
+      <div className="bracketBoard">
+        <div className="bracketTitle">Ronda de 32 · proyección</div>
+        <div className="bracketColumns">
+          <div className="bracketSide">
+            {pairings.slice(0, 8).map((pairing) => <BracketMatch key={pairing.id} pairing={pairing} />)}
+          </div>
+          <div className="bracketCenter">
+            <span>Camino a la final</span>
+            <small>La siguiente fase se podrá añadir después con predicción de ganadores.</small>
+          </div>
+          <div className="bracketSide">
+            {pairings.slice(8).map((pairing) => <BracketMatch key={pairing.id} pairing={pairing} />)}
+          </div>
+        </div>
+      </div>
+
+      <GroupStandingsPanel
+        title="Tablas según tus pronósticos"
+        description="Orden provisional de cada grupo si tus resultados fueran correctos."
+        fixtures={fixtures}
+        groups={groups}
+        scores={predictions}
+        emptyMessage="Todavía no hay pronósticos para calcular las tablas."
+      />
+    </section>
+  );
+}
+
+function QualifiedList({ title, teams }) {
+  return (
+    <div className="qualifiedList">
+      <h3>{title}</h3>
+      {teams.map((team) => (
+        <div className="qualifiedItem" key={`${team.seed}-${team.team}`}>
+          <span className="seedBadge">{team.seed}</span>
+          <TeamFlag team={team.team} />
+          <span>{team.team}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BracketMatch({ pairing }) {
+  return (
+    <article className="bracketMatch">
+      <BracketTeam team={pairing.home} seed={pairing.homeSeed} />
+      <div className="bracketLine" aria-hidden="true" />
+      <BracketTeam team={pairing.away} seed={pairing.awaySeed} />
+    </article>
+  );
+}
+
+function BracketTeam({ team, seed }) {
+  return (
+    <div className={team ? 'bracketTeam' : 'bracketTeam pendingTeam'}>
+      <span className="seedBadge">{seed}</span>
+      {team ? <TeamFlag team={team.team} /> : <span className="flagFallback" aria-hidden="true">?</span>}
+      <span>{team ? team.team : 'Pendiente'}</span>
+    </div>
   );
 }
 
