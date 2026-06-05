@@ -62,6 +62,25 @@ button.secondary {
   background: linear-gradient(135deg, #ffffff 0%, #edf6ff 55%, #f7f0ff 100%);
 }
 
+.hero--app {
+  position: relative;
+  background:
+    linear-gradient(135deg, rgba(8, 20, 40, 0.78), rgba(8, 20, 40, 0.55)),
+    url('/akira.png');
+  background-size: cover;
+  background-position: center;
+  color: #f5f8ff;
+}
+
+.hero--app h1,
+.hero--app p {
+  color: #f5f8ff;
+}
+
+.hero--app .eyebrow {
+  color: #9cc4ff !important;
+}
+
 .hero h1 {
   margin: 0.2rem 0 0.6rem;
   font-size: clamp(2rem, 5vw, 4rem);
