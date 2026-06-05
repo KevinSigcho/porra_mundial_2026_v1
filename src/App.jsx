@@ -229,29 +229,68 @@ function getQualifiedTeams(groupTables) {
 
 function makeKnockoutPairings(qualifiedData) {
   const bySeed = {};
+
   for (const team of [...qualifiedData.winners, ...qualifiedData.runners]) {
     bySeed[team.seed] = team;
   }
-  qualifiedData.thirds.forEach((team, index) => {
-    bySeed[`T${index + 1}`] = {
-      ...team,
-      label: `${index + 1}º mejor tercero, Grupo ${team.group}`
-    };
-  });
 
-  const seedPairs = [
-    ['1A', 'T8'], ['2B', '2C'], ['1D', 'T7'], ['1E', '2F'],
-    ['1G', 'T6'], ['2H', '2I'], ['1J', 'T5'], ['1K', '2L'],
-    ['1B', 'T4'], ['2A', '2D'], ['1C', 'T3'], ['1F', '2E'],
-    ['1H', 'T2'], ['2G', '2J'], ['1I', 'T1'], ['1L', '2K']
+  const thirdByGroup = {};
+  for (const team of qualifiedData.thirds || []) {
+    thirdByGroup[team.group] = team;
+  }
+
+  function resolveSeed(seed) {
+    if (bySeed[seed]) return bySeed[seed];
+
+    if (seed.startsWith('3')) {
+      const possibleGroups = seed.slice(1).split('');
+      const matchedThird = possibleGroups
+        .map((group) => thirdByGroup[group])
+        .find(Boolean);
+
+      if (matchedThird) {
+        return {
+          ...matchedThird,
+          seed,
+          label: `3º Grupo ${matchedThird.group}`
+        };
+      }
+
+      return {
+        team: `3º ${possibleGroups.join('/')}`,
+        seed,
+        label: `3º de ${possibleGroups.join(', ')}`,
+        isPlaceholder: true
+      };
+    }
+
+    return null;
+  }
+
+  const officialRoundOf32 = [
+    { id: 'M74', homeSeed: '1E', awaySeed: '3ABCDF', date: '29/06/2026', time: '22:30', side: 'left' },
+    { id: 'M77', homeSeed: '1I', awaySeed: '3CDFGH', date: '30/06/2026', time: '23:00', side: 'left' },
+    { id: 'M73', homeSeed: '2A', awaySeed: '2B', date: '28/06/2026', time: '21:00', side: 'left' },
+    { id: 'M75', homeSeed: '1F', awaySeed: '2C', date: '30/06/2026', time: '03:00', side: 'left' },
+    { id: 'M83', homeSeed: '2K', awaySeed: '2L', date: '03/07/2026', time: '01:00', side: 'left' },
+    { id: 'M84', homeSeed: '1H', awaySeed: '2J', date: '02/07/2026', time: '21:00', side: 'left' },
+    { id: 'M81', homeSeed: '1D', awaySeed: '3BEFIJ', date: '02/07/2026', time: '02:00', side: 'left' },
+    { id: 'M82', homeSeed: '1G', awaySeed: '3AEHIJ', date: '01/07/2026', time: '22:00', side: 'left' },
+
+    { id: 'M76', homeSeed: '1C', awaySeed: '2F', date: '29/06/2026', time: '19:00', side: 'right' },
+    { id: 'M78', homeSeed: '2E', awaySeed: '2I', date: '30/06/2026', time: '19:00', side: 'right' },
+    { id: 'M79', homeSeed: '1A', awaySeed: '3CEFIH', date: '01/07/2026', time: '03:00', side: 'right' },
+    { id: 'M80', homeSeed: '1L', awaySeed: '3EHJK', date: '01/07/2026', time: '18:00', side: 'right' },
+    { id: 'M86', homeSeed: '1J', awaySeed: '2H', date: '04/07/2026', time: '00:00', side: 'right' },
+    { id: 'M88', homeSeed: '2D', awaySeed: '2G', date: '03/07/2026', time: '20:00', side: 'right' },
+    { id: 'M85', homeSeed: '1B', awaySeed: '3EFGIJ', date: '03/07/2026', time: '05:00', side: 'right' },
+    { id: 'M87', homeSeed: '1K', awaySeed: '3DEIJL', date: '04/07/2026', time: '03:30', side: 'right' }
   ];
 
-  return seedPairs.map(([homeSeed, awaySeed], index) => ({
-    id: `R32-${index + 1}`,
-    homeSeed,
-    awaySeed,
-    home: bySeed[homeSeed] || null,
-    away: bySeed[awaySeed] || null
+  return officialRoundOf32.map((match) => ({
+    ...match,
+    home: resolveSeed(match.homeSeed),
+    away: resolveSeed(match.awaySeed)
   }));
 }
 
@@ -830,17 +869,25 @@ function MyKnockoutPanel({ fixtures, groups, predictions, fixtureCount }) {
       </div>
 
       <div className="bracketBoard">
-        <div className="bracketTitle">Ronda de 32 · proyección</div>
-        <div className="bracketColumns">
+        <div className="bracketTitle">Cuadro oficial · Ronda de 32</div>
+        <div className="officialBracketNotice">
+          Cruces oficiales por posición de grupo. Los equipos mostrados salen de tus pronósticos, por eso siguen siendo una proyección hasta que termine la fase de grupos.
+        </div>
+
+        <div className="bracketColumns officialBracketColumns">
           <div className="bracketSide">
-            {pairings.slice(0, 8).map((pairing) => <BracketMatch key={pairing.id} pairing={pairing} />)}
+            {pairings
+              .filter((pairing) => pairing.side === 'left')
+              .map((pairing) => <BracketMatch key={pairing.id} pairing={pairing} />)}
           </div>
           <div className="bracketCenter">
             <span>Camino a la final</span>
-            <small>La siguiente fase se podrá añadir después con predicción de ganadores.</small>
+            <small>Los ganadores avanzarán a octavos, cuartos, semifinales y final.</small>
           </div>
           <div className="bracketSide">
-            {pairings.slice(8).map((pairing) => <BracketMatch key={pairing.id} pairing={pairing} />)}
+            {pairings
+              .filter((pairing) => pairing.side === 'right')
+              .map((pairing) => <BracketMatch key={pairing.id} pairing={pairing} />)}
           </div>
         </div>
       </div>
@@ -874,7 +921,12 @@ function QualifiedList({ title, teams }) {
 
 function BracketMatch({ pairing }) {
   return (
-    <article className="bracketMatch">
+    <article className="bracketMatch officialBracketMatch">
+      <div className="officialMatchMeta">
+        <span>{pairing.id}</span>
+        <span>{pairing.date}</span>
+        <span>{pairing.time}</span>
+      </div>
       <BracketTeam team={pairing.home} seed={pairing.homeSeed} />
       <div className="bracketLine" aria-hidden="true" />
       <BracketTeam team={pairing.away} seed={pairing.awaySeed} />
@@ -883,10 +935,16 @@ function BracketMatch({ pairing }) {
 }
 
 function BracketTeam({ team, seed }) {
+  const isPlaceholder = !team || team.isPlaceholder;
+
   return (
-    <div className={team ? 'bracketTeam' : 'bracketTeam pendingTeam'}>
+    <div className={isPlaceholder ? 'bracketTeam pendingTeam' : 'bracketTeam'}>
       <span className="seedBadge">{seed}</span>
-      {team ? <TeamFlag team={team.team} /> : <span className="flagFallback" aria-hidden="true">?</span>}
+      {team && !team.isPlaceholder ? (
+        <TeamFlag team={team.team} />
+      ) : (
+        <span className="flagFallback" aria-hidden="true">?</span>
+      )}
       <span>{team ? team.team : 'Pendiente'}</span>
     </div>
   );
