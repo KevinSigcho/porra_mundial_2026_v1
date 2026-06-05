@@ -466,7 +466,7 @@ export default function App() {
     <main className="page">
       <header className="hero">
         <div>
-          <p className="eyebrow">Porra privada</p>
+          <p className="eyebrow">Porra 2026</p>
           <h1>Mundial 2026: fase de grupos</h1>
           <p>Pronostica el marcador de los {fixtures.length} partidos de grupos. Juega como <strong>{player.name}</strong>.</p>
         </div>
