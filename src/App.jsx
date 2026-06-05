@@ -429,7 +429,7 @@ export default function App() {
 
   return (
     <main className="page">
-      <header className="hero">
+      <header className="hero hero--app">
         <div>
           <p className="eyebrow">Porra privada</p>
           <h1>Mundial 2026: fase de grupos</h1>
