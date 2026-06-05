@@ -521,12 +521,17 @@ function LoginForm({ onLoggedIn }) {
         </label>
         <label>
           Código de invitación
-          <input value={joinCode} onChange={(event) => setJoinCode(event.target.value)} placeholder="Te lo pasa el admin" required />
+          <input
+            value={joinCode}
+            onChange={(event) => setJoinCode(event.target.value)}
+            placeholder="Solo para crear jugador nuevo"
+          />
+          <span className="fieldHelp">Solo es necesario la primera vez. Si ya estás registrado, entra solo con nombre y PIN.</span>
         </label>
         {error && <p className="error">{error}</p>}
         <button disabled={busy}>{busy ? 'Entrando...' : 'Entrar / crear jugador'}</button>
       </form>
-      <p className="muted small">La primera vez se crea tu usuario. Después entra con el mismo nombre y PIN.</p>
+      <p className="muted small">Si ya tienes jugador, deja vacío el código de invitación y usa el mismo nombre y PIN.</p>
     </section>
   );
 }
