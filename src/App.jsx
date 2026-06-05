@@ -407,6 +407,13 @@ export default function App() {
             </label>
           </div>
 
+          <PredictionStandingsPreview
+            fixtures={fixtures}
+            groups={groups}
+            scores={predictions}
+            groupFilter={groupFilter}
+          />
+
           <FixtureList
             fixtures={filteredFixtures}
             scores={predictions}
@@ -699,6 +706,43 @@ function StandingsTable({ rows }) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+function PredictionStandingsPreview({ fixtures, groups, scores, groupFilter }) {
+  const groupTables = useMemo(() => buildGroupTables(fixtures, groups, scores), [fixtures, groups, scores]);
+  const completed = countCompletedScores(scores);
+  const visibleGroups = Object.entries(groupTables)
+    .filter(([group]) => groupFilter === 'TODOS' || group === groupFilter);
+
+  return (
+    <section className="predictionStandingsPreview">
+      <div className="previewHeading">
+        <div>
+          <h3>Así quedan los grupos con tus pronósticos</h3>
+          <p className="muted small">Se actualiza mientras completas marcadores. Guarda tus pronósticos para que quede registrado en la porra.</p>
+        </div>
+        <span className="pill">{completed}/{fixtures.length} partidos</span>
+      </div>
+
+      {completed === 0 && (
+        <div className="notice softNotice">
+          Rellena algún marcador para ver cómo se ordena cada grupo.
+        </div>
+      )}
+
+      <div className="standingsGrid compactStandingsGrid">
+        {visibleGroups.map(([group, rows]) => (
+          <section className="standingCard compactStandingCard" key={group}>
+            <div className="standingHeader">
+              <p className="eyebrow">Grupo {group}</p>
+              <span className="qualificationHint">1º y 2º avanzan · 3º depende del ranking</span>
+            </div>
+            <StandingsTable rows={rows} />
+          </section>
+        ))}
+      </div>
+    </section>
   );
 }
 
