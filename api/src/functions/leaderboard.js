@@ -24,6 +24,8 @@ app.http('leaderboard', {
         return {
           playerId: player.rowKey,
           name: player.name,
+          avatarId: player.avatarId || 'football-1',
+          avatarUrl: player.avatarUrl || '',
           points: score.points,
           exactScores: score.exactScores,
           correctOutcomes: score.correctOutcomes,
