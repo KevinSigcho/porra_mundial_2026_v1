@@ -589,7 +589,7 @@ function Hero({ fixtureCount }) {
         <span className="badgeBall">⚽</span>
         <span>FIFA World Cup 2026</span>
       </div>
-      <h1>Porra NTT DATA</h1>
+      <h1>Porra Mundial 2026</h1>
       <p>Inicia sesión si ya tienes cuenta o regístrate con el código de invitación. Pronostica los {fixtureCount} partidos y compite con tus amigos.</p>
     </header>
   );
