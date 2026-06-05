@@ -1,4 +1,4 @@
-# Porra Mundial 2026 - fase de grupos - Esto es una troleada de tu amigo
+# Porra Mundial 2026 - fase de grupos
 
 Web pública para jugar una porra privada con amigos. No usa Excel. Cada persona entra con:
 
