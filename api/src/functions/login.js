@@ -1,8 +1,14 @@
 const { app } = require('@azure/functions');
-const crypto = require('crypto');
-const { readJson, ok, created, fail, errorResponse } = require('../lib/response');
-const { listByPartition, upsertEntity } = require('../lib/storage');
-const { normalizeName, publicName, randomSalt, hashPin, verifyPin, createToken } = require('../lib/auth');
+const { readJson, ok, fail, errorResponse } = require('../lib/response');
+const { getEntity, upsertEntity } = require('../lib/storage');
+const {
+  normalizeName,
+  publicName,
+  randomSalt,
+  hashPin,
+  verifyPin,
+  createToken
+} = require('../lib/auth');
 
 app.http('login', {
   methods: ['POST'],
@@ -11,52 +17,79 @@ app.http('login', {
   handler: async (request) => {
     try {
       const body = await readJson(request);
-      const expectedJoinCode = process.env.PUBLIC_JOIN_CODE || 'amigos2026';
-      const joinCode = String(body.joinCode || '').trim();
-      if (!joinCode || joinCode !== expectedJoinCode) {
-        return fail(401, 'Código de invitación incorrecto.');
-      }
 
       const name = publicName(body.name);
-      const nameKey = normalizeName(name);
       const pin = String(body.pin || '').trim();
-      if (!name || name.length < 2 || !nameKey) {
-        return fail(400, 'Escribe un nombre válido.');
-      }
-      if (pin.length < 4 || pin.length > 20) {
-        return fail(400, 'El PIN debe tener entre 4 y 20 caracteres.');
+      const joinCode = String(body.joinCode || '').trim();
+
+      if (!name) {
+        return fail(400, 'Introduce tu nombre.');
       }
 
-      const players = await listByPartition('player');
-      let player = players.find((item) => item.nameKey === nameKey);
-      let isNew = false;
+      if (!pin || pin.length < 4) {
+        return fail(400, 'Introduce un PIN de al menos 4 caracteres.');
+      }
 
-      if (player) {
-        if (!verifyPin(pin, player.pinSalt, player.pinHash)) {
-          return fail(401, 'El PIN no coincide con ese nombre.');
+      const rowKey = normalizeName(name);
+
+      if (!rowKey) {
+        return fail(400, 'El nombre no es válido.');
+      }
+
+      const existingPlayer = await getEntity('player', rowKey);
+
+      if (existingPlayer) {
+        const pinIsValid = verifyPin(pin, existingPlayer.pinSalt, existingPlayer.pinHash);
+
+        if (!pinIsValid) {
+          return fail(401, 'PIN incorrecto para este jugador.');
         }
-      } else {
-        const pinSalt = randomSalt();
-        player = {
-          partitionKey: 'player',
-          rowKey: crypto.randomUUID(),
-          name,
-          nameKey,
-          pinSalt,
-          pinHash: hashPin(pin, pinSalt),
-          createdAt: new Date().toISOString()
-        };
-        await upsertEntity(player, 'Replace');
-        isNew = true;
+
+        const token = createToken(existingPlayer);
+
+        return ok({
+          token,
+          player: {
+            id: existingPlayer.rowKey,
+            name: existingPlayer.name
+          },
+          created: false,
+          message: 'Sesión iniciada.'
+        });
       }
+
+      const expectedJoinCode = process.env.PUBLIC_JOIN_CODE || 'amigos2026';
+
+      if (!joinCode || joinCode !== expectedJoinCode) {
+        return fail(401, 'Código de invitación incorrecto. Solo es necesario la primera vez que creas tu jugador.');
+      }
+
+      const pinSalt = randomSalt();
+      const pinHash = hashPin(pin, pinSalt);
+
+      const player = {
+        partitionKey: 'player',
+        rowKey,
+        name,
+        pinSalt,
+        pinHash,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      await upsertEntity(player, 'Merge');
 
       const token = createToken(player);
-      const bodyOut = {
+
+      return ok({
         token,
-        player: { id: player.rowKey, name: player.name },
-        isNew
-      };
-      return isNew ? created(bodyOut) : ok(bodyOut);
+        player: {
+          id: player.rowKey,
+          name: player.name
+        },
+        created: true,
+        message: 'Jugador creado correctamente.'
+      });
     } catch (error) {
       return errorResponse(error);
     }
