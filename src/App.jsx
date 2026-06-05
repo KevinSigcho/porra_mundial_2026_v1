@@ -5,6 +5,41 @@ const STORAGE_TOKEN = 'porra2026.token';
 const STORAGE_PLAYER = 'porra2026.player';
 const STORAGE_ADMIN = 'porra2026.adminCode';
 
+const AVATAR_PRESETS = [
+  { id: 'football-1', label: 'Balón clásico', emoji: '⚽', theme: 'green' },
+  { id: 'football-2', label: 'Bota dorada', emoji: '👟', theme: 'gold' },
+  { id: 'football-3', label: 'Copa', emoji: '🏆', theme: 'gold' },
+  { id: 'football-4', label: 'Portero', emoji: '🧤', theme: 'blue' },
+  { id: 'shiba-1', label: 'Shiba feliz', emoji: '🐕', theme: 'orange' },
+  { id: 'shiba-2', label: 'Shiba pro', emoji: '🦊', theme: 'orange' },
+  { id: 'hero-1', label: 'Superhéroe', emoji: '🦸', theme: 'red' },
+  { id: 'hero-2', label: 'Rayo', emoji: '⚡', theme: 'purple' },
+  { id: 'hero-3', label: 'Escudo', emoji: '🛡️', theme: 'blue' },
+  { id: 'space-1', label: 'Galaxia', emoji: '🚀', theme: 'purple' },
+  { id: 'gaming-1', label: 'Gamer', emoji: '🎮', theme: 'cyan' },
+  { id: 'fire-1', label: 'Fuego', emoji: '🔥', theme: 'red' },
+  { id: 'crown-1', label: 'Rey de la porra', emoji: '👑', theme: 'gold' },
+  { id: 'ninja-1', label: 'Ninja', emoji: '🥷', theme: 'dark' },
+  { id: 'robot-1', label: 'Robot', emoji: '🤖', theme: 'cyan' }
+];
+
+function getAvatarPreset(id) {
+  return AVATAR_PRESETS.find((avatar) => avatar.id === id) || AVATAR_PRESETS[0];
+}
+
+function PlayerAvatar({ player, size = 'md', rank = null }) {
+  const avatarUrl = player?.avatarUrl || player?.profileImage || '';
+  const preset = getAvatarPreset(player?.avatarId || player?.avatarPreset || 'football-1');
+
+  return (
+    <span className={`playerAvatar playerAvatar-${size} avatarTheme-${preset.theme}`} aria-hidden="true">
+      {avatarUrl ? <img src={avatarUrl} alt="" loading="lazy" /> : <span>{preset.emoji}</span>}
+      {rank && <span className="avatarRankBadge">{rank}</span>}
+    </span>
+  );
+}
+
+
 const TEAM_FLAG_CODES = {
   'México': 'mx',
   'Corea del Sur': 'kr',
@@ -429,7 +464,7 @@ export default function App() {
 
   return (
     <main className="page">
-      <header className="hero hero--app">
+      <header className="hero">
         <div>
           <p className="eyebrow">Porra privada</p>
           <h1>Mundial 2026: fase de grupos</h1>
@@ -549,22 +584,50 @@ export default function App() {
 
 function Hero({ fixtureCount }) {
   return (
-    <header className="hero">
-      <div>
-        <p className="eyebrow">Mundial 2026</p>
-        <h1>Porra de fase de grupos</h1>
-        <p>Cada amigo entra con nombre, PIN y código de invitación. Después selecciona marcadores para los {fixtureCount} partidos.</p>
+    <header className="loginHero">
+      <div className="tournamentBadge">
+        <span className="badgeBall">⚽</span>
+        <span>FIFA World Cup 2026</span>
       </div>
+      <h1>Porra NTT DATA</h1>
+      <p>Inicia sesión si ya tienes cuenta o regístrate con el código de invitación. Pronostica los {fixtureCount} partidos y compite con tus amigos.</p>
     </header>
   );
 }
 
 function LoginForm({ onLoggedIn }) {
+  const [mode, setMode] = useState('login');
   const [name, setName] = useState('');
   const [pin, setPin] = useState('');
   const [joinCode, setJoinCode] = useState('');
+  const [avatarId, setAvatarId] = useState('football-1');
+  const [avatarUrl, setAvatarUrl] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+
+  function switchMode(nextMode) {
+    setMode(nextMode);
+    setError('');
+    if (nextMode === 'login') {
+      setJoinCode('');
+    }
+  }
+
+  async function handleAvatarUpload(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('El archivo debe ser una imagen.');
+      return;
+    }
+
+    try {
+      const resized = await resizeImageToDataUrl(file, 160, 0.82);
+      setAvatarUrl(resized);
+    } catch (_) {
+      setError('No se pudo cargar la imagen. Prueba con otra foto.');
+    }
+  }
 
   async function submit(event) {
     event.preventDefault();
@@ -573,7 +636,14 @@ function LoginForm({ onLoggedIn }) {
     try {
       const data = await apiFetch('/api/login', {
         method: 'POST',
-        body: { name, pin, joinCode }
+        body: {
+          mode,
+          name,
+          pin,
+          joinCode: mode === 'register' ? joinCode : '',
+          avatarId: mode === 'register' ? avatarId : undefined,
+          avatarUrl: mode === 'register' ? avatarUrl : undefined
+        }
       });
       onLoggedIn(data);
     } catch (err) {
@@ -584,32 +654,94 @@ function LoginForm({ onLoggedIn }) {
   }
 
   return (
-    <section className="panel loginPanel">
-      <h2>Entrar en la porra</h2>
-      <form onSubmit={submit} className="formGrid">
-        <label>
-          Nombre
-          <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Ej. Carlos" required />
-        </label>
-        <label>
-          PIN personal
-          <input value={pin} onChange={(event) => setPin(event.target.value)} placeholder="4 dígitos o más" type="password" required />
-        </label>
-        <label>
-          Código de invitación
-          <input
-            value={joinCode}
-            onChange={(event) => setJoinCode(event.target.value)}
-            placeholder="Solo para crear jugador nuevo"
-          />
-          <span className="fieldHelp">Solo es necesario la primera vez. Si ya estás registrado, entra solo con nombre y PIN.</span>
-        </label>
-        {error && <p className="error">{error}</p>}
-        <button disabled={busy}>{busy ? 'Entrando...' : 'Entrar / crear jugador'}</button>
-      </form>
-      <p className="muted small">Si ya tienes jugador, deja vacío el código de invitación y usa el mismo nombre y PIN.</p>
+    <section className="authShell">
+      <div className="authCard">
+        <div className="authTabs" role="tablist" aria-label="Acceso a la porra">
+          <button type="button" className={mode === 'login' ? 'active' : ''} onClick={() => switchMode('login')}>Iniciar sesión</button>
+          <button type="button" className={mode === 'register' ? 'active' : ''} onClick={() => switchMode('register')}>Registrarme</button>
+        </div>
+
+        <form onSubmit={submit} className="authForm">
+          <label>
+            Usuario
+            <input value={name} onChange={(event) => setName(event.target.value)} placeholder="ej. gonzalez" autoComplete="username" required />
+          </label>
+          <label>
+            Contraseña / PIN
+            <input value={pin} onChange={(event) => setPin(event.target.value)} placeholder="4 caracteres o más" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required />
+          </label>
+
+          {mode === 'register' && (
+            <>
+              <label>
+                Código de invitación
+                <input value={joinCode} onChange={(event) => setJoinCode(event.target.value)} placeholder="Código que te pasa el admin" required />
+              </label>
+
+              <div className="avatarSection">
+                <div>
+                  <h3>Elige tu foto de perfil</h3>
+                  <p className="muted small">Puedes subir una foto o escoger uno de los iconos predeterminados.</p>
+                </div>
+
+                <div className="avatarUploadRow">
+                  <PlayerAvatar player={{ avatarId, avatarUrl }} size="xl" />
+                  <label className="uploadButton">
+                    Subir imagen
+                    <input type="file" accept="image/*" onChange={handleAvatarUpload} />
+                  </label>
+                  {avatarUrl && <button type="button" className="secondary miniButton" onClick={() => setAvatarUrl('')}>Quitar foto</button>}
+                </div>
+
+                <div className="avatarGrid" aria-label="Iconos predeterminados">
+                  {AVATAR_PRESETS.map((avatar) => (
+                    <button
+                      type="button"
+                      key={avatar.id}
+                      className={`avatarChoice avatarTheme-${avatar.theme} ${avatarId === avatar.id && !avatarUrl ? 'selected' : ''}`}
+                      onClick={() => { setAvatarId(avatar.id); setAvatarUrl(''); }}
+                      title={avatar.label}
+                    >
+                      <span>{avatar.emoji}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {mode === 'login' && (
+            <p className="authHelp">Si ya estás registrado, no necesitas código de invitación. Entra con el mismo usuario y PIN.</p>
+          )}
+
+          {error && <p className="error">{error}</p>}
+          <button disabled={busy}>{busy ? 'Entrando...' : mode === 'login' ? 'Entrar' : 'Crear cuenta'}</button>
+        </form>
+      </div>
     </section>
   );
+}
+
+function resizeImageToDataUrl(file, maxSize = 160, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
+        const context = canvas.getContext('2d');
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function FixtureList({ fixtures, scores, results, onChange, disabled, groups = {} }) {
@@ -951,41 +1083,78 @@ function BracketTeam({ team, seed }) {
 }
 
 function Leaderboard({ data, onRefresh }) {
+  const rows = data?.rows || [];
+  const podium = rows.slice(0, 3);
+  const rest = rows.slice(3);
+  const podiumOrder = [1, 0, 2].filter((index) => podium[index]);
+  const medals = ['🥇', '🥈', '🥉'];
+
   return (
-    <section className="panel">
+    <section className="panel leaderboardPanel">
       <div className="toolbar">
         <div>
-          <h2>Clasificación</h2>
+          <h2>Clasificación porra</h2>
           <p className="muted">Resultados reales cargados: {data?.resultCount || 0}/{data?.fixtureCount || 72}</p>
         </div>
         <button className="secondary" onClick={onRefresh}>Actualizar</button>
       </div>
-      <div className="tableWrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jugador</th>
-              <th>Puntos</th>
-              <th>Exactos</th>
-              <th>Signos</th>
-              <th>Pronósticos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(data?.rows || []).map((row, index) => (
-              <tr key={row.playerId}>
-                <td>{index + 1}</td>
-                <td>{row.name}</td>
-                <td><strong>{row.points}</strong></td>
-                <td>{row.exactScores}</td>
-                <td>{row.correctOutcomes}</td>
-                <td>{row.predictionsMade}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
+      {rows.length === 0 ? (
+        <div className="notice softNotice">Todavía no hay jugadores con pronósticos.</div>
+      ) : (
+        <>
+          <div className="podium" aria-label="Podio de la porra">
+            {podiumOrder.map((podiumIndex) => {
+              const row = podium[podiumIndex];
+              const rank = podiumIndex + 1;
+              return (
+                <article key={row.playerId} className={`podiumCard podiumRank${rank}`}>
+                  <div className="podiumMedal">{medals[podiumIndex]}</div>
+                  <PlayerAvatar player={row} size="xl" rank={rank} />
+                  <h3>{row.name}</h3>
+                  <p className="podiumPoints">{row.points} pts</p>
+                  <div className="podiumStats">
+                    <span>{row.exactScores} exactos</span>
+                    <span>{row.correctOutcomes} signos</span>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="tableWrap leaderboardTableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Jugador</th>
+                  <th>Puntos</th>
+                  <th>Exactos</th>
+                  <th>Signos</th>
+                  <th>Pronósticos</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row, index) => (
+                  <tr key={row.playerId}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <span className="leaderboardPlayer">
+                        <PlayerAvatar player={row} size="sm" />
+                        <span>{row.name}</span>
+                      </span>
+                    </td>
+                    <td><strong>{row.points}</strong></td>
+                    <td>{row.exactScores}</td>
+                    <td>{row.correctOutcomes}</td>
+                    <td>{row.predictionsMade}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </section>
   );
 }
