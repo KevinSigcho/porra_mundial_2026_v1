@@ -780,3 +780,132 @@ th {
     padding: 0.75rem;
   }
 }
+
+/* Navegación de grupos en Mis pronósticos */
+.predictionsPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.predictionsTopBar {
+  align-items: stretch;
+}
+
+.overallProgressCard {
+  min-width: 260px;
+  padding: 0.9rem 1rem;
+  border: 1px solid #d8e4f5;
+  border-radius: 18px;
+  background: #f8fbff;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.progressNumber {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #0b5bd3;
+  line-height: 1;
+}
+
+.progressText {
+  font-weight: 800;
+  color: #18324d;
+}
+
+.progressTrack {
+  height: 10px;
+  border-radius: 999px;
+  background: #e6eef8;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0b5bd3, #34c759);
+  transition: width 0.25s ease;
+}
+
+.groupStepper {
+  display: grid;
+  grid-template-columns: auto minmax(240px, 1fr) auto minmax(160px, 220px);
+  gap: 0.75rem;
+  align-items: end;
+  padding: 0.9rem;
+  border: 1px solid #d8e4f5;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+}
+
+.currentGroupCard {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem;
+  border-radius: 18px;
+  background: #edf5ff;
+  border: 1px solid #d8e4f5;
+  text-align: center;
+}
+
+.currentGroupCard strong {
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #0b5bd3;
+}
+
+.currentGroupCard span:last-child {
+  color: #58708d;
+  font-weight: 800;
+}
+
+.groupJump {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 800;
+  color: #4e6783;
+}
+
+.predictionActions {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+}
+
+@media (max-width: 980px) {
+  .groupStepper {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .currentGroupCard,
+  .groupJump {
+    grid-column: 1 / -1;
+  }
+
+  .predictionActions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .predictionActions button:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .predictionsTopBar {
+    flex-direction: column;
+  }
+
+  .overallProgressCard {
+    min-width: 0;
+  }
+
+  .groupStepper {
+    grid-template-columns: 1fr;
+  }
+
+  .predictionActions {
+    grid-template-columns: 1fr;
+  }
+}

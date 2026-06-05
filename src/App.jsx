@@ -264,7 +264,7 @@ export default function App() {
   const [results, setResults] = useState({});
   const [leaderboard, setLeaderboard] = useState(null);
   const [settings, setSettings] = useState({ locked: false, scoring: null });
-  const [groupFilter, setGroupFilter] = useState('TODOS');
+  const [groupFilter, setGroupFilter] = useState('A');
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -349,12 +349,31 @@ export default function App() {
 
   const fixtures = fixtureData?.fixtures || [];
   const groups = fixtureData?.groups || {};
-  const filteredFixtures = useMemo(() => {
-    if (groupFilter === 'TODOS') return fixtures;
-    return fixtures.filter((fixture) => fixture.group === groupFilter);
-  }, [fixtures, groupFilter]);
+  const groupKeys = useMemo(() => Object.keys(groups).sort((a, b) => a.localeCompare(b, 'es')), [groups]);
+  const activeGroup = groupKeys.includes(groupFilter) ? groupFilter : groupKeys[0] || 'A';
+  const activeGroupIndex = Math.max(0, groupKeys.indexOf(activeGroup));
+  const filteredFixtures = useMemo(
+    () => fixtures.filter((fixture) => fixture.group === activeGroup),
+    [fixtures, activeGroup]
+  );
+
+  useEffect(() => {
+    if (groupKeys.length && !groupKeys.includes(groupFilter)) {
+      setGroupFilter(groupKeys[0]);
+    }
+  }, [groupKeys, groupFilter]);
 
   const completedPredictions = Object.keys(normalizeForSave(predictions)).length;
+  const predictionPercent = fixtures.length ? Math.round((completedPredictions / fixtures.length) * 100) : 0;
+  const currentGroupCompleted = filteredFixtures.filter((fixture) => isCompleteScore(predictions[fixture.id])).length;
+  const currentGroupPercent = filteredFixtures.length ? Math.round((currentGroupCompleted / filteredFixtures.length) * 100) : 0;
+
+  function goToGroup(offset) {
+    if (!groupKeys.length) return;
+    const nextIndex = (activeGroupIndex + offset + groupKeys.length) % groupKeys.length;
+    setGroupFilter(groupKeys[nextIndex]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   if (!fixtureData) {
     return <main className="page"><div className="panel">Cargando calendario...</div></main>;
@@ -391,18 +410,34 @@ export default function App() {
       </nav>
 
       {tab === 'predictions' && (
-        <section className="panel">
-          <div className="toolbar">
+        <section className="panel predictionsPanel">
+          <div className="toolbar predictionsTopBar">
             <div>
               <h2>Mis pronósticos</h2>
-              <p className="muted">Completados: {completedPredictions}/{fixtures.length}. Puntuación: {fixtureData.rules.description}</p>
+              <p className="muted">Puntuación: {fixtureData.rules.description}</p>
               {settings.locked && <p className="locked">La porra está cerrada. Puedes ver tus pronósticos, pero no guardarlos.</p>}
             </div>
-            <label>
-              Grupo
-              <select value={groupFilter} onChange={(event) => setGroupFilter(event.target.value)}>
-                <option value="TODOS">Todos</option>
-                {Object.keys(groups).map((group) => <option key={group} value={group}>Grupo {group}</option>)}
+            <div className="overallProgressCard" aria-label="Progreso total de pronósticos">
+              <span className="progressNumber">{predictionPercent}%</span>
+              <span className="progressText">{completedPredictions}/{fixtures.length} partidos</span>
+              <div className="progressTrack" aria-hidden="true">
+                <div className="progressFill" style={{ width: `${predictionPercent}%` }} />
+              </div>
+            </div>
+          </div>
+
+          <div className="groupStepper">
+            <button className="secondary" onClick={() => goToGroup(-1)} disabled={!groupKeys.length}>← Grupo anterior</button>
+            <div className="currentGroupCard">
+              <span className="eyebrow">Grupo {activeGroup}</span>
+              <strong>{activeGroupIndex + 1}/{groupKeys.length}</strong>
+              <span>{currentGroupCompleted}/{filteredFixtures.length} partidos · {currentGroupPercent}% completado</span>
+            </div>
+            <button className="secondary" onClick={() => goToGroup(1)} disabled={!groupKeys.length}>Siguiente grupo →</button>
+            <label className="groupJump">
+              Ir a grupo
+              <select value={activeGroup} onChange={(event) => setGroupFilter(event.target.value)}>
+                {groupKeys.map((group) => <option key={group} value={group}>Grupo {group}</option>)}
               </select>
             </label>
           </div>
@@ -411,7 +446,7 @@ export default function App() {
             fixtures={fixtures}
             groups={groups}
             scores={predictions}
-            groupFilter={groupFilter}
+            groupFilter={activeGroup}
           />
 
           <FixtureList
@@ -423,9 +458,11 @@ export default function App() {
             disabled={settings.locked}
           />
 
-          <div className="stickyActions">
+          <div className="stickyActions predictionActions">
+            <button className="secondary" onClick={() => goToGroup(-1)} disabled={!groupKeys.length}>← Grupo anterior</button>
             <button onClick={savePredictions} disabled={busy || settings.locked}>{busy ? 'Guardando...' : 'Guardar mis pronósticos'}</button>
             <button className="secondary" onClick={refreshPrivateData}>Recargar</button>
+            <button className="secondary" onClick={() => goToGroup(1)} disabled={!groupKeys.length}>Siguiente grupo →</button>
           </div>
         </section>
       )}
