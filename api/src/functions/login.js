@@ -20,13 +20,26 @@ function cleanAvatarUrl(value) {
   const avatarUrl = String(value || '').trim();
   if (!avatarUrl) return '';
 
-  // La imagen se redimensiona en frontend antes de enviarse.
-  // Dejamos margen suficiente para un avatar pequeño sin comprometer Table Storage.
   if (!avatarUrl.startsWith('data:image/') || avatarUrl.length > 180000) {
     return '';
   }
 
   return avatarUrl;
+}
+
+function cleanPhone(value) {
+  const phone = String(value || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .slice(0, 32);
+
+  return phone;
+}
+
+function isValidPhone(value) {
+  const compact = String(value || '').replace(/[^0-9+]/g, '');
+  const digits = compact.replace(/\D/g, '');
+  return digits.length >= 9 && digits.length <= 15;
 }
 
 app.http('login', {
@@ -60,6 +73,7 @@ app.http('login', {
       } else {
         const expectedJoinCode = process.env.PUBLIC_JOIN_CODE || 'amigos2026';
         const joinCode = String(body.joinCode || '').trim();
+        const phone = cleanPhone(body.phone);
 
         if (mode !== 'register') {
           return fail(404, 'Este usuario no existe. Pulsa Registrarme y usa el código de invitación.');
@@ -69,12 +83,19 @@ app.http('login', {
           return fail(401, 'Código de invitación incorrecto. Es obligatorio para registrarte.');
         }
 
+        if (!isValidPhone(phone)) {
+          return fail(400, 'Introduce un teléfono válido para Bizum.');
+        }
+
         const pinSalt = randomSalt();
         player = {
           partitionKey: 'player',
           rowKey: crypto.randomUUID(),
           name,
           nameKey,
+          phone,
+          paymentAmount: 5,
+          paymentStatus: 'pending',
           avatarId: cleanAvatarId(body.avatarId),
           avatarUrl: cleanAvatarUrl(body.avatarUrl),
           pinSalt,

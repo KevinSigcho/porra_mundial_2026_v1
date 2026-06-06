@@ -5,6 +5,12 @@ const { parseJson, computePlayerScore } = require('../lib/scoring');
 const { countComplete } = require('../lib/validation');
 const fixtureData = require('../data/fixtures.json');
 
+const ENTRY_FEE = 5;
+
+function money(value) {
+  return Math.round(Number(value || 0) * 100) / 100;
+}
+
 app.http('leaderboard', {
   methods: ['GET'],
   authLevel: 'anonymous',
@@ -46,8 +52,20 @@ app.http('leaderboard', {
         return a.name.localeCompare(b.name, 'es');
       });
 
+      const playerCount = players.length;
+      const prizePool = money(playerCount * ENTRY_FEE);
+      const prizes = {
+        first: money(prizePool * 0.5),
+        second: money(prizePool * 0.3),
+        third: money(prizePool * 0.2)
+      };
+
       return ok({
         rows,
+        playerCount,
+        entryFee: ENTRY_FEE,
+        prizePool,
+        prizes,
         resultCount: Object.keys(results).length,
         fixtureCount: fixtureData.fixtures.length,
         scoring: {
