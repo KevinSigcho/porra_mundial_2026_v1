@@ -2541,3 +2541,841 @@ th {
     width: min(96vw, 760px);
   }
 }
+
+/* =====================================================
+   MOBILE MOCKUP V3 - diseño tipo app para móvil
+   ===================================================== */
+
+.mobileBracketCard { display: none; }
+
+@media (min-width: 900px) {
+  .page {
+    width: min(100% - 56px, 1480px) !important;
+    max-width: 1480px !important;
+  }
+}
+
+@media (max-width: 780px) {
+  :root {
+    background: #f7f8fb;
+    color: #0d1726;
+  }
+
+  html, body, #root {
+    min-height: 100%;
+    background: #f7f8fb;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .page {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 0 calc(92px + env(safe-area-inset-bottom)) !important;
+    background: #f7f8fb;
+  }
+
+  /* Cabecera tipo app */
+  .hero {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    margin: 0 !important;
+    padding: calc(18px + env(safe-area-inset-top)) 18px 18px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 8px 20px rgba(0, 18, 50, 0.16) !important;
+    background: #061b3d !important;
+    color: #ffffff !important;
+    display: grid !important;
+    grid-template-columns: 44px 1fr 58px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero::before {
+    content: '☰';
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .hero > div {
+    min-width: 0;
+  }
+
+  .hero h1 {
+    margin: 0 !important;
+    font-size: 1.72rem !important;
+    line-height: 1.05 !important;
+    color: #fff !important;
+    letter-spacing: -0.03em;
+  }
+
+  .hero p {
+    margin-top: 0.25rem !important;
+    color: #b8cdf0 !important;
+    font-size: 1rem !important;
+    max-width: none !important;
+  }
+
+  .hero .secondary {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    color: transparent !important;
+    box-shadow: none !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero .secondary::before {
+    content: '◯';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 2.7rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .notice,
+  .rulesBanner {
+    margin: 10px 14px 0 !important;
+    border-radius: 16px !important;
+    font-size: 0.86rem;
+  }
+
+  .rulesBanner {
+    display: none !important;
+  }
+
+  /* Navegación inferior estilo app */
+  .tabs {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 80;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 !important;
+    margin: 0 !important;
+    padding: 7px 8px calc(7px + env(safe-area-inset-bottom)) !important;
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 1px solid #e2e6ef;
+    box-shadow: 0 -10px 28px rgba(10, 30, 55, 0.10);
+    backdrop-filter: blur(14px);
+  }
+
+  .tabs button {
+    background: transparent !important;
+    color: #4b5565 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0.2rem 0.1rem !important;
+    min-height: 58px;
+    font-size: 0 !important;
+    display: grid;
+    place-items: center;
+    gap: 0;
+    position: relative;
+  }
+
+  .tabs button:nth-child(5) {
+    display: none !important;
+  }
+
+  .tabs button::before {
+    display: block;
+    font-size: 1.65rem;
+    line-height: 1;
+    margin-bottom: 0.15rem;
+    color: currentColor;
+  }
+
+  .tabs button::after {
+    display: block;
+    font-size: 0.82rem;
+    line-height: 1.1;
+    font-weight: 650;
+    color: currentColor;
+  }
+
+  .tabs button:nth-child(1)::before { content: '👥'; }
+  .tabs button:nth-child(1)::after { content: 'Grupos'; }
+  .tabs button:nth-child(2)::before { content: '↬'; }
+  .tabs button:nth-child(2)::after { content: 'Cruces'; }
+  .tabs button:nth-child(3)::before { content: '🏆'; }
+  .tabs button:nth-child(3)::after { content: 'Pronósticos'; }
+  .tabs button:nth-child(4)::before { content: '▮▮▮'; font-size: 1.2rem; letter-spacing: -0.15rem; transform: rotate(90deg); }
+  .tabs button:nth-child(4)::after { content: 'Clasificación'; }
+
+  .tabs button.active {
+    color: #0b65d8 !important;
+  }
+
+  .tabs button.active::after {
+    font-weight: 850;
+  }
+
+  .tabs button.active::before {
+    filter: saturate(1.2);
+  }
+
+  .tabs button.active::marker { display: none; }
+
+  .tabs button.active::selection { background: transparent; }
+
+  .tabs button.active {
+    border-top: 4px solid #126ee2 !important;
+  }
+
+  /* Paneles móviles */
+  .panel {
+    margin: 14px 12px 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .toolbar,
+  .predictionsTopBar {
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  .toolbar h2,
+  .predictionsTopBar h2 {
+    display: none !important;
+  }
+
+  .toolbar .muted,
+  .predictionsTopBar .muted,
+  .locked {
+    display: none !important;
+  }
+
+  .mobileSectionPill,
+  .predictionsPanel::before,
+  .myBracketPanel::before,
+  .knockoutStagePanel::before,
+  .leaderboardPanel::before {
+    display: block;
+    width: fit-content;
+    margin: 16px auto 16px;
+    padding: 0.85rem 1.45rem;
+    border-radius: 999px;
+    background: #061b3d;
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 850;
+    box-shadow: 0 8px 18px rgba(0, 25, 70, 0.18);
+  }
+
+  .predictionsPanel::before { content: '📅 Fase de grupos⌄'; }
+  .myBracketPanel::before { content: '🏆 Cuadro de eliminatorias'; }
+  .knockoutStagePanel::before { content: '🏆 Pronósticos eliminatorias⌄'; }
+  .leaderboardPanel::before { content: '🏆 Clasificación general⌄'; }
+
+  .overallProgressCard {
+    display: none !important;
+  }
+
+  /* Pronósticos fase de grupos */
+  .groupStepper {
+    display: block !important;
+    margin: 0 0 16px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .groupStepper > button,
+  .groupStepper .currentGroupCard {
+    display: none !important;
+  }
+
+  .groupJump {
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  .groupJump::before {
+    content: 'Grupo A   Grupo B   Grupo C   Grupo D';
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border: 1px solid #d9dde6;
+    border-radius: 999px;
+    background: #fff;
+    padding: 0.15rem;
+    color: transparent;
+    pointer-events: none;
+    min-height: 54px;
+  }
+
+  .groupJump select {
+    margin-top: -54px;
+    position: relative;
+    width: 100% !important;
+    height: 54px;
+    border-radius: 999px !important;
+    background: transparent !important;
+    border: 0 !important;
+    color: #0d1726 !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    text-align: center;
+    text-align-last: center;
+  }
+
+  .groupBlock {
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .groupHeader,
+  .teamStrip {
+    display: none !important;
+  }
+
+  .matches,
+  .groupMatches {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .matchCard {
+    border: 1px solid #e1e5ec !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    padding: 14px !important;
+    box-shadow: 0 5px 14px rgba(10, 20, 40, 0.10) !important;
+    position: relative;
+  }
+
+  .matchMeta {
+    display: flex !important;
+    gap: 0.45rem !important;
+    margin-bottom: 12px !important;
+    font-size: 0.9rem !important;
+    color: #394457 !important;
+    align-items: center;
+  }
+
+  .matchMeta span:first-child {
+    display: none !important;
+  }
+
+  .matchMeta span:nth-child(2)::before {
+    content: '📅 ';
+  }
+
+  .matchCard::after {
+    content: 'Por jugar';
+    position: absolute;
+    top: 13px;
+    right: 14px;
+    background: #edf3fb;
+    color: #315478;
+    border-radius: 8px;
+    padding: 0.35rem 0.55rem;
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+
+  .scoreRow,
+  .scoreRowEnhanced {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.3fr) 62px 18px 62px 54px !important;
+    grid-template-areas:
+      'home home home home check'
+      'away away away away check'
+      '. hs dash as check' !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .scoreRow .team.home,
+  .scoreRowEnhanced .team.home {
+    grid-area: home;
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    justify-content: flex-end !important;
+    gap: 0.65rem !important;
+    font-size: 1.25rem !important;
+    font-weight: 850 !important;
+    color: #101828 !important;
+  }
+
+  .scoreRow .team.away,
+  .scoreRowEnhanced .team.away {
+    grid-area: away;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    gap: 0.65rem !important;
+    font-size: 1.25rem !important;
+    font-weight: 850 !important;
+    color: #101828 !important;
+  }
+
+  .scoreRow input:first-of-type,
+  .scoreRowEnhanced input:first-of-type { grid-area: hs; }
+  .scoreRow .dash,
+  .scoreRowEnhanced .dash { grid-area: dash; }
+  .scoreRow input:last-of-type,
+  .scoreRowEnhanced input:last-of-type { grid-area: as; }
+
+  .scoreRow input,
+  .scoreRowEnhanced input {
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 12px !important;
+    border: 1px solid #d5dbe5 !important;
+    background: #fff !important;
+    font-size: 1.6rem !important;
+    font-weight: 500 !important;
+    text-align: center;
+    padding: 0 !important;
+  }
+
+  .scoreRow .dash,
+  .scoreRowEnhanced .dash {
+    font-size: 1.4rem !important;
+    font-weight: 800;
+    color: #1c2635;
+    text-align: center;
+  }
+
+  .scoreRow::after,
+  .scoreRowEnhanced::after {
+    content: '✓';
+    grid-area: check;
+    align-self: center;
+    justify-self: end;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    background: #126ee2;
+    color: #fff;
+    font-size: 2rem;
+    line-height: 1;
+    font-weight: 600;
+  }
+
+  .flagImg {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+  }
+
+  .actualResult {
+    margin-top: 10px !important;
+    color: #0a7a2e !important;
+    font-weight: 750 !important;
+  }
+
+  .predictionStandingsPreview {
+    margin: 14px 0 0 !important;
+    border: 1px solid #e1e5ec !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    box-shadow: 0 5px 14px rgba(10, 20, 40, 0.10) !important;
+    padding: 14px !important;
+  }
+
+  .previewHeading h3 {
+    font-size: 1.35rem !important;
+    margin: 0 0 4px !important;
+  }
+
+  .previewHeading {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .compactStandingsGrid,
+  .standingsGrid {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  .standingCard,
+  .compactStandingCard {
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .standingHeader {
+    margin-top: 12px;
+  }
+
+  .standingsTableWrap {
+    border-radius: 14px !important;
+    overflow-x: auto !important;
+    border: 1px solid #e1e5ec;
+  }
+
+  .standingsTable {
+    min-width: 520px !important;
+    font-size: 0.82rem;
+  }
+
+  .stickyActions {
+    position: sticky !important;
+    bottom: calc(70px + env(safe-area-inset-bottom)) !important;
+    z-index: 40;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    margin: 12px -12px 0 !important;
+    padding: 10px 12px !important;
+    border-radius: 18px 18px 0 0 !important;
+    background: rgba(255,255,255,0.96) !important;
+    box-shadow: 0 -6px 18px rgba(10, 20, 40, 0.08) !important;
+  }
+
+  .predictionActions button:first-child,
+  .predictionActions button:last-child,
+  .predictionActions .secondary:nth-of-type(2) {
+    display: none !important;
+  }
+
+  .stickyActions button {
+    min-height: 52px !important;
+    border-radius: 12px !important;
+    font-size: 1.05rem !important;
+  }
+
+  /* Mi eliminatoria compacta */
+  .myBracketPanel .toolbar,
+  .myBracketPanel .notice,
+  .myBracketPanel .bracketSummary,
+  .myBracketPanel .projectedBracketWrap {
+    display: none !important;
+  }
+
+  .mobileBracketCard {
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  .mobileBracketHero {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin: 0 0 18px;
+    padding: 18px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid #e1e5ec;
+    box-shadow: 0 5px 14px rgba(10, 20, 40, 0.10);
+  }
+
+  .mobileBracketIcon {
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    background: #126ee2;
+    color: #fff;
+    font-size: 2.2rem;
+    flex: 0 0 auto;
+  }
+
+  .mobileBracketHero h3 {
+    margin: 0 0 6px;
+    font-size: 1.28rem;
+    line-height: 1.2;
+  }
+
+  .mobileBracketHero p {
+    margin: 0;
+    color: #667085;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .mobilePhaseTabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0 0 18px;
+    background: #fff;
+    border: 1px solid #e1e5ec;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(10, 20, 40, 0.06);
+  }
+
+  .mobilePhaseTabs button {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent;
+    color: #172033;
+    min-height: 52px;
+    font-size: 1rem;
+  }
+
+  .mobilePhaseTabs button.active {
+    margin: 6px;
+    border-radius: 12px !important;
+    background: #126ee2 !important;
+    color: #fff !important;
+  }
+
+  .mobileBracketGrid {
+    display: grid;
+    grid-template-columns: 1fr 0.82fr;
+    gap: 14px;
+    padding: 14px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid #e1e5ec;
+    box-shadow: 0 5px 14px rgba(10, 20, 40, 0.10);
+    overflow-x: auto;
+  }
+
+  .mobileBracketRound h4 {
+    margin: 0 0 12px;
+    text-align: center;
+    color: #444d5d;
+    font-weight: 700;
+  }
+
+  .mobileBracketMatch,
+  .mobileBracketPlaceholder {
+    border: 1px solid #e1e5ec;
+    border-radius: 14px;
+    background: #fff;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(10, 20, 40, 0.06);
+    min-height: 86px;
+  }
+
+  .mobileBracketTeam {
+    display: grid;
+    grid-template-columns: 42px 32px 1fr;
+    gap: 8px;
+    align-items: center;
+    margin: 5px 0;
+    font-size: 1rem;
+  }
+
+  .mobileBracketTeam .seedBadge {
+    width: auto;
+    min-width: 34px;
+    height: 30px;
+    border-radius: 8px;
+    background: #eef3fb;
+    color: #172033;
+  }
+
+  .mobileBracketPlaceholder {
+    color: #667085;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .trophyIcon {
+    grid-row: span 2;
+    font-size: 1.4rem;
+    color: #667085;
+  }
+
+  .mobileInfoNote {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid #d4e1f3;
+    background: #f3f8ff;
+    color: #4b596a;
+    font-size: 0.95rem;
+  }
+
+  /* Pronósticos eliminatorias */
+  .knockoutStagePanel .toolbar,
+  .knockoutStagePanel .bracketWarning {
+    display: none !important;
+  }
+
+  .knockoutStagePanel::after {
+    content: 'ⓘ  Disponible cuando empiece la fase eliminatoria. Realiza tus pronósticos de los resultados y el equipo que clasifica en cada eliminatoria.';
+    display: block;
+    margin: 0 0 16px;
+    padding: 16px;
+    border-radius: 16px;
+    background: #f3f8ff;
+    border: 1px solid #d4e1f3;
+    color: #334155;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .knockoutStagePanel .fullBracketBoard {
+    display: none !important;
+  }
+
+  /* Clasificación tipo lista */
+  .leaderboardPanel .mobileSectionPill {
+    display: none !important;
+  }
+
+  .leaderboardSummaryCard {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 !important;
+    align-items: center;
+    padding: 18px !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    border: 1px solid #e1e5ec !important;
+    box-shadow: 0 5px 14px rgba(10, 20, 40, 0.10) !important;
+  }
+
+  .leaderboardSummaryCard button {
+    display: none !important;
+  }
+
+  .leaderboardSummaryCard > div:first-child::before {
+    content: '👤';
+    display: inline-grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    margin-right: 12px;
+    background: #126ee2;
+    color: #fff;
+    font-size: 1.8rem;
+    vertical-align: middle;
+  }
+
+  .leaderboardSummaryCard .summaryLabel {
+    display: block;
+    color: #667085;
+    font-size: 0.95rem;
+  }
+
+  .leaderboardSummaryCard strong {
+    color: #126ee2;
+    font-size: 1.8rem;
+  }
+
+  .prizeCards {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    margin: 14px 0 !important;
+  }
+
+  .prizeCard {
+    border-radius: 14px !important;
+    padding: 12px 8px !important;
+    text-align: center;
+  }
+
+  .mobileRankingList {
+    display: block !important;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e1e5ec;
+    box-shadow: 0 5px 14px rgba(10, 20, 40, 0.10);
+  }
+
+  .rankingRow,
+  .mobileRankingRow {
+    display: grid !important;
+    grid-template-columns: 52px 56px 1fr 74px !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-height: 74px !important;
+    padding: 10px 12px !important;
+    border-bottom: 1px solid #edf0f4 !important;
+    background: #fff !important;
+  }
+
+  .rankingRow:nth-child(1),
+  .mobileRankingRow:nth-child(1) { border-left: 5px solid #ffd43b !important; }
+  .rankingRow:nth-child(2),
+  .mobileRankingRow:nth-child(2) { border-left: 5px solid #cfd3d9 !important; }
+  .rankingRow:nth-child(3),
+  .mobileRankingRow:nth-child(3) { border-left: 5px solid #c37a2e !important; }
+
+  .rankingPosition,
+  .rankNumber {
+    font-size: 1.35rem !important;
+    font-weight: 900 !important;
+    color: #0d1726 !important;
+  }
+
+  .rankingPoints,
+  .mobileRankingPoints {
+    text-align: right;
+    color: #126ee2 !important;
+    font-weight: 900 !important;
+    font-size: 1.25rem !important;
+  }
+
+  .rankingName,
+  .mobileRankingName {
+    font-size: 1.08rem !important;
+    font-weight: 750 !important;
+    color: #111827 !important;
+  }
+
+  .podium,
+  .podiumGrid,
+  .tableWrap.leaderboardTableWrap,
+  .leaderboardTableWrap {
+    display: none !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero h1 { font-size: 1.55rem !important; }
+  .hero p { font-size: 0.9rem !important; }
+  .scoreRow, .scoreRowEnhanced {
+    grid-template-columns: minmax(0, 1fr) 54px 14px 54px 48px !important;
+  }
+  .scoreRow input, .scoreRowEnhanced input {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 1.35rem !important;
+  }
+  .teamName { font-size: 1.06rem !important; }
+  .mobileBracketGrid { grid-template-columns: 1fr; }
+  .mobileBracketRoundNext { display: none; }
+}
