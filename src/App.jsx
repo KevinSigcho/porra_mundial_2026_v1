@@ -960,14 +960,26 @@ function LoginForm({ onLoggedIn }) {
 
           {mode === 'register' && (
             <>
-              <label>
-                Teléfono para Bizum
-                <input value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="Ej. 600 123 456" inputMode="tel" autoComplete="tel" required />
-                <span className="fieldHint">Solo lo verá el admin en Azure Storage para comprobar el pago de 5 €.</span>
+              <div className="paymentRegisterBox">
+                <strong>Pago de inscripción: 5 €</strong>
+                <span>Introduce tu teléfono para que el admin pueda enviarte o comprobar el Bizum.</span>
+              </div>
+
+              <label className="phoneBizumField">
+                Teléfono para Bizum <span className="requiredMark">*</span>
+                <input
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  placeholder="Ej. 600 123 456"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  required
+                />
+                <span className="fieldHint">Solo se usará para identificar el pago de la porra.</span>
               </label>
 
               <label>
-                Código de invitación
+                Código de invitación <span className="requiredMark">*</span>
                 <input value={joinCode} onChange={(event) => setJoinCode(event.target.value)} placeholder="Código que te pasa el admin" required />
               </label>
 
