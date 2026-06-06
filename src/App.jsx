@@ -582,9 +582,8 @@ export default function App() {
     <main className="page">
       <header className="hero">
         <div>
-          <p className="eyebrow">Porra privada</p>
-          <h1>Mundial 2026: fase de grupos</h1>
-          <p>Pronostica el marcador de los {fixtures.length} partidos de grupos. Juega como <strong>{player.name}</strong>.</p>
+          <h1>Porra Mundial 2026</h1>
+          <p>Juega como <strong>{player.name}</strong>.</p>
         </div>
         <button className="secondary" onClick={logout}>Salir</button>
       </header>
@@ -594,10 +593,9 @@ export default function App() {
       <RulesBanner showRules={showRules} onToggle={() => setShowRules((value) => !value)} />
 
       <nav className="tabs" aria-label="Secciones">
-        <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Mis pronósticos</button>
-        <button className={tab === 'liveGroups' ? 'active' : ''} onClick={() => { setTab('liveGroups'); refreshPrivateData(); }}>Grupos actualizados</button>
+        <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
         <button className={tab === 'myBracket' ? 'active' : ''} onClick={() => { setTab('myBracket'); refreshPrivateData(); }}>Mi eliminatoria</button>
-        <button className={tab === 'knockouts' ? 'active' : ''} onClick={() => setTab('knockouts')}>Fase eliminatorias</button>
+        <button className={tab === 'knockouts' ? 'active' : ''} onClick={() => setTab('knockouts')}>Pronósticos fase eliminatorias</button>
         <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'admin' ? 'active' : ''} onClick={() => setTab('admin')}>Admin</button>
       </nav>
@@ -606,7 +604,7 @@ export default function App() {
         <section className="panel predictionsPanel">
           <div className="toolbar predictionsTopBar">
             <div>
-              <h2>Mis pronósticos</h2>
+              <h2>Pronósticos fase de grupos</h2>
               <p className="muted">Puntuación: {GROUP_SCORING_SUMMARY}</p>
               {settings.locked && <p className="locked">La porra está cerrada. Puedes ver tus pronósticos, pero no guardarlos.</p>}
             </div>
