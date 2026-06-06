@@ -3878,3 +3878,317 @@ th {
     font-size: 0.66rem !important;
   }
 }
+
+/* ==========================================================
+   NORMAL MOBILE VIEW + DESKTOP MODE ADVICE
+   This block intentionally cancels the previous app-like
+   mobile redesign so mobile uses the same layout as desktop.
+   ========================================================== */
+
+.desktopModeBanner {
+  display: none;
+  width: min(100%, 1880px);
+  margin: 0 auto 14px;
+  padding: 0.85rem 1rem;
+  border: 1px solid #93c5fd;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  color: #0f2f5f;
+  font-weight: 800;
+  line-height: 1.35;
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.08);
+}
+
+@media (max-width: 760px) {
+  body {
+    overflow-x: auto !important;
+    padding-bottom: 0 !important;
+    background: #eef5fb !important;
+    font-size: 14px !important;
+  }
+
+  .page {
+    width: 1120px !important;
+    max-width: none !important;
+    min-width: 1120px !important;
+    margin-inline: auto !important;
+    padding: 1rem !important;
+    background: transparent !important;
+  }
+
+  .desktopModeBanner {
+    display: block !important;
+  }
+
+  .hero,
+  .appHeader {
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+    width: 100% !important;
+    margin: 0 auto 1rem !important;
+    padding: 1.4rem 1.7rem !important;
+    border-radius: 26px !important;
+    border: 1px solid rgba(190, 210, 235, 0.8) !important;
+    background: linear-gradient(135deg, #f8fbff, #f2efff) !important;
+    color: #061a3a !important;
+    box-shadow: 0 20px 60px rgba(15, 35, 70, 0.08) !important;
+  }
+
+  .hero::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  .hero h1,
+  .appTitle {
+    color: #071d3a !important;
+    font-size: 2.6rem !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.04em !important;
+  }
+
+  .hero p,
+  .appSubtitle {
+    color: #55708d !important;
+    font-size: 0.95rem !important;
+  }
+
+  .hero button.secondary,
+  .hero .secondary {
+    width: auto !important;
+    min-width: 84px !important;
+    height: auto !important;
+    padding: 0.9rem 1rem !important;
+    border-radius: 18px !important;
+    font-size: 0.9rem !important;
+    color: #102a47 !important;
+    background: #eaf1f9 !important;
+    border: 0 !important;
+  }
+
+  .hero button.secondary::before {
+    content: none !important;
+  }
+
+  .notice,
+  .rulesBanner,
+  .panel {
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .notice,
+  .rulesBanner {
+    margin-bottom: 0.9rem !important;
+    border-radius: 18px !important;
+    padding: 0.85rem 1rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  .rulesBanner {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 1rem !important;
+    align-items: center !important;
+  }
+
+  .rulesBanner p,
+  .rulesBanner strong,
+  .rulesBanner .eyebrow {
+    font-size: inherit !important;
+  }
+
+  .rulesBanner button,
+  .rulesButton {
+    width: auto !important;
+    min-height: 42px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .tabs {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: auto !important;
+    display: flex !important;
+    grid-template-columns: none !important;
+    gap: 0.7rem !important;
+    margin: 0 0 1rem !important;
+    padding: 0 0 0.35rem !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .tabs button {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: auto !important;
+    white-space: nowrap !important;
+    padding: 0.8rem 1rem !important;
+    border-radius: 14px !important;
+    font-size: 0.88rem !important;
+    line-height: 1.1 !important;
+    background: #eaf1f9 !important;
+    color: #102a47 !important;
+    box-shadow: none !important;
+  }
+
+  .tabs button.active {
+    background: #145bd7 !important;
+    color: #fff !important;
+  }
+
+  .tabs button::before,
+  .tabs button:nth-child(1)::before,
+  .tabs button:nth-child(2)::before,
+  .tabs button:nth-child(3)::before,
+  .tabs button:nth-child(4)::before,
+  .tabs button:nth-child(5)::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  .panel {
+    margin-bottom: 1rem !important;
+    padding: 1.4rem !important;
+    border-radius: 24px !important;
+    box-shadow: 0 18px 40px rgba(15, 35, 70, 0.08) !important;
+  }
+
+  .panel h2 {
+    font-size: 1.55rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .panel h3 {
+    font-size: 1.1rem !important;
+  }
+
+  .toolbar,
+  .predictionsTopBar {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 1rem !important;
+    align-items: start !important;
+  }
+
+  .groupStepper {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto auto !important;
+    gap: 0.8rem !important;
+    align-items: center !important;
+  }
+
+  .matches,
+  .groupMatches,
+  .predictionsPanel .matches {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+
+  .matchCard,
+  .matchCardEnhanced {
+    padding: 1rem !important;
+    border-radius: 20px !important;
+  }
+
+  .scoreRow,
+  .scoreRowEnhanced {
+    display: grid !important;
+    grid-template-columns: 1fr 4rem auto 4rem 1fr !important;
+    gap: 0.65rem !important;
+    align-items: center !important;
+  }
+
+  .scoreRow input,
+  .scoreRowEnhanced input {
+    width: 4rem !important;
+    min-width: 4rem !important;
+    height: 3.4rem !important;
+    font-size: 1.35rem !important;
+  }
+
+  .teamName {
+    font-size: 0.98rem !important;
+  }
+
+  .stickyActions,
+  .predictionActions {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 30 !important;
+    display: grid !important;
+    grid-template-columns: auto 1fr auto auto !important;
+    gap: 0.65rem !important;
+    margin: 1rem 0 0 !important;
+    padding: 0.8rem !important;
+    border-radius: 18px !important;
+    background: rgba(248, 252, 255, 0.96) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  .standingsGrid,
+  .compactStandingsGrid,
+  .qualifiedLists,
+  .podium {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+
+  .tableWrap,
+  .standingsTableWrap {
+    overflow-x: auto !important;
+  }
+
+  .standingsTable {
+    min-width: 720px !important;
+  }
+
+  .mobileBracketCard {
+    display: none !important;
+  }
+
+  .projectedOfficialBracket,
+  .officialFullBracket,
+  .phaseBracket,
+  .bracketBoard {
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .bracketColumns,
+  .officialBracketColumns,
+  .phaseBracketInner,
+  .officialFullBracketInner,
+  .knockoutCanvas {
+    min-width: 1400px !important;
+  }
+
+  .mobileRankingList {
+    display: none !important;
+  }
+
+  .leaderboardPanel .tableWrap {
+    display: block !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .page {
+    width: 1080px !important;
+    min-width: 1080px !important;
+    padding: 0.9rem !important;
+  }
+}

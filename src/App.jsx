@@ -638,6 +638,8 @@ export default function App() {
 
       {status && <div className="notice">{status}</div>}
 
+      <DesktopModeBanner />
+
       <RulesBanner showRules={showRules} onToggle={() => setShowRules((value) => !value)} />
 
       <nav className="tabs" aria-label="Secciones">
@@ -751,6 +753,15 @@ export default function App() {
   );
 }
 
+
+
+function DesktopModeBanner() {
+  return (
+    <div className="desktopModeBanner" role="note">
+      <strong>Consejo para móvil:</strong> para ver la porra con el mismo formato que en ordenador, activa la opción <strong>“Vista de ordenador”</strong> en el navegador.
+    </div>
+  );
+}
 
 function RulesBanner({ showRules, onToggle }) {
   return (
@@ -1304,7 +1315,6 @@ function MyKnockoutPanel({ fixtures, groups, predictions, fixtureCount }) {
         </section>
       </div>
 
-      <MobileProjectedBracket qualifiedData={qualifiedData} />
       <ProjectedOfficialBracketBoard qualifiedData={qualifiedData} />
     </section>
   );
