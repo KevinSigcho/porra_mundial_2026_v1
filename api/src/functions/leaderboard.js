@@ -11,6 +11,10 @@ function money(value) {
   return Math.round(Number(value || 0) * 100) / 100;
 }
 
+function isConfirmed(player) {
+  return player?.paymentStatus === 'confirmed' || player?.paymentConfirmed === true;
+}
+
 app.http('leaderboard', {
   methods: ['GET'],
   authLevel: 'anonymous',
@@ -27,12 +31,18 @@ app.http('leaderboard', {
         const entity = predictionsByPlayer.get(player.rowKey);
         const predictions = parseJson(entity?.predictions, {});
         const score = computePlayerScore(predictions, results);
+        const paymentConfirmed = isConfirmed(player);
 
         return {
           playerId: player.rowKey,
           name: player.name,
+          phone: player.phone || '',
           avatarId: player.avatarId || 'football-1',
           avatarUrl: player.avatarUrl || '',
+          paymentAmount: Number(player.paymentAmount || ENTRY_FEE),
+          paymentStatus: paymentConfirmed ? 'confirmed' : 'pending',
+          paymentConfirmed,
+          paymentConfirmedAt: player.paymentConfirmedAt || null,
           points: score.points,
           groupWinnersCorrect: score.groupWinnersCorrect,
           groupRunnersCorrect: score.groupRunnersCorrect,
@@ -44,6 +54,7 @@ app.http('leaderboard', {
           updatedAt: entity?.updatedAt || null
         };
       }).sort((a, b) => {
+        if (a.paymentConfirmed !== b.paymentConfirmed) return a.paymentConfirmed ? -1 : 1;
         if (b.points !== a.points) return b.points - a.points;
         if (b.exactScores !== a.exactScores) return b.exactScores - a.exactScores;
         if (b.exactGoalDifferences !== a.exactGoalDifferences) return b.exactGoalDifferences - a.exactGoalDifferences;
@@ -53,7 +64,9 @@ app.http('leaderboard', {
       });
 
       const playerCount = players.length;
-      const prizePool = money(playerCount * ENTRY_FEE);
+      const confirmedPlayerCount = rows.filter((row) => row.paymentConfirmed).length;
+      const pendingPlayerCount = playerCount - confirmedPlayerCount;
+      const prizePool = money(confirmedPlayerCount * ENTRY_FEE);
       const prizes = {
         first: money(prizePool * 0.5),
         second: money(prizePool * 0.3),
@@ -63,6 +76,8 @@ app.http('leaderboard', {
       return ok({
         rows,
         playerCount,
+        confirmedPlayerCount,
+        pendingPlayerCount,
         entryFee: ENTRY_FEE,
         prizePool,
         prizes,
