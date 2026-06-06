@@ -4354,3 +4354,103 @@ th {
     width: 100%;
   }
 }
+
+/* Admin separado y protegido */
+.adminEntryFooter {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0 3rem;
+}
+
+.adminEntryButton {
+  min-width: 180px;
+  border-radius: 999px;
+  padding: 0.9rem 1.4rem;
+  background: #eef5ff;
+  color: #0b2a55;
+  border: 1px solid rgba(21, 90, 190, 0.18);
+  box-shadow: 0 12px 30px rgba(11, 42, 85, 0.08);
+}
+
+.adminEntryButton:hover {
+  background: #dbeafe;
+}
+
+.adminGatePanel {
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+}
+
+.adminGateCard {
+  width: min(100%, 520px);
+  padding: 2rem;
+  border: 1px solid rgba(21, 90, 190, 0.16);
+  border-radius: 28px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  box-shadow: 0 24px 60px rgba(11, 42, 85, 0.12);
+}
+
+.adminGateIcon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  margin-bottom: 1rem;
+  background: #0b5ed7;
+  color: #fff;
+  font-size: 2rem;
+}
+
+.adminGateForm {
+  display: grid;
+  gap: 1rem;
+  margin: 1.25rem 0 0.85rem;
+}
+
+.adminGateForm label {
+  display: grid;
+  gap: 0.45rem;
+  font-weight: 800;
+  color: #31506f;
+}
+
+.adminGateForm input {
+  width: 100%;
+}
+
+.adminSessionBox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.adminPanelUnlocked .toolbar {
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  .adminEntryFooter {
+    padding: 1.25rem 0 6rem;
+  }
+
+  .adminEntryButton {
+    width: min(100%, 260px);
+  }
+
+  .adminGatePanel {
+    min-height: 300px;
+  }
+
+  .adminGateCard {
+    padding: 1.25rem;
+    border-radius: 22px;
+  }
+
+  .adminSessionBox {
+    justify-content: flex-start;
+  }
+}
