@@ -40,6 +40,121 @@ function PlayerAvatar({ player, size = 'md', rank = null }) {
 }
 
 
+
+const GROUP_SCORING_SUMMARY = 'Fase de grupos: 5 pts por acertar el 1º de grupo, 3 pts por acertar el 2º y 1 pt por acertar el 3º que entra a eliminatorias.';
+
+const KNOCKOUT_AVAILABLE_DATE = '27 de junio de 2026';
+const KNOCKOUT_START_DATE = '28 de junio de 2026';
+
+const RULE_SECTIONS = [
+  {
+    title: 'Fase de grupos',
+    items: [
+      '5 puntos si aciertas el equipo que queda 1º de cada grupo.',
+      '3 puntos si aciertas el equipo que queda 2º de cada grupo.',
+      '1 punto si aciertas el 3º de grupo que se clasifica a eliminatorias.',
+      'La clasificación de cada grupo se calcula con tus marcadores: puntos, diferencia de goles, goles a favor y orden alfabético si persiste el empate.'
+    ]
+  },
+  {
+    title: 'Desempates de la porra',
+    items: [
+      '1º: más puntos totales.',
+      '2º: más partidos con marcador exacto acertado.',
+      '3º: más partidos con diferencia de goles exacta acertada.',
+      '4º: más signos acertados en los partidos.',
+      '5º: más pronósticos completados.',
+      '6º: orden alfabético del jugador para evitar empates técnicos.'
+    ]
+  },
+  {
+    title: 'Fase de eliminatorias',
+    items: [
+      'Cuando termine la fase de grupos se cargan los 32 clasificados en el cuadro oficial.',
+      '5 puntos por acertar el equipo que pasa cada eliminatoria, incluyendo prórroga o penaltis.',
+      '1 punto extra si aciertas el resultado del partido antes de tanda de penaltis.',
+      'Desempate recomendado en eliminatorias: más finalistas acertados, campeón acertado, más clasificados a semifinales, más clasificados a cuartos, más resultados exactos y mayor diferencia de goles exacta.'
+    ]
+  }
+];
+
+const OFFICIAL_KNOCKOUT_BRACKET = {
+  left: [
+    {
+      title: 'Dieciseisavos',
+      matches: [
+        { id: 'M73', label: '2º Grupo A', other: '2º Grupo B' },
+        { id: 'M74', label: '1º Grupo C', other: '2º Grupo F' },
+        { id: 'M75', label: '1º Grupo E', other: '3º A/B/C/D/F' },
+        { id: 'M76', label: '1º Grupo F', other: '2º Grupo C' },
+        { id: 'M77', label: '2º Grupo E', other: '2º Grupo I' },
+        { id: 'M78', label: '1º Grupo I', other: '3º C/D/F/G/H' },
+        { id: 'M79', label: '1º Grupo A', other: '3º C/E/F/H/I' },
+        { id: 'M80', label: '1º Grupo L', other: '3º E/H/I/J/K' }
+      ]
+    },
+    {
+      title: 'Octavos',
+      matches: [
+        { id: 'M89', label: 'Ganador M74', other: 'Ganador M77' },
+        { id: 'M90', label: 'Ganador M73', other: 'Ganador M75' },
+        { id: 'M91', label: 'Ganador M76', other: 'Ganador M78' },
+        { id: 'M92', label: 'Ganador M79', other: 'Ganador M80' }
+      ]
+    },
+    {
+      title: 'Cuartos',
+      matches: [
+        { id: 'M97', label: 'Ganador M89', other: 'Ganador M90' },
+        { id: 'M98', label: 'Ganador M91', other: 'Ganador M92' }
+      ]
+    },
+    {
+      title: 'Semis',
+      matches: [
+        { id: 'M101', label: 'Ganador M97', other: 'Ganador M98' }
+      ]
+    }
+  ],
+  right: [
+    {
+      title: 'Semis',
+      matches: [
+        { id: 'M102', label: 'Ganador M99', other: 'Ganador M100' }
+      ]
+    },
+    {
+      title: 'Cuartos',
+      matches: [
+        { id: 'M99', label: 'Ganador M93', other: 'Ganador M94' },
+        { id: 'M100', label: 'Ganador M95', other: 'Ganador M96' }
+      ]
+    },
+    {
+      title: 'Octavos',
+      matches: [
+        { id: 'M93', label: 'Ganador M83', other: 'Ganador M84' },
+        { id: 'M94', label: 'Ganador M81', other: 'Ganador M82' },
+        { id: 'M95', label: 'Ganador M86', other: 'Ganador M88' },
+        { id: 'M96', label: 'Ganador M85', other: 'Ganador M87' }
+      ]
+    },
+    {
+      title: 'Dieciseisavos',
+      matches: [
+        { id: 'M81', label: '1º Grupo G', other: '3º A/E/H/I/J' },
+        { id: 'M82', label: '1º Grupo D', other: '3º B/E/F/I/J' },
+        { id: 'M83', label: '1º Grupo H', other: '2º Grupo J' },
+        { id: 'M84', label: '2º Grupo K', other: '2º Grupo L' },
+        { id: 'M85', label: '1º Grupo B', other: '3º E/F/G/I/J' },
+        { id: 'M86', label: '1º Grupo J', other: '2º Grupo H' },
+        { id: 'M87', label: '1º Grupo K', other: '3º D/E/I/J/L' },
+        { id: 'M88', label: '2º Grupo D', other: '2º Grupo G' }
+      ]
+    }
+  ]
+};
+
 const TEAM_FLAG_CODES = {
   'México': 'mx',
   'Corea del Sur': 'kr',
@@ -340,6 +455,7 @@ export default function App() {
   const [settings, setSettings] = useState({ locked: false, scoring: null });
   const [groupFilter, setGroupFilter] = useState('A');
   const [status, setStatus] = useState('');
+  const [showRules, setShowRules] = useState(false);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -466,7 +582,7 @@ export default function App() {
     <main className="page">
       <header className="hero">
         <div>
-          <p className="eyebrow">Porra 2026</p>
+          <p className="eyebrow">Porra privada</p>
           <h1>Mundial 2026: fase de grupos</h1>
           <p>Pronostica el marcador de los {fixtures.length} partidos de grupos. Juega como <strong>{player.name}</strong>.</p>
         </div>
@@ -475,10 +591,13 @@ export default function App() {
 
       {status && <div className="notice">{status}</div>}
 
+      <RulesBanner showRules={showRules} onToggle={() => setShowRules((value) => !value)} />
+
       <nav className="tabs" aria-label="Secciones">
         <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Mis pronósticos</button>
         <button className={tab === 'liveGroups' ? 'active' : ''} onClick={() => { setTab('liveGroups'); refreshPrivateData(); }}>Grupos actualizados</button>
         <button className={tab === 'myBracket' ? 'active' : ''} onClick={() => { setTab('myBracket'); refreshPrivateData(); }}>Mi eliminatoria</button>
+        <button className={tab === 'knockouts' ? 'active' : ''} onClick={() => setTab('knockouts')}>Fase eliminatorias</button>
         <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'admin' ? 'active' : ''} onClick={() => setTab('admin')}>Admin</button>
       </nav>
@@ -488,7 +607,7 @@ export default function App() {
           <div className="toolbar predictionsTopBar">
             <div>
               <h2>Mis pronósticos</h2>
-              <p className="muted">Puntuación: {fixtureData.rules.description}</p>
+              <p className="muted">Puntuación: {GROUP_SCORING_SUMMARY}</p>
               {settings.locked && <p className="locked">La porra está cerrada. Puedes ver tus pronósticos, pero no guardarlos.</p>}
             </div>
             <div className="overallProgressCard" aria-label="Progreso total de pronósticos">
@@ -561,6 +680,10 @@ export default function App() {
         />
       )}
 
+      {tab === 'knockouts' && (
+        <OfficialKnockoutStagePanel />
+      )}
+
       {tab === 'leaderboard' && (
         <Leaderboard data={leaderboard} onRefresh={refreshPrivateData} />
       )}
@@ -582,6 +705,107 @@ export default function App() {
   );
 }
 
+
+function RulesBanner({ showRules, onToggle }) {
+  return (
+    <section className="rulesBanner" aria-label="Reglas de puntuación">
+      <div>
+        <p className="eyebrow">Reglas de la porra</p>
+        <strong>Fase de grupos: 5 pts por 1º, 3 pts por 2º y 1 pt por 3º clasificado a eliminatorias.</strong>
+        <p>Después se abrirá la porra de eliminatorias con 5 pts por acertar quién pasa y 1 punto extra por resultado exacto sin tanda de penaltis.</p>
+      </div>
+      <button className="secondary rulesButton" type="button" onClick={onToggle}>{showRules ? 'Ocultar reglas' : 'Ver reglas completas'}</button>
+      {showRules && <RulesPanel />}
+    </section>
+  );
+}
+
+function RulesPanel() {
+  return (
+    <div className="rulesPanel">
+      {RULE_SECTIONS.map((section) => (
+        <article key={section.title}>
+          <h3>{section.title}</h3>
+          <ul>
+            {section.items.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function OfficialKnockoutStagePanel() {
+  return (
+    <section className="panel knockoutStagePanel">
+      <div className="toolbar">
+        <div>
+          <h2>Fase de eliminatorias</h2>
+          <p className="muted">Cuadro oficial de cruces por posición. Los equipos concretos quedan pendientes hasta terminar la fase de grupos.</p>
+          <p className="muted small">Pendiente de definir: {KNOCKOUT_AVAILABLE_DATE}. La ronda de 32 empieza el {KNOCKOUT_START_DATE}.</p>
+        </div>
+      </div>
+
+      <div className="notice bracketWarning">
+        Este cuadro muestra el camino oficial por posiciones de grupo. Cuando finalice la fase de grupos se cargarán los equipos clasificados y se abrirá la porra de eliminatorias.
+      </div>
+
+      <div className="fullBracketBoard">
+        <div className="fullBracketHeader">
+          <span>Dieciseisavos</span>
+          <span>Octavos</span>
+          <span>Cuartos</span>
+          <span>Semis</span>
+          <strong>Final</strong>
+          <span>Semis</span>
+          <span>Cuartos</span>
+          <span>Octavos</span>
+          <span>Dieciseisavos</span>
+        </div>
+        <div className="fullBracketGrid">
+          <BracketColumn columns={OFFICIAL_KNOCKOUT_BRACKET.left} side="left" />
+          <div className="finalColumn">
+            <div className="tournamentLogoMini">🏆</div>
+            <p className="eyebrow">Final</p>
+            <OfficialBracketBox match={{ id: 'M104', label: 'Ganador M101', other: 'Ganador M102' }} />
+            <p className="championLabel">Campeón</p>
+            <div className="championPlaceholder">Pendiente</div>
+            <p className="eyebrow thirdPlaceTitle">Tercer puesto</p>
+            <OfficialBracketBox match={{ id: 'M103', label: 'Perdedor M101', other: 'Perdedor M102' }} />
+          </div>
+          <BracketColumn columns={OFFICIAL_KNOCKOUT_BRACKET.right} side="right" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BracketColumn({ columns, side }) {
+  return (
+    <div className={`knockoutColumns knockoutColumns-${side}`}>
+      {columns.map((column) => (
+        <div className="knockoutRound" key={`${side}-${column.title}`}>
+          <h3>{column.title}</h3>
+          <div className="knockoutMatches">
+            {column.matches.map((match) => <OfficialBracketBox key={match.id} match={match} />)}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OfficialBracketBox({ match }) {
+  return (
+    <article className="officialSeedBox">
+      <div className="officialSeedMeta">{match.id}</div>
+      <div className="officialSeedTeam">{match.label}</div>
+      <div className="officialSeedTeam">{match.other}</div>
+      <div className="officialSeedPass">Pasa: <span>—</span></div>
+    </article>
+  );
+}
+
 function Hero({ fixtureCount }) {
   return (
     <header className="loginHero">
@@ -589,7 +813,7 @@ function Hero({ fixtureCount }) {
         <span className="badgeBall">⚽</span>
         <span>FIFA World Cup 2026</span>
       </div>
-      <h1>Porra Mundial 2026</h1>
+      <h1>PORRA MUNDIAL 2026</h1>
       <p>Inicia sesión si ya tienes cuenta o regístrate con el código de invitación. Pronostica los {fixtureCount} partidos y compite con tus amigos.</p>
     </header>
   );
@@ -1114,8 +1338,8 @@ function Leaderboard({ data, onRefresh }) {
                   <h3>{row.name}</h3>
                   <p className="podiumPoints">{row.points} pts</p>
                   <div className="podiumStats">
-                    <span>{row.exactScores} exactos</span>
-                    <span>{row.correctOutcomes} signos</span>
+                    <span>{row.groupWinnersCorrect || 0} primeros</span>
+                    <span>{row.groupRunnersCorrect || 0} segundos</span>
                   </div>
                 </article>
               );
@@ -1129,8 +1353,11 @@ function Leaderboard({ data, onRefresh }) {
                   <th>#</th>
                   <th>Jugador</th>
                   <th>Puntos</th>
+                  <th>1º grupo</th>
+                  <th>2º grupo</th>
+                  <th>3º KO</th>
                   <th>Exactos</th>
-                  <th>Signos</th>
+                  <th>DG exacta</th>
                   <th>Pronósticos</th>
                 </tr>
               </thead>
@@ -1145,8 +1372,11 @@ function Leaderboard({ data, onRefresh }) {
                       </span>
                     </td>
                     <td><strong>{row.points}</strong></td>
-                    <td>{row.exactScores}</td>
-                    <td>{row.correctOutcomes}</td>
+                    <td>{row.groupWinnersCorrect || 0}</td>
+                    <td>{row.groupRunnersCorrect || 0}</td>
+                    <td>{row.thirdsCorrect || 0}</td>
+                    <td>{row.exactScores || 0}</td>
+                    <td>{row.exactGoalDifferences || 0}</td>
                     <td>{row.predictionsMade}</td>
                   </tr>
                 ))}

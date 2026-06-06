@@ -1285,3 +1285,227 @@ th {
     transform: none;
   }
 }
+
+/* Rules banner and scoring explanation */
+.rulesBanner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.15rem;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.14), rgba(15, 23, 42, 0.05));
+  border: 1px solid rgba(14, 165, 233, 0.28);
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+}
+
+.rulesBanner strong {
+  display: block;
+  color: var(--text, #0f172a);
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.rulesBanner p {
+  margin: 0;
+}
+
+.rulesButton {
+  white-space: nowrap;
+}
+
+.rulesPanel {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.rulesPanel article {
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+.rulesPanel h3 {
+  margin: 0 0 0.6rem;
+}
+
+.rulesPanel ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.rulesPanel li {
+  margin: 0.35rem 0;
+  color: var(--muted, #475569);
+  line-height: 1.35;
+}
+
+/* Official knockout full bracket */
+.knockoutStagePanel {
+  overflow-x: auto;
+}
+
+.fullBracketBoard {
+  min-width: 1480px;
+  padding: 1.15rem;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08), transparent 30%),
+    linear-gradient(135deg, #c80f46, #a50837 52%, #d91452);
+  color: #fff;
+  box-shadow: 0 24px 60px rgba(160, 8, 55, 0.26);
+}
+
+.fullBracketHeader {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr)) 180px repeat(4, minmax(120px, 1fr));
+  gap: 1rem;
+  align-items: center;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 900;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.fullBracketHeader strong {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.fullBracketGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 210px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.knockoutColumns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 1rem;
+  align-items: center;
+}
+
+.knockoutRound h3 {
+  margin: 0 0 0.75rem;
+  text-align: center;
+  color: #22d3ee;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+}
+
+.knockoutMatches {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.knockoutColumns-left .knockoutRound:nth-child(2) .knockoutMatches,
+.knockoutColumns-right .knockoutRound:nth-child(3) .knockoutMatches {
+  gap: 2.1rem;
+}
+
+.knockoutColumns-left .knockoutRound:nth-child(3) .knockoutMatches,
+.knockoutColumns-right .knockoutRound:nth-child(2) .knockoutMatches {
+  gap: 5.8rem;
+}
+
+.knockoutColumns-left .knockoutRound:nth-child(4) .knockoutMatches,
+.knockoutColumns-right .knockoutRound:nth-child(1) .knockoutMatches {
+  gap: 12rem;
+}
+
+.officialSeedBox {
+  position: relative;
+  padding: 0.55rem;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.officialSeedMeta {
+  color: #67e8f9;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+}
+
+.officialSeedTeam {
+  margin: 0.3rem 0;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  color: #fff;
+  font-weight: 900;
+  font-size: 0.82rem;
+}
+
+.officialSeedPass {
+  margin-top: 0.4rem;
+  color: #7dd3fc;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.officialSeedPass span {
+  color: #4ade80;
+}
+
+.finalColumn {
+  display: grid;
+  gap: 0.8rem;
+  justify-items: center;
+  padding: 1rem 0.8rem;
+  border-radius: 24px;
+  background: rgba(20, 20, 15, 0.7);
+  border: 1px solid rgba(250, 204, 21, 0.45);
+}
+
+.finalColumn .officialSeedBox {
+  width: 100%;
+}
+
+.tournamentLogoMini {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1.7rem;
+}
+
+.championLabel,
+.thirdPlaceTitle {
+  margin: 0;
+  text-align: center;
+}
+
+.championPlaceholder {
+  min-width: 120px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(250, 204, 21, 0.16);
+  color: #fde68a;
+  font-weight: 900;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .rulesBanner {
+    grid-template-columns: 1fr;
+  }
+
+  .rulesPanel {
+    grid-template-columns: 1fr;
+  }
+}
