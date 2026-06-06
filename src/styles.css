@@ -1509,3 +1509,162 @@ th {
     grid-template-columns: 1fr;
   }
 }
+
+/* Layout amplio y ajustes para cuadro oficial/proyección */
+.page {
+  width: min(1720px, calc(100% - 40px));
+  max-width: none;
+}
+
+.hero,
+.panel,
+.rulesBanner,
+.notice,
+.tabs {
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.predictionsPanel .matches,
+.groupMatches {
+  grid-template-columns: repeat(2, minmax(360px, 1fr));
+}
+
+.predictionsPanel .toolbar,
+.predictionsTopBar {
+  align-items: stretch;
+}
+
+.overallProgressCard {
+  min-width: 220px;
+}
+
+.groupStepper {
+  grid-template-columns: minmax(140px, auto) minmax(260px, 1fr) minmax(140px, auto) minmax(180px, 240px);
+}
+
+.myBracketPanel {
+  overflow: visible;
+}
+
+.qualifiedCardWide {
+  width: 100%;
+}
+
+.fullBracketScrollWrap {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fullBracketBoard {
+  min-width: 1580px;
+}
+
+.projectedBracketWrap {
+  margin-top: 1.25rem;
+}
+
+.projectedFullBracketBoard {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.09), transparent 31%),
+    linear-gradient(135deg, #c70f46 0%, #a70638 52%, #d91452 100%);
+}
+
+.officialSeedTeam {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+}
+
+.officialSeedTeamProjected {
+  grid-template-columns: minmax(84px, auto) 1fr;
+  align-items: center;
+}
+
+.officialSeedLabel {
+  opacity: 0.96;
+  font-size: 0.72rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.officialProjectedTeam {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.officialProjectedTeam strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.78rem;
+}
+
+/* En pantallas muy grandes aprovechamos todo el ancho disponible */
+@media (min-width: 1600px) {
+  .page {
+    width: min(1820px, calc(100% - 56px));
+  }
+
+  .fullBracketBoard {
+    min-width: 1680px;
+  }
+}
+
+/* Tablet y movil: contenido usable sin romper el cuadro */
+@media (max-width: 900px) {
+  .page {
+    width: min(100% - 16px, 100%);
+    padding-top: 10px;
+  }
+
+  .hero {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .panel {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+  }
+
+  .tabs button {
+    white-space: nowrap;
+  }
+
+  .predictionsPanel .matches,
+  .groupMatches {
+    grid-template-columns: 1fr;
+  }
+
+  .groupStepper {
+    grid-template-columns: 1fr;
+  }
+
+  .overallProgressCard {
+    width: 100%;
+  }
+
+  .fullBracketBoard {
+    min-width: 1480px;
+  }
+}

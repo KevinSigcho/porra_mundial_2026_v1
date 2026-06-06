@@ -444,6 +444,54 @@ function makeKnockoutPairings(qualifiedData) {
   }));
 }
 
+
+function findQualifiedByGroup(list, group) {
+  return (list || []).find((team) => team.group === group) || null;
+}
+
+function resolveOfficialSlot(label, qualifiedData) {
+  const text = String(label || '');
+
+  const firstMatch = text.match(/^1º Grupo ([A-L])$/);
+  if (firstMatch) {
+    return findQualifiedByGroup(qualifiedData.winners, firstMatch[1]);
+  }
+
+  const secondMatch = text.match(/^2º Grupo ([A-L])$/);
+  if (secondMatch) {
+    return findQualifiedByGroup(qualifiedData.runners, secondMatch[1]);
+  }
+
+  const thirdMatch = text.match(/^3º ([A-L](?:\/[A-L])*)$/);
+  if (thirdMatch) {
+    const allowedGroups = new Set(thirdMatch[1].split('/'));
+    return (qualifiedData.thirds || []).find((team) => allowedGroups.has(team.group)) || null;
+  }
+
+  return null;
+}
+
+function decorateOfficialMatch(match, qualifiedData) {
+  return {
+    ...match,
+    labelTeam: resolveOfficialSlot(match.label, qualifiedData),
+    otherTeam: resolveOfficialSlot(match.other, qualifiedData)
+  };
+}
+
+function buildProjectedOfficialBracket(qualifiedData) {
+  return {
+    left: OFFICIAL_KNOCKOUT_BRACKET.left.map((column) => ({
+      ...column,
+      matches: column.matches.map((match) => decorateOfficialMatch(match, qualifiedData))
+    })),
+    right: OFFICIAL_KNOCKOUT_BRACKET.right.map((column) => ({
+      ...column,
+      matches: column.matches.map((match) => decorateOfficialMatch(match, qualifiedData))
+    }))
+  };
+}
+
 export default function App() {
   const [fixtureData, setFixtureData] = useState(null);
   const [token, setToken] = useState(localStorage.getItem(STORAGE_TOKEN) || '');
@@ -797,10 +845,24 @@ function OfficialBracketBox({ match }) {
   return (
     <article className="officialSeedBox">
       <div className="officialSeedMeta">{match.id}</div>
-      <div className="officialSeedTeam">{match.label}</div>
-      <div className="officialSeedTeam">{match.other}</div>
+      <OfficialSeedTeamLine label={match.label} team={match.labelTeam} />
+      <OfficialSeedTeamLine label={match.other} team={match.otherTeam} />
       <div className="officialSeedPass">Pasa: <span>—</span></div>
     </article>
+  );
+}
+
+function OfficialSeedTeamLine({ label, team }) {
+  return (
+    <div className={team ? 'officialSeedTeam officialSeedTeamProjected' : 'officialSeedTeam'}>
+      <span className="officialSeedLabel">{label}</span>
+      {team && (
+        <span className="officialProjectedTeam">
+          <TeamFlag team={team.team} />
+          <strong>{team.team}</strong>
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -1184,32 +1246,31 @@ function PredictionStandingsPreview({ fixtures, groups, scores, groupFilter }) {
 function MyKnockoutPanel({ fixtures, groups, predictions, fixtureCount }) {
   const groupTables = useMemo(() => buildGroupTables(fixtures, groups, predictions), [fixtures, groups, predictions]);
   const qualifiedData = useMemo(() => getQualifiedTeams(groupTables), [groupTables]);
-  const pairings = useMemo(() => makeKnockoutPairings(qualifiedData), [qualifiedData]);
   const completed = countCompletedScores(predictions);
   const isComplete = completed === fixtureCount;
 
   return (
-    <section className="panel">
+    <section className="panel myBracketPanel">
       <div className="toolbar">
         <div>
           <h2>Mi eliminatoria proyectada</h2>
-          <p className="muted">Cuadro calculado con tus marcadores de fase de grupos. Si aciertas todo, esta sería tu foto estimada de clasificados.</p>
+          <p className="muted">Clasificados y cuadro calculados con tus marcadores de fase de grupos.</p>
           <p className="muted small">Pronósticos completos: {completed}/{fixtureCount}</p>
         </div>
       </div>
 
       <div className="notice bracketWarning">
-        Aviso: este cuadro no es oficial. Es una proyección privada basada en tus pronósticos y puede cambiar hasta que se disputen y carguen todos los partidos de la fase de grupos. Los cruces son orientativos para visualizar la porra.
+        Aviso: este cuadro no es oficial. Es una proyección privada basada en tus pronósticos y puede cambiar hasta que se disputen y carguen todos los partidos de la fase de grupos.
       </div>
 
       {!isComplete && (
         <div className="notice softNotice">
-          Todavía te faltan {fixtureCount - completed} partidos por pronosticar. El cuadro se irá rellenando mejor cuando completes todos los marcadores.
+          Todavía te faltan {fixtureCount - completed} partidos por pronosticar. El cuadro usará tus clasificados provisionales hasta que completes todos los marcadores.
         </div>
       )}
 
       <div className="bracketSummary">
-        <section className="standingCard">
+        <section className="standingCard qualifiedCardWide">
           <div className="standingHeader">
             <p className="eyebrow">Clasificados por tu porra</p>
             <span className="qualificationHint">Primeros, segundos y mejores terceros</span>
@@ -1222,39 +1283,43 @@ function MyKnockoutPanel({ fixtures, groups, predictions, fixtureCount }) {
         </section>
       </div>
 
-      <div className="bracketBoard">
-        <div className="bracketTitle">Cuadro oficial · Ronda de 32</div>
-        <div className="officialBracketNotice">
-          Cruces oficiales por posición de grupo. Los equipos mostrados salen de tus pronósticos, por eso siguen siendo una proyección hasta que termine la fase de grupos.
-        </div>
+      <ProjectedOfficialBracketBoard qualifiedData={qualifiedData} />
+    </section>
+  );
+}
 
-        <div className="bracketColumns officialBracketColumns">
-          <div className="bracketSide">
-            {pairings
-              .filter((pairing) => pairing.side === 'left')
-              .map((pairing) => <BracketMatch key={pairing.id} pairing={pairing} />)}
+function ProjectedOfficialBracketBoard({ qualifiedData }) {
+  const projectedBracket = useMemo(() => buildProjectedOfficialBracket(qualifiedData), [qualifiedData]);
+
+  return (
+    <div className="fullBracketScrollWrap projectedBracketWrap">
+      <div className="fullBracketBoard projectedFullBracketBoard">
+        <div className="fullBracketHeader">
+          <span>Dieciseisavos</span>
+          <span>Octavos</span>
+          <span>Cuartos</span>
+          <span>Semis</span>
+          <strong>Final</strong>
+          <span>Semis</span>
+          <span>Cuartos</span>
+          <span>Octavos</span>
+          <span>Dieciseisavos</span>
+        </div>
+        <div className="fullBracketGrid">
+          <BracketColumn columns={projectedBracket.left} side="left" />
+          <div className="finalColumn">
+            <div className="tournamentLogoMini">🏆</div>
+            <p className="eyebrow">Final</p>
+            <OfficialBracketBox match={{ id: 'M104', label: 'Ganador M101', other: 'Ganador M102' }} />
+            <p className="championLabel">Campeón</p>
+            <div className="championPlaceholder">Pendiente</div>
+            <p className="eyebrow thirdPlaceTitle">Tercer puesto</p>
+            <OfficialBracketBox match={{ id: 'M103', label: 'Perdedor M101', other: 'Perdedor M102' }} />
           </div>
-          <div className="bracketCenter">
-            <span>Camino a la final</span>
-            <small>Los ganadores avanzarán a octavos, cuartos, semifinales y final.</small>
-          </div>
-          <div className="bracketSide">
-            {pairings
-              .filter((pairing) => pairing.side === 'right')
-              .map((pairing) => <BracketMatch key={pairing.id} pairing={pairing} />)}
-          </div>
+          <BracketColumn columns={projectedBracket.right} side="right" />
         </div>
       </div>
-
-      <GroupStandingsPanel
-        title="Tablas según tus pronósticos"
-        description="Orden provisional de cada grupo si tus resultados fueran correctos."
-        fixtures={fixtures}
-        groups={groups}
-        scores={predictions}
-        emptyMessage="Todavía no hay pronósticos para calcular las tablas."
-      />
-    </section>
+    </div>
   );
 }
 
