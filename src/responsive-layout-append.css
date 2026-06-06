@@ -1,0 +1,369 @@
+/* =========================================================
+   Responsive layout patch - Porra Mundial 2026
+   Copia TODO este bloque al FINAL de src/styles.css
+   ========================================================= */
+
+/* Desktop: aprovecha mejor el ancho de pantalla */
+.page {
+  width: min(1560px, calc(100% - 48px));
+  padding: 22px 0 64px;
+}
+
+.hero {
+  padding: 28px 34px;
+  margin-bottom: 14px;
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 4vw, 4.4rem);
+}
+
+.panel {
+  padding: 26px;
+}
+
+/* Cabecera y banners mas compactos */
+.notice {
+  margin: 12px 0;
+}
+
+.rulesBanner {
+  margin: 12px 0;
+}
+
+.tabs {
+  margin: 14px 0 16px;
+  gap: 8px;
+}
+
+.tabs button {
+  padding: 0.72rem 0.95rem;
+}
+
+/* En pantallas grandes, los partidos usan mejor el espacio */
+.matches,
+.groupMatches {
+  grid-template-columns: repeat(2, minmax(380px, 1fr));
+  gap: 16px;
+}
+
+.matchCard {
+  min-height: 128px;
+}
+
+.scoreRow,
+.scoreRowEnhanced {
+  gap: 0.75rem;
+}
+
+.scoreRow input,
+.scoreRowEnhanced input {
+  max-width: 76px;
+}
+
+/* Bloques de grupo mas fluidos */
+.groupBlock,
+.predictionStandingsPreview,
+.groupNavigator,
+.stickyActions {
+  width: 100%;
+}
+
+.standingsGrid.compactStandingsGrid {
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+}
+
+/* El area de acciones queda clara, sin comerse la pantalla */
+.stickyActions {
+  position: sticky;
+  bottom: 10px;
+  z-index: 8;
+  display: grid;
+  grid-template-columns: auto minmax(240px, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.stickyActions button {
+  min-height: 46px;
+}
+
+/* Cuadro de eliminatorias: ocupa ancho, pero con scroll limpio */
+.knockoutStagePanel,
+.bracketBoard {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fullBracketBoard {
+  min-width: 1420px;
+}
+
+/* Tablet */
+@media (max-width: 1100px) {
+  .page {
+    width: min(100% - 24px, 980px);
+    padding-top: 14px;
+  }
+
+  .hero {
+    padding: 22px;
+    gap: 16px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 7vw, 3.2rem);
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar label {
+    min-width: 0;
+  }
+
+  .matches,
+  .groupMatches {
+    grid-template-columns: 1fr;
+  }
+
+  .standingsGrid.compactStandingsGrid,
+  .standingsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stickyActions {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Movil: optimizado para usar, no para verse en miniatura */
+@media (max-width: 700px) {
+  body {
+    background: #eef3f8;
+  }
+
+  .page {
+    width: 100%;
+    padding: 8px 8px 90px;
+  }
+
+  .hero,
+  .panel {
+    border-radius: 18px;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 12vw, 3rem);
+    line-height: 0.95;
+  }
+
+  .hero .secondary,
+  .hero button {
+    width: 100%;
+  }
+
+  .panel {
+    padding: 14px;
+    margin-top: 12px;
+  }
+
+  .notice,
+  .rulesBanner {
+    margin: 10px 0;
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .rulesBanner {
+    grid-template-columns: 1fr;
+  }
+
+  .rulesButton {
+    width: 100%;
+  }
+
+  /* Pestañas en scroll horizontal */
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 0 8px;
+    margin: 10px 0 12px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .tabs button {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    white-space: nowrap;
+    padding: 0.72rem 0.9rem;
+  }
+
+  .toolbar {
+    gap: 14px;
+  }
+
+  .toolbar h2 {
+    font-size: 1.35rem;
+  }
+
+  .groupNavigator {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .groupNavigator button,
+  .groupNavigator select {
+    width: 100%;
+  }
+
+  .progressCard,
+  .groupProgressCard {
+    width: 100%;
+  }
+
+  .predictionStandingsPreview {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .previewHeading {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .standingCard,
+  .compactStandingCard {
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .tableWrap,
+  .standingsTableWrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .standingsTable {
+    min-width: 560px;
+  }
+
+  .groupHeader {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .groupTeamsSummary,
+  .teamStrip {
+    gap: 8px;
+  }
+
+  .teamStrip {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+  }
+
+  .teamBadge {
+    flex: 0 0 auto;
+  }
+
+  .matchCard {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .matchMeta {
+    font-size: 0.78rem;
+  }
+
+  .scoreRow,
+  .scoreRowEnhanced {
+    display: grid;
+    grid-template-columns: 1fr 58px 18px 58px 1fr;
+    gap: 7px;
+    align-items: center;
+  }
+
+  .scoreRow input,
+  .scoreRowEnhanced input {
+    width: 58px;
+    min-width: 58px;
+    padding: 0.65rem 0.3rem;
+    text-align: center;
+  }
+
+  .teamName {
+    font-size: 0.9rem;
+    line-height: 1.05;
+  }
+
+  .team.home,
+  .team.away {
+    min-width: 0;
+  }
+
+  .flagImg {
+    width: 22px;
+    min-width: 22px;
+  }
+
+  .stickyActions {
+    position: sticky;
+    bottom: 0;
+    grid-template-columns: 1fr;
+    margin: 12px -4px -8px;
+    border-radius: 18px 18px 0 0;
+    padding: 10px;
+  }
+
+  .stickyActions button {
+    width: 100%;
+  }
+
+  /* En movil el cuadro se ve como tablero desplazable horizontalmente */
+  .fullBracketBoard {
+    min-width: 1180px;
+    padding: 0.9rem;
+    transform-origin: top left;
+  }
+
+  .knockoutStagePanel::after,
+  .bracketBoard::after {
+    content: 'Desliza horizontalmente para ver todo el cuadro';
+    display: block;
+    margin-top: 8px;
+    color: #60758b;
+    font-size: 0.82rem;
+    text-align: center;
+  }
+}
+
+/* Pantallas muy grandes */
+@media (min-width: 1700px) {
+  .page {
+    width: min(1660px, calc(100% - 72px));
+  }
+
+  .matches,
+  .groupMatches {
+    grid-template-columns: repeat(2, minmax(460px, 1fr));
+  }
+}
