@@ -1473,9 +1473,12 @@ function BracketTeam({ team, seed }) {
 
 function Leaderboard({ data, onRefresh }) {
   const rows = data?.rows || [];
+  const confirmedRows = rows.filter((row) => row.paymentConfirmed);
+  const pendingRows = rows.filter((row) => !row.paymentConfirmed);
+  const confirmedPlayerCount = data?.confirmedPlayerCount ?? confirmedRows.length;
   const playerCount = data?.playerCount || rows.length;
   const entryFee = data?.entryFee || 5;
-  const prizePool = data?.prizePool ?? playerCount * entryFee;
+  const prizePool = data?.prizePool ?? confirmedPlayerCount * entryFee;
   const prizes = data?.prizes || {
     first: Math.round(prizePool * 0.5 * 100) / 100,
     second: Math.round(prizePool * 0.3 * 100) / 100,
@@ -1487,7 +1490,8 @@ function Leaderboard({ data, onRefresh }) {
     return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(Number(value || 0));
   }
 
-  function prizeForRank(rank) {
+  function prizeForRank(rank, row) {
+    if (!row?.paymentConfirmed) return 0;
     if (rank === 1) return prizes.first;
     if (rank === 2) return prizes.second;
     if (rank === 3) return prizes.third;
@@ -1500,8 +1504,8 @@ function Leaderboard({ data, onRefresh }) {
 
       <div className="leaderboardSummaryCard">
         <div>
-          <span className="summaryLabel">Jugadores registrados</span>
-          <strong>{playerCount}</strong>
+          <span className="summaryLabel">Participantes confirmados</span>
+          <strong>{confirmedPlayerCount}/{playerCount}</strong>
         </div>
         <div>
           <span className="summaryLabel">Bote actual</span>
@@ -1514,21 +1518,23 @@ function Leaderboard({ data, onRefresh }) {
         <article className="prizeCard prizeGold">
           <span>1º</span>
           <strong>{euro(prizes.first)}</strong>
-          <small>50% del bote</small>
+          <small>50% del bote confirmado</small>
         </article>
         <article className="prizeCard prizeSilver">
           <span>2º</span>
           <strong>{euro(prizes.second)}</strong>
-          <small>30% del bote</small>
+          <small>30% del bote confirmado</small>
         </article>
         <article className="prizeCard prizeBronze">
           <span>3º</span>
           <strong>{euro(prizes.third)}</strong>
-          <small>20% del bote</small>
+          <small>20% del bote confirmado</small>
         </article>
       </div>
 
-      <p className="muted small leaderboardMeta">Resultados reales cargados: {data?.resultCount || 0}/{data?.fixtureCount || 72}. Entrada: {euro(entryFee)} por jugador.</p>
+      <p className="muted small leaderboardMeta">
+        Resultados reales cargados: {data?.resultCount || 0}/{data?.fixtureCount || 72}. Entrada: {euro(entryFee)} por jugador. Los usuarios pendientes de Bizum aparecen en gris y no suman al bote.
+      </p>
 
       {rows.length === 0 ? (
         <div className="notice softNotice">Todavía no hay jugadores con pronósticos.</div>
@@ -1537,15 +1543,16 @@ function Leaderboard({ data, onRefresh }) {
           <div className="mobileRankingList" aria-label="Clasificación de la porra">
             {rows.map((row, index) => {
               const rank = index + 1;
-              const prize = prizeForRank(rank);
+              const prize = prizeForRank(rank, row);
               return (
-                <article key={row.playerId} className={`rankingRowCard ${rank <= 3 ? `rankingTop rankingTop${rank}` : ''}`}>
-                  <div className="rankingPosition">{rank}º</div>
-                  <div className="rankingMedal">{rank <= 3 ? medals[index] : ''}</div>
+                <article key={row.playerId} className={`rankingRowCard ${!row.paymentConfirmed ? 'rankingPendingPayment' : ''} ${rank <= 3 && row.paymentConfirmed ? `rankingTop rankingTop${rank}` : ''}`}>
+                  <div className="rankingPosition">{row.paymentConfirmed ? `${rank}º` : '—'}</div>
+                  <div className="rankingMedal">{rank <= 3 && row.paymentConfirmed ? medals[index] : '⚠️'}</div>
                   <PlayerAvatar player={row} size="md" />
                   <div className="rankingPlayerInfo">
                     <strong>{row.name}</strong>
                     <span>{row.groupWinnersCorrect || 0} primeros · {row.groupRunnersCorrect || 0} segundos · {row.thirdsCorrect || 0} terceros</span>
+                    {!row.paymentConfirmed && <em className="pendingPaymentText">Pendiente confirmar Bizum</em>}
                   </div>
                   <div className="rankingPoints">
                     <strong>{row.points}</strong>
@@ -1563,6 +1570,7 @@ function Leaderboard({ data, onRefresh }) {
                 <tr>
                   <th>#</th>
                   <th>Jugador</th>
+                  <th>Bizum</th>
                   <th>Puntos</th>
                   <th>Premio</th>
                   <th>1º grupo</th>
@@ -1575,16 +1583,17 @@ function Leaderboard({ data, onRefresh }) {
               </thead>
               <tbody>
                 {rows.map((row, index) => (
-                  <tr key={row.playerId}>
-                    <td>{index + 1}</td>
+                  <tr key={row.playerId} className={!row.paymentConfirmed ? 'rankingPendingPaymentRow' : ''}>
+                    <td>{row.paymentConfirmed ? index + 1 : '—'}</td>
                     <td>
                       <span className="leaderboardPlayer">
                         <PlayerAvatar player={row} size="sm" />
                         <span>{row.name}</span>
                       </span>
                     </td>
+                    <td>{row.paymentConfirmed ? 'Confirmado' : '⚠️ Pendiente Bizum'}</td>
                     <td><strong>{row.points}</strong></td>
-                    <td>{prizeForRank(index + 1) ? euro(prizeForRank(index + 1)) : '—'}</td>
+                    <td>{prizeForRank(index + 1, row) ? euro(prizeForRank(index + 1, row)) : '—'}</td>
                     <td>{row.groupWinnersCorrect || 0}</td>
                     <td>{row.groupRunnersCorrect || 0}</td>
                     <td>{row.thirdsCorrect || 0}</td>
@@ -1597,7 +1606,9 @@ function Leaderboard({ data, onRefresh }) {
             </table>
           </div>
 
-          <div className="notice softNotice rankingInfo">El reparto actual se calcula con {playerCount} jugadores registrados. He interpretado el 20% como premio para el 3º clasificado.</div>
+          <div className="notice softNotice rankingInfo">
+            Bote actual: {euro(prizePool)} calculado con {confirmedPlayerCount} pagos confirmados de {euro(entryFee)}. Pendientes de Bizum: {pendingRows.length}.
+          </div>
         </>
       )}
     </section>
@@ -1608,6 +1619,9 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
   const [adminCode, setAdminCode] = useState(localStorage.getItem(STORAGE_ADMIN) || '');
   const [results, setResults] = useState(initialResults || {});
   const [busy, setBusy] = useState(false);
+  const [paymentRows, setPaymentRows] = useState([]);
+  const [paymentsLoaded, setPaymentsLoaded] = useState(false);
+  const [paymentsBusy, setPaymentsBusy] = useState(false);
 
   useEffect(() => {
     setResults(initialResults || {});
@@ -1665,12 +1679,59 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
     }
   }
 
+  async function loadPayments() {
+    setPaymentsBusy(true);
+    onStatus('');
+    try {
+      localStorage.setItem(STORAGE_ADMIN, adminCode);
+      const data = await apiFetch('/api/admin-payments', { adminCode });
+      setPaymentRows(data.players || []);
+      setPaymentsLoaded(true);
+      onStatus(`Pagos cargados: ${data.confirmedCount}/${data.playerCount} confirmados. Bote: ${data.prizePool} €.`);
+    } catch (error) {
+      onStatus(error.message);
+    } finally {
+      setPaymentsBusy(false);
+    }
+  }
+
+  async function updatePayment(playerId, confirmed) {
+    setPaymentsBusy(true);
+    onStatus('');
+    try {
+      localStorage.setItem(STORAGE_ADMIN, adminCode);
+      const data = await apiFetch('/api/admin-payments', {
+        method: 'POST',
+        adminCode,
+        body: {
+          playerId,
+          paymentStatus: confirmed ? 'confirmed' : 'pending'
+        }
+      });
+      setPaymentRows(data.players || []);
+      setPaymentsLoaded(true);
+      onStatus(confirmed ? 'Bizum confirmado. El jugador ya cuenta para el bote.' : 'Jugador marcado como pendiente de Bizum.');
+      await onSaved();
+    } catch (error) {
+      onStatus(error.message);
+    } finally {
+      setPaymentsBusy(false);
+    }
+  }
+
+  function euro(value) {
+    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(Number(value || 0));
+  }
+
+  const confirmedCount = paymentRows.filter((row) => row.paymentConfirmed).length;
+  const prizePool = confirmedCount * 5;
+
   return (
     <section className="panel">
       <div className="toolbar">
         <div>
           <h2>Admin</h2>
-          <p className="muted">Usa esta zona para cerrar la porra y cargar resultados reales.</p>
+          <p className="muted">Usa esta zona para cerrar la porra, cargar resultados reales y confirmar pagos por Bizum.</p>
         </div>
         <label>
           Código admin
@@ -1683,6 +1744,60 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
         <button className="secondary" onClick={() => setLocked(false)} disabled={busy || !locked}>Reabrir porra</button>
         <span className={locked ? 'locked pill' : 'pill'}>{locked ? 'Cerrada' : 'Abierta'}</span>
       </div>
+
+      <section className="adminPaymentPanel">
+        <div className="paymentPanelHeader">
+          <div>
+            <h3>Confirmación de Bizum</h3>
+            <p className="muted small">Marca quién ha pagado los 5 €. Solo los confirmados cuentan para el bote y aparecen activos en la clasificación.</p>
+          </div>
+          <button className="secondary" type="button" onClick={loadPayments} disabled={paymentsBusy || !adminCode}>
+            {paymentsBusy ? 'Cargando...' : paymentsLoaded ? 'Actualizar pagos' : 'Cargar jugadores'}
+          </button>
+        </div>
+
+        {paymentsLoaded && (
+          <>
+            <div className="paymentSummaryCards">
+              <article>
+                <span>Confirmados</span>
+                <strong>{confirmedCount}/{paymentRows.length}</strong>
+              </article>
+              <article>
+                <span>Bote actual</span>
+                <strong>{euro(prizePool)}</strong>
+              </article>
+              <article>
+                <span>Premios</span>
+                <strong>{euro(prizePool * 0.5)} · {euro(prizePool * 0.3)} · {euro(prizePool * 0.2)}</strong>
+              </article>
+            </div>
+
+            <div className="paymentList">
+              {paymentRows.map((row) => (
+                <article key={row.playerId} className={`paymentRow ${!row.paymentConfirmed ? 'paymentPending' : ''}`}>
+                  <PlayerAvatar player={row} size="sm" />
+                  <div className="paymentPlayerInfo">
+                    <strong>{row.name}</strong>
+                    <span>{row.phone || 'Sin teléfono registrado'}</span>
+                    {!row.paymentConfirmed && <em>⚠️ Pendiente confirmar Bizum</em>}
+                  </div>
+                  <div className="paymentActions">
+                    <span className={row.paymentConfirmed ? 'paymentBadge confirmed' : 'paymentBadge pending'}>
+                      {row.paymentConfirmed ? 'Confirmado' : 'Pendiente'}
+                    </span>
+                    {row.paymentConfirmed ? (
+                      <button className="secondary" type="button" onClick={() => updatePayment(row.playerId, false)} disabled={paymentsBusy}>Marcar pendiente</button>
+                    ) : (
+                      <button type="button" onClick={() => updatePayment(row.playerId, true)} disabled={paymentsBusy}>Confirmar Bizum</button>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </>
+        )}
+      </section>
 
       <FixtureList fixtures={fixtures} scores={results} results={{}} groups={groups} onChange={updateResult} disabled={false} />
 

@@ -4192,3 +4192,165 @@ th {
     padding: 0.9rem !important;
   }
 }
+
+/* =========================
+   ADMIN BIZUM + PAYMENT RANKING
+   ========================= */
+.adminPaymentPanel {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1.1rem;
+  border: 1px solid rgba(25, 101, 192, 0.18);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(239, 248, 255, 0.94), rgba(255, 255, 255, 0.96));
+  box-shadow: 0 12px 30px rgba(15, 36, 68, 0.06);
+}
+
+.paymentPanelHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.paymentPanelHeader h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+}
+
+.paymentSummaryCards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.paymentSummaryCards article {
+  padding: 0.9rem;
+  border: 1px solid rgba(25, 101, 192, 0.18);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.paymentSummaryCards span {
+  display: block;
+  color: #55708d;
+  font-weight: 800;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.paymentSummaryCards strong {
+  color: #061e3a;
+  font-size: 1.2rem;
+}
+
+.paymentList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.paymentRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(25, 101, 192, 0.16);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.paymentRow.paymentPending {
+  background: #f5f7fa;
+  color: #6b7280;
+}
+
+.paymentPlayerInfo {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.paymentPlayerInfo strong {
+  color: inherit;
+}
+
+.paymentPlayerInfo span {
+  color: #55708d;
+  font-weight: 700;
+}
+
+.paymentPlayerInfo em,
+.pendingPaymentText {
+  color: #9a6a00;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 0.78rem;
+}
+
+.paymentActions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.paymentBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.42rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.paymentBadge.confirmed {
+  color: #0a6b36;
+  background: #dcfce7;
+}
+
+.paymentBadge.pending {
+  color: #8a5a00;
+  background: #fff4ce;
+}
+
+.rankingPendingPayment,
+.rankingPendingPaymentRow {
+  color: #8b95a1 !important;
+  background: #f4f6f8 !important;
+  opacity: 0.86;
+}
+
+.rankingPendingPayment .rankingPlayerInfo strong,
+.rankingPendingPaymentRow strong,
+.rankingPendingPaymentRow .leaderboardPlayer span {
+  color: #6b7280 !important;
+}
+
+.rankingPendingPayment .rankingPoints strong {
+  color: #8b95a1;
+}
+
+.rankingPendingPayment .playerAvatar {
+  filter: grayscale(0.85);
+}
+
+@media (max-width: 760px) {
+  .paymentPanelHeader,
+  .paymentRow,
+  .paymentActions {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .paymentSummaryCards {
+    grid-template-columns: 1fr;
+  }
+
+  .paymentActions button,
+  .paymentPanelHeader button {
+    width: 100%;
+  }
+}
