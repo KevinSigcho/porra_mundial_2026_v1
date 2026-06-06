@@ -1668,3 +1668,562 @@ th {
     min-width: 1480px;
   }
 }
+
+/* ==========================================================
+   MOBILE APP REDESIGN + PRIZES + BIZUM REGISTRATION
+   Safe append: does not remove existing desktop styles.
+   ========================================================== */
+
+.fieldHint {
+  color: #7b8ea6;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.prizeCards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0 10px;
+}
+
+.prizeCard {
+  border: 1px solid #dce8f4;
+  border-radius: 20px;
+  padding: 14px;
+  display: grid;
+  gap: 4px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(15,35,60,0.06);
+}
+
+.prizeCard span {
+  font-size: 0.85rem;
+  font-weight: 950;
+  color: #64748b;
+}
+
+.prizeCard strong {
+  font-size: 1.45rem;
+  color: #0758d8;
+}
+
+.prizeCard small {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.prizeGold { background: linear-gradient(180deg, #fff7d6, #ffffff); }
+.prizeSilver { background: linear-gradient(180deg, #f4f7fb, #ffffff); }
+.prizeBronze { background: linear-gradient(180deg, #fff1e6, #ffffff); }
+
+.leaderboardSummaryCard {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #dce8f4;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(15,35,60,0.06);
+}
+
+.leaderboardSummaryCard > div {
+  display: grid;
+  gap: 4px;
+}
+
+.summaryLabel {
+  color: #64748b;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.leaderboardSummaryCard strong {
+  color: #0758d8;
+  font-size: 1.7rem;
+}
+
+.mobileRankingList {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.rankingRowCard {
+  display: grid;
+  grid-template-columns: 48px 34px auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(15,35,60,0.04);
+}
+
+.rankingTop1 { border-left: 6px solid #facc15; background: linear-gradient(90deg, #fffbeb, #fff); }
+.rankingTop2 { border-left: 6px solid #94a3b8; }
+.rankingTop3 { border-left: 6px solid #c2410c; }
+
+.rankingPosition {
+  font-size: 1.35rem;
+  font-weight: 950;
+  color: #0f172a;
+}
+
+.rankingMedal {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.rankingPlayerInfo {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rankingPlayerInfo strong {
+  font-size: 1.05rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rankingPlayerInfo span {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.rankingPoints {
+  text-align: right;
+  display: grid;
+  gap: 0;
+}
+
+.rankingPoints strong {
+  font-size: 1.45rem;
+  color: #0758d8;
+  line-height: 1;
+}
+
+.rankingPoints span,
+.rankingPoints small {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.rankingPoints small {
+  color: #16a34a;
+}
+
+.rankingInfo {
+  margin-top: 14px;
+}
+
+.mobileSectionPill {
+  width: max-content;
+  margin: 0 auto 18px;
+  padding: 0.8rem 1.35rem;
+  border-radius: 999px;
+  background: #061a3a;
+  color: #fff;
+  font-weight: 950;
+  box-shadow: 0 12px 30px rgba(6,26,58,0.18);
+}
+
+/* More usable desktop width */
+@media (min-width: 1100px) {
+  .page {
+    width: min(1760px, calc(100% - 48px));
+  }
+
+  .predictionsPanel .matches,
+  .groupMatches {
+    grid-template-columns: repeat(2, minmax(420px, 1fr));
+  }
+}
+
+@media (min-width: 1600px) {
+  .page {
+    width: min(1880px, calc(100% - 72px));
+  }
+}
+
+/* Mobile app-like layout inspired by the mockups */
+@media (max-width: 760px) {
+  :root {
+    background: #ffffff;
+  }
+
+  body {
+    background: #ffffff;
+    overflow-x: hidden;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .page {
+    width: 100%;
+    max-width: none;
+    padding: 0 0 calc(96px + env(safe-area-inset-bottom));
+  }
+
+  .hero {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    margin: 0;
+    border-radius: 0;
+    border: 0;
+    padding: calc(18px + env(safe-area-inset-top)) 18px 18px;
+    background: linear-gradient(135deg, #061a3a, #0b234a);
+    color: #fff;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+  }
+
+  .hero::before {
+    content: '☰';
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+    font-size: 1.6rem;
+  }
+
+  .hero > div {
+    flex: 1;
+  }
+
+  .hero h1 {
+    font-size: 1.7rem;
+    letter-spacing: -0.03em;
+    margin: 0;
+    color: #fff;
+  }
+
+  .hero p {
+    color: #b8c7e3;
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+  }
+
+  .hero button.secondary {
+    align-self: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0;
+    border-radius: 999px;
+    font-size: 0;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.9);
+  }
+
+  .hero button.secondary::before {
+    content: '👤';
+    font-size: 1.35rem;
+  }
+
+  .rulesBanner,
+  .notice {
+    width: calc(100% - 24px);
+    margin: 12px auto;
+    border-radius: 16px;
+  }
+
+  .rulesBanner {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .rulesBanner button {
+    width: 100%;
+  }
+
+  .tabs {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 80;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    margin: 0;
+    padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+    background: rgba(255,255,255,0.96);
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -10px 24px rgba(15,35,60,0.10);
+    overflow: visible;
+  }
+
+  .tabs button {
+    display: grid;
+    place-items: center;
+    gap: 4px;
+    padding: 6px 4px;
+    border-radius: 0;
+    background: transparent;
+    color: #475569;
+    font-size: 0.68rem;
+    line-height: 1.05;
+    white-space: normal;
+    box-shadow: none;
+  }
+
+  .tabs button::before {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .tabs button:nth-child(1)::before { content: '👥'; }
+  .tabs button:nth-child(2)::before { content: '🔀'; }
+  .tabs button:nth-child(3)::before { content: '🏆'; }
+  .tabs button:nth-child(4)::before { content: '📊'; }
+  .tabs button:nth-child(5)::before { content: '⚙️'; }
+
+  .tabs button.active {
+    color: #0758d8;
+    background: transparent;
+  }
+
+  .tabs button.active::after {
+    content: '';
+    width: 42px;
+    height: 3px;
+    border-radius: 99px;
+    background: #0758d8;
+  }
+
+  .panel {
+    width: calc(100% - 24px);
+    margin: 14px auto;
+    border-radius: 20px;
+    padding: 14px;
+    box-shadow: 0 8px 24px rgba(15,35,60,0.08);
+  }
+
+  .mobileCardPanel {
+    background: #fff;
+  }
+
+  .toolbar,
+  .predictionsTopBar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .toolbar h2 {
+    font-size: 1.25rem;
+  }
+
+  .overallProgressCard,
+  .leaderboardSummaryCard {
+    width: 100%;
+  }
+
+  .groupStepper {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+
+  .currentGroupCard {
+    order: -1;
+    border-radius: 999px;
+    background: #061a3a;
+    color: #fff;
+    padding: 12px;
+  }
+
+  .currentGroupCard .eyebrow {
+    color: #b8d7ff !important;
+  }
+
+  .groupJump select {
+    border-radius: 999px;
+    font-weight: 900;
+  }
+
+  .standingCard,
+  .matchCard,
+  .groupBlock,
+  .leaderboardSummaryCard,
+  .rankingRowCard {
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(15,35,60,0.08);
+  }
+
+  .standingsGrid,
+  .compactStandingsGrid,
+  .qualifiedLists,
+  .prizeCards {
+    grid-template-columns: 1fr;
+  }
+
+  .standingsTableWrap,
+  .tableWrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .standingsTable {
+    min-width: 560px;
+  }
+
+  .matches,
+  .groupMatches,
+  .predictionsPanel .matches {
+    grid-template-columns: 1fr !important;
+  }
+
+  .matchCard {
+    padding: 12px;
+    background: #fff;
+  }
+
+  .matchMeta {
+    margin-bottom: 10px;
+  }
+
+  .scoreRow,
+  .scoreRowEnhanced {
+    grid-template-columns: 1fr 54px 10px 54px 1fr;
+    gap: 6px;
+  }
+
+  .scoreRow input,
+  .scoreRowEnhanced input {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .teamName {
+    font-size: 0.92rem;
+  }
+
+  .flagImg {
+    width: 1.65rem;
+    height: 1.1rem;
+    border-radius: 4px;
+  }
+
+  .stickyActions {
+    position: sticky;
+    bottom: calc(70px + env(safe-area-inset-bottom));
+    z-index: 70;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    width: calc(100% + 12px);
+    margin: 16px -6px -6px;
+    padding: 10px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(12px);
+  }
+
+  .stickyActions button {
+    min-height: 48px;
+    border-radius: 14px;
+  }
+
+  .fullBracketScrollWrap,
+  .fullBracketBoard,
+  .bracketBoard {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fullBracketBoard,
+  .projectedFullBracketBoard {
+    min-width: 1180px;
+  }
+
+  .authShell {
+    width: calc(100% - 24px);
+  }
+
+  .authCard {
+    border-radius: 22px;
+  }
+
+  .loginHero {
+    padding: 22px 0 4px;
+  }
+
+  .loginHero h1 {
+    font-size: 2rem;
+  }
+
+  .avatarGrid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .desktopOnlyTable {
+    display: none;
+  }
+
+  .leaderboardSummaryCard {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .leaderboardSummaryCard button {
+    grid-column: 1 / -1;
+  }
+
+  .rankingRowCard {
+    grid-template-columns: 42px 28px 44px 1fr auto;
+    padding: 12px;
+  }
+
+  .rankingPosition {
+    font-size: 1.15rem;
+  }
+
+  .rankingPlayerInfo strong {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .scoreRow,
+  .scoreRowEnhanced {
+    grid-template-columns: 1fr 46px 8px 46px 1fr;
+  }
+
+  .scoreRow input,
+  .scoreRowEnhanced input {
+    width: 46px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+
+  .teamName {
+    font-size: 0.78rem;
+  }
+
+  .tabs button {
+    font-size: 0.62rem;
+  }
+
+  .rankingRowCard {
+    grid-template-columns: 34px 0 42px 1fr auto;
+    gap: 8px;
+  }
+
+  .rankingMedal {
+    display: none;
+  }
+}

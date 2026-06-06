@@ -884,6 +884,7 @@ function LoginForm({ onLoggedIn }) {
   const [name, setName] = useState('');
   const [pin, setPin] = useState('');
   const [joinCode, setJoinCode] = useState('');
+  const [phone, setPhone] = useState('');
   const [avatarId, setAvatarId] = useState('football-1');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [error, setError] = useState('');
@@ -894,6 +895,7 @@ function LoginForm({ onLoggedIn }) {
     setError('');
     if (nextMode === 'login') {
       setJoinCode('');
+      setPhone('');
     }
   }
 
@@ -925,6 +927,7 @@ function LoginForm({ onLoggedIn }) {
           name,
           pin,
           joinCode: mode === 'register' ? joinCode : '',
+          phone: mode === 'register' ? phone : undefined,
           avatarId: mode === 'register' ? avatarId : undefined,
           avatarUrl: mode === 'register' ? avatarUrl : undefined
         }
@@ -957,6 +960,12 @@ function LoginForm({ onLoggedIn }) {
 
           {mode === 'register' && (
             <>
+              <label>
+                Teléfono para Bizum
+                <input value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="Ej. 600 123 456" inputMode="tel" autoComplete="tel" required />
+                <span className="fieldHint">Solo lo verá el admin en Azure Storage para comprobar el pago de 5 €.</span>
+              </label>
+
               <label>
                 Código de invitación
                 <input value={joinCode} onChange={(event) => setJoinCode(event.target.value)} placeholder="Código que te pasa el admin" required />
@@ -1371,51 +1380,98 @@ function BracketTeam({ team, seed }) {
 
 function Leaderboard({ data, onRefresh }) {
   const rows = data?.rows || [];
-  const podium = rows.slice(0, 3);
-  const rest = rows.slice(3);
-  const podiumOrder = [1, 0, 2].filter((index) => podium[index]);
-  const medals = ['🥇', '🥈', '🥉'];
+  const playerCount = data?.playerCount || rows.length;
+  const entryFee = data?.entryFee || 5;
+  const prizePool = data?.prizePool ?? playerCount * entryFee;
+  const prizes = data?.prizes || {
+    first: Math.round(prizePool * 0.5 * 100) / 100,
+    second: Math.round(prizePool * 0.3 * 100) / 100,
+    third: Math.round(prizePool * 0.2 * 100) / 100
+  };
+  const medals = ['🏆', '🥈', '🥉'];
+
+  function euro(value) {
+    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(Number(value || 0));
+  }
+
+  function prizeForRank(rank) {
+    if (rank === 1) return prizes.first;
+    if (rank === 2) return prizes.second;
+    if (rank === 3) return prizes.third;
+    return 0;
+  }
 
   return (
-    <section className="panel leaderboardPanel">
-      <div className="toolbar">
+    <section className="panel leaderboardPanel mobileCardPanel">
+      <div className="mobileSectionPill">🏆 Clasificación general</div>
+
+      <div className="leaderboardSummaryCard">
         <div>
-          <h2>Clasificación porra</h2>
-          <p className="muted">Resultados reales cargados: {data?.resultCount || 0}/{data?.fixtureCount || 72}</p>
+          <span className="summaryLabel">Jugadores registrados</span>
+          <strong>{playerCount}</strong>
+        </div>
+        <div>
+          <span className="summaryLabel">Bote actual</span>
+          <strong>{euro(prizePool)}</strong>
         </div>
         <button className="secondary" onClick={onRefresh}>Actualizar</button>
       </div>
+
+      <div className="prizeCards" aria-label="Reparto de premios">
+        <article className="prizeCard prizeGold">
+          <span>1º</span>
+          <strong>{euro(prizes.first)}</strong>
+          <small>50% del bote</small>
+        </article>
+        <article className="prizeCard prizeSilver">
+          <span>2º</span>
+          <strong>{euro(prizes.second)}</strong>
+          <small>30% del bote</small>
+        </article>
+        <article className="prizeCard prizeBronze">
+          <span>3º</span>
+          <strong>{euro(prizes.third)}</strong>
+          <small>20% del bote</small>
+        </article>
+      </div>
+
+      <p className="muted small leaderboardMeta">Resultados reales cargados: {data?.resultCount || 0}/{data?.fixtureCount || 72}. Entrada: {euro(entryFee)} por jugador.</p>
 
       {rows.length === 0 ? (
         <div className="notice softNotice">Todavía no hay jugadores con pronósticos.</div>
       ) : (
         <>
-          <div className="podium" aria-label="Podio de la porra">
-            {podiumOrder.map((podiumIndex) => {
-              const row = podium[podiumIndex];
-              const rank = podiumIndex + 1;
+          <div className="mobileRankingList" aria-label="Clasificación de la porra">
+            {rows.map((row, index) => {
+              const rank = index + 1;
+              const prize = prizeForRank(rank);
               return (
-                <article key={row.playerId} className={`podiumCard podiumRank${rank}`}>
-                  <div className="podiumMedal">{medals[podiumIndex]}</div>
-                  <PlayerAvatar player={row} size="xl" rank={rank} />
-                  <h3>{row.name}</h3>
-                  <p className="podiumPoints">{row.points} pts</p>
-                  <div className="podiumStats">
-                    <span>{row.groupWinnersCorrect || 0} primeros</span>
-                    <span>{row.groupRunnersCorrect || 0} segundos</span>
+                <article key={row.playerId} className={`rankingRowCard ${rank <= 3 ? `rankingTop rankingTop${rank}` : ''}`}>
+                  <div className="rankingPosition">{rank}º</div>
+                  <div className="rankingMedal">{rank <= 3 ? medals[index] : ''}</div>
+                  <PlayerAvatar player={row} size="md" />
+                  <div className="rankingPlayerInfo">
+                    <strong>{row.name}</strong>
+                    <span>{row.groupWinnersCorrect || 0} primeros · {row.groupRunnersCorrect || 0} segundos · {row.thirdsCorrect || 0} terceros</span>
+                  </div>
+                  <div className="rankingPoints">
+                    <strong>{row.points}</strong>
+                    <span>pts</span>
+                    {prize > 0 && <small>{euro(prize)}</small>}
                   </div>
                 </article>
               );
             })}
           </div>
 
-          <div className="tableWrap leaderboardTableWrap">
+          <div className="tableWrap leaderboardTableWrap desktopOnlyTable">
             <table>
               <thead>
                 <tr>
                   <th>#</th>
                   <th>Jugador</th>
                   <th>Puntos</th>
+                  <th>Premio</th>
                   <th>1º grupo</th>
                   <th>2º grupo</th>
                   <th>3º KO</th>
@@ -1435,6 +1491,7 @@ function Leaderboard({ data, onRefresh }) {
                       </span>
                     </td>
                     <td><strong>{row.points}</strong></td>
+                    <td>{prizeForRank(index + 1) ? euro(prizeForRank(index + 1)) : '—'}</td>
                     <td>{row.groupWinnersCorrect || 0}</td>
                     <td>{row.groupRunnersCorrect || 0}</td>
                     <td>{row.thirdsCorrect || 0}</td>
@@ -1446,6 +1503,8 @@ function Leaderboard({ data, onRefresh }) {
               </tbody>
             </table>
           </div>
+
+          <div className="notice softNotice rankingInfo">El reparto actual se calcula con {playerCount} jugadores registrados. He interpretado el 20% como premio para el 3º clasificado.</div>
         </>
       )}
     </section>
