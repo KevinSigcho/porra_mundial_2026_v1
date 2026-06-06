@@ -15,6 +15,7 @@ function money(value) {
 
 function mapPlayer(player) {
   const confirmed = isConfirmed(player);
+
   return {
     playerId: player.rowKey,
     name: player.name || player.rowKey,
@@ -31,10 +32,16 @@ function mapPlayer(player) {
 
 async function paymentSnapshot() {
   const players = await listByPartition('player');
-  const mapped = players.map(mapPlayer).sort((a, b) => {
-    if (a.paymentConfirmed !== b.paymentConfirmed) return a.paymentConfirmed ? -1 : 1;
-    return a.name.localeCompare(b.name, 'es');
-  });
+
+  const mapped = players
+    .map(mapPlayer)
+    .sort((a, b) => {
+      if (a.paymentConfirmed !== b.paymentConfirmed) {
+        return a.paymentConfirmed ? -1 : 1;
+      }
+      return a.name.localeCompare(b.name, 'es');
+    });
+
   const confirmedCount = mapped.filter((player) => player.paymentConfirmed).length;
   const prizePool = money(confirmedCount * ENTRY_FEE);
 
@@ -74,7 +81,7 @@ app.http('adminPayments', {
       }
 
       if (!['confirmed', 'pending'].includes(nextStatus)) {
-        return fail(400, 'Estado de pago no válido. Usa confirmed o pending.');
+        return fail(400, 'Estado de pago no valido. Usa confirmed o pending.');
       }
 
       const player = await getEntity('player', playerId);
