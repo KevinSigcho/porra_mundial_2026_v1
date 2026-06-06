@@ -3379,3 +3379,502 @@ th {
   .mobileBracketGrid { grid-template-columns: 1fr; }
   .mobileBracketRoundNext { display: none; }
 }
+
+/* ===============================
+   V4: mobile mockup tuning
+   - smaller typography
+   - official R32 labels (dieciseisavos)
+   - no fake knockout data
+   =============================== */
+
+@media (max-width: 760px) {
+  :root {
+    --mobile-page-pad: 0.72rem;
+  }
+
+  body {
+    font-size: 14px !important;
+  }
+
+  .page {
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    background: #f7f9fc !important;
+  }
+
+  .appHeader,
+  .hero {
+    border-radius: 0 0 20px 20px !important;
+    padding: 0.9rem var(--mobile-page-pad) 1rem !important;
+    margin: 0 0 0.75rem !important;
+    box-shadow: 0 5px 16px rgba(9, 25, 55, 0.16) !important;
+  }
+
+  .hero h1,
+  .appTitle {
+    font-size: 1.72rem !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.03em !important;
+    margin: 0 !important;
+  }
+
+  .hero p,
+  .appSubtitle {
+    font-size: 0.78rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .hero .secondary,
+  .hero button {
+    padding: 0.65rem 0.75rem !important;
+    min-height: 42px !important;
+    min-width: 58px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .notice,
+  .rulesBanner {
+    margin-inline: var(--mobile-page-pad) !important;
+    font-size: 0.72rem !important;
+    line-height: 1.25 !important;
+    border-radius: 14px !important;
+    padding: 0.65rem 0.75rem !important;
+  }
+
+  .rulesBanner strong,
+  .rulesBanner .eyebrow {
+    font-size: 0.72rem !important;
+  }
+
+  .rulesBanner p {
+    font-size: 0.7rem !important;
+    margin: 0.15rem 0 0 !important;
+  }
+
+  .rulesButton,
+  .rulesBanner button {
+    padding: 0.55rem 0.65rem !important;
+    font-size: 0.72rem !important;
+    min-height: 36px !important;
+  }
+
+  .tabs {
+    margin: 0 var(--mobile-page-pad) 0.65rem !important;
+    padding: 0 0 0.22rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .tabs button {
+    padding: 0.58rem 0.7rem !important;
+    border-radius: 12px !important;
+    font-size: 0.72rem !important;
+    min-height: 36px !important;
+    white-space: nowrap !important;
+  }
+
+  .panel {
+    margin: 0 var(--mobile-page-pad) 5.6rem !important;
+    padding: 0.75rem !important;
+    border-radius: 18px !important;
+  }
+
+  .panel h2 {
+    font-size: 1.05rem !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0.2rem !important;
+  }
+
+  .panel h3 {
+    font-size: 0.92rem !important;
+    line-height: 1.18 !important;
+  }
+
+  .muted,
+  .small,
+  .qualificationHint {
+    font-size: 0.68rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .toolbar {
+    gap: 0.7rem !important;
+    margin-bottom: 0.65rem !important;
+  }
+
+  .mobileSectionPill {
+    min-height: 38px !important;
+    padding: 0.55rem 0.8rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 999px !important;
+  }
+
+  .groupNavigator,
+  .predictionNav,
+  .groupNav {
+    gap: 0.5rem !important;
+    padding: 0.55rem !important;
+    border-radius: 14px !important;
+  }
+
+  .groupNavigator button,
+  .predictionNav button,
+  .groupNav button,
+  .groupNavigator select,
+  .predictionNav select,
+  .groupNav select {
+    min-height: 38px !important;
+    padding: 0.45rem 0.55rem !important;
+    font-size: 0.72rem !important;
+    border-radius: 10px !important;
+  }
+
+  .groupProgressCard,
+  .predictionProgress,
+  .progressCard,
+  .progressBox {
+    padding: 0.55rem !important;
+    border-radius: 12px !important;
+  }
+
+  .groupProgressCard strong,
+  .predictionProgress strong,
+  .progressCard strong,
+  .progressBox strong {
+    font-size: 1.05rem !important;
+  }
+
+  .predictionStandingsPreview {
+    margin-top: 0.75rem !important;
+    padding: 0.65rem !important;
+    border-radius: 16px !important;
+  }
+
+  .previewHeading {
+    gap: 0.45rem !important;
+    margin-bottom: 0.55rem !important;
+  }
+
+  .pill,
+  .groupCount,
+  .seedBadge {
+    font-size: 0.64rem !important;
+  }
+
+  .standingCard {
+    border-radius: 14px !important;
+    padding: 0.55rem !important;
+  }
+
+  .standingsTable {
+    min-width: 470px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .standingsTable th,
+  .standingsTable td {
+    padding: 0.35rem 0.4rem !important;
+  }
+
+  .standingTeam {
+    gap: 0.3rem !important;
+  }
+
+  .groupBlock {
+    padding: 0.65rem !important;
+    border-radius: 16px !important;
+    margin-top: 0.8rem !important;
+  }
+
+  .groupHeader {
+    gap: 0.4rem !important;
+  }
+
+  .groupTeamsSummary,
+  .teamStrip {
+    gap: 0.35rem !important;
+  }
+
+  .teamBadge,
+  .groupTeamName {
+    padding: 0.32rem 0.45rem !important;
+    border-radius: 999px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .matches,
+  .groupMatches {
+    gap: 0.55rem !important;
+  }
+
+  .matchCard,
+  .matchCardEnhanced {
+    padding: 0.65rem !important;
+    border-radius: 16px !important;
+    box-shadow: 0 5px 12px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  .matchMeta {
+    gap: 0.25rem !important;
+    margin-bottom: 0.45rem !important;
+  }
+
+  .matchMeta span {
+    padding: 0.22rem 0.38rem !important;
+    border-radius: 999px !important;
+    font-size: 0.62rem !important;
+  }
+
+  .scoreRow,
+  .scoreRowEnhanced {
+    gap: 0.25rem !important;
+    grid-template-columns: minmax(0, 1fr) 2.6rem auto 2.6rem minmax(0, 1fr) !important;
+  }
+
+  .scoreRow input,
+  .scoreRowEnhanced input {
+    width: 2.6rem !important;
+    min-width: 2.6rem !important;
+    height: 2.45rem !important;
+    font-size: 1rem !important;
+    border-radius: 10px !important;
+  }
+
+  .teamName {
+    font-size: 0.72rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .flagImg {
+    width: 1.15rem !important;
+    height: 0.78rem !important;
+    border-radius: 2px !important;
+  }
+
+  .actualResult {
+    font-size: 0.62rem !important;
+    margin-top: 0.35rem !important;
+  }
+
+  .stickyActions {
+    bottom: 78px !important;
+    padding: 0.55rem 0.75rem !important;
+    gap: 0.4rem !important;
+  }
+
+  .stickyActions button {
+    min-height: 42px !important;
+    font-size: 0.78rem !important;
+    border-radius: 10px !important;
+  }
+
+  /* Mi eliminatoria: compacta y con nombres correctos */
+  .mobileBracketCard {
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  .mobileBracketHero {
+    gap: 0.65rem !important;
+    margin: 0 0 0.75rem !important;
+    padding: 0.8rem !important;
+    border-radius: 16px !important;
+  }
+
+  .mobileBracketIcon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 14px !important;
+    font-size: 1.45rem !important;
+  }
+
+  .mobileBracketHero h3 {
+    font-size: 0.98rem !important;
+    line-height: 1.15 !important;
+    margin: 0 0 0.25rem !important;
+  }
+
+  .mobileBracketHero p {
+    font-size: 0.74rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .mobilePhaseTabs {
+    margin: 0 0 0.7rem !important;
+    border-radius: 14px !important;
+  }
+
+  .mobilePhaseTabs button {
+    min-height: 40px !important;
+    font-size: 0.76rem !important;
+    padding: 0.45rem 0.35rem !important;
+  }
+
+  .mobilePhaseTabs button.active {
+    margin: 4px !important;
+    border-radius: 10px !important;
+  }
+
+  .mobileBracketGrid {
+    grid-template-columns: minmax(250px, 1fr) minmax(185px, 0.74fr) !important;
+    gap: 0.55rem !important;
+    padding: 0.65rem !important;
+    border-radius: 16px !important;
+  }
+
+  .mobileBracketRound h4 {
+    margin: 0 0 0.55rem !important;
+    font-size: 0.82rem !important;
+  }
+
+  .mobileBracketMatch,
+  .mobileBracketPlaceholder {
+    padding: 0.58rem !important;
+    margin-bottom: 0.55rem !important;
+    border-radius: 12px !important;
+    min-height: auto !important;
+  }
+
+  .mobileBracketMatchId {
+    font-size: 0.62rem !important;
+    font-weight: 900 !important;
+    color: #126ee2 !important;
+    margin-bottom: 0.28rem !important;
+  }
+
+  .mobileBracketTeam {
+    grid-template-columns: 42px 22px 1fr !important;
+    gap: 0.35rem !important;
+    margin: 0.25rem 0 !important;
+    font-size: 0.73rem !important;
+  }
+
+  .mobileBracketTeam .seedBadge {
+    min-width: 36px !important;
+    height: 24px !important;
+    border-radius: 7px !important;
+    font-size: 0.58rem !important;
+  }
+
+  .mobileBracketTeam strong {
+    font-size: 0.73rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .mobileBracketPlaceholder {
+    grid-template-columns: 24px 1fr !important;
+    gap: 0.4rem !important;
+    font-size: 0.68rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .trophyIcon {
+    font-size: 1rem !important;
+  }
+
+  .mobileInfoNote {
+    margin-top: 0.75rem !important;
+    padding: 0.65rem !important;
+    border-radius: 12px !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* Fase eliminatorias: no mostrar datos inventados; solo cuadro oficial pendiente */
+  .knockoutStagePanel h2 {
+    font-size: 1rem !important;
+  }
+
+  .fullBracketBoard,
+  .projectedFullBracketBoard {
+    transform-origin: top left !important;
+  }
+
+  /* Clasificación */
+  .leaderboardPanel .toolbar,
+  .leaderboardSummaryCard,
+  .prizeCards {
+    gap: 0.6rem !important;
+  }
+
+  .mobileRankingRow {
+    min-height: 58px !important;
+    padding: 0.55rem 0.65rem !important;
+    border-radius: 14px !important;
+  }
+
+  .mobileRankingName {
+    font-size: 0.88rem !important;
+  }
+
+  .mobileRankingPoints {
+    font-size: 1rem !important;
+  }
+
+  .playerAvatar-md,
+  .playerAvatar-lg {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1rem !important;
+  }
+
+  .mobileBottomNav {
+    height: 70px !important;
+    padding: 0.35rem 0.35rem env(safe-area-inset-bottom) !important;
+  }
+
+  .mobileBottomNav button {
+    font-size: 0.68rem !important;
+    gap: 0.15rem !important;
+  }
+
+  .mobileBottomNavIcon {
+    font-size: 1.05rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  body { font-size: 13px !important; }
+
+  .hero h1,
+  .appTitle {
+    font-size: 1.52rem !important;
+  }
+
+  .panel {
+    padding: 0.62rem !important;
+  }
+
+  .scoreRow,
+  .scoreRowEnhanced {
+    grid-template-columns: minmax(0, 1fr) 2.35rem auto 2.35rem minmax(0, 1fr) !important;
+  }
+
+  .scoreRow input,
+  .scoreRowEnhanced input {
+    width: 2.35rem !important;
+    min-width: 2.35rem !important;
+    height: 2.25rem !important;
+    font-size: 0.92rem !important;
+  }
+
+  .teamName {
+    font-size: 0.66rem !important;
+  }
+
+  .mobileBracketGrid {
+    grid-template-columns: minmax(235px, 1fr) minmax(165px, 0.7fr) !important;
+  }
+
+  .mobileBracketHero h3 {
+    font-size: 0.9rem !important;
+  }
+
+  .mobileBracketTeam {
+    grid-template-columns: 38px 20px 1fr !important;
+    font-size: 0.66rem !important;
+  }
+
+  .mobileBracketTeam strong {
+    font-size: 0.66rem !important;
+  }
+}

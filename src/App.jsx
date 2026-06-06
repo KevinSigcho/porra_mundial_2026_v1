@@ -1313,31 +1313,40 @@ function MyKnockoutPanel({ fixtures, groups, predictions, fixtureCount }) {
 
 function MobileProjectedBracket({ qualifiedData }) {
   const projectedBracket = useMemo(() => buildProjectedOfficialBracket(qualifiedData), [qualifiedData]);
-  const roundOf32 = projectedBracket.left?.[0]?.matches?.slice(0, 4) || [];
-  const quarterPlaceholders = ['Ganador 1', 'Ganador 2', 'Ganador 3'];
+  const roundOf32 = [
+    ...(projectedBracket.left?.[0]?.matches || []),
+    ...(projectedBracket.right?.[3]?.matches || [])
+  ];
+  const roundOf16 = [
+    ...(projectedBracket.left?.[1]?.matches || []),
+    ...(projectedBracket.right?.[2]?.matches || [])
+  ];
+  const visibleRoundOf32 = roundOf32.slice(0, 6);
+  const visibleRoundOf16 = roundOf16.slice(0, 3);
 
   return (
     <section className="mobileBracketCard" aria-label="Cuadro de eliminatorias móvil">
       <div className="mobileBracketHero">
-        <div className="mobileBracketIcon">↬</div>
+        <div className="mobileBracketIcon">⇄</div>
         <div>
           <h3>Cruces generados según tu fase de grupos</h3>
-          <p>Los emparejamientos se basan en tu clasificación de la fase de grupos.</p>
+          <p>Los equipos salen de tus pronósticos. El cuadro usa los cruces oficiales por posición.</p>
         </div>
       </div>
 
       <div className="mobilePhaseTabs" aria-label="Fases del cuadro">
-        <button type="button" className="active">Octavos</button>
+        <button type="button" className="active">Dieciseisavos</button>
+        <button type="button">Octavos</button>
         <button type="button">Cuartos</button>
-        <button type="button">Semis</button>
         <button type="button">Final</button>
       </div>
 
       <div className="mobileBracketGrid">
         <div className="mobileBracketRound">
-          <h4>Octavos de final</h4>
-          {roundOf32.map((match) => (
+          <h4>Dieciseisavos · Ronda de 32</h4>
+          {visibleRoundOf32.map((match) => (
             <article className="mobileBracketMatch" key={match.id}>
+              <div className="mobileBracketMatchId">{match.id}</div>
               <MobileBracketTeam seed={match.label} team={match.labelTeam} />
               <MobileBracketTeam seed={match.other} team={match.otherTeam} />
             </article>
@@ -1345,18 +1354,18 @@ function MobileProjectedBracket({ qualifiedData }) {
         </div>
 
         <div className="mobileBracketRound mobileBracketRoundNext">
-          <h4>Cuartos de final</h4>
-          {quarterPlaceholders.map((label) => (
-            <article className="mobileBracketPlaceholder" key={label}>
+          <h4>Octavos</h4>
+          {visibleRoundOf16.map((match) => (
+            <article className="mobileBracketPlaceholder" key={match.id}>
               <span className="trophyIcon">🏆</span>
-              <div>Ganador<br />-</div>
-              <div>Ganador<br />-</div>
+              <div><strong>{match.id}</strong><br />{match.label}</div>
+              <div>{match.other}</div>
             </article>
           ))}
         </div>
       </div>
 
-      <div className="mobileInfoNote">ℹ️ Desliza o cambia de fase para ver el resto del cuadro.</div>
+      <div className="mobileInfoNote">ℹ️ En móvil se muestra una vista compacta. Desliza el cuadro completo en escritorio o tablet para ver todos los cruces.</div>
     </section>
   );
 }
