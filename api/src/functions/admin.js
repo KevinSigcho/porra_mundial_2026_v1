@@ -25,7 +25,13 @@ app.http('admin', {
 
       if (body.action === 'setLocked') {
         const locked = body.locked === true;
-
+        if (body.action === 'verify') {
+          return ok({
+            ok: true,
+            admin: true
+          });
+        }
+        
         await upsertEntity({
           partitionKey: 'settings',
           rowKey: 'global',
