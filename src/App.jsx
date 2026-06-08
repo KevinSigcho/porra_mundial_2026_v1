@@ -1740,7 +1740,11 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
 
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-      const data = await apiFetch('/api/admin-payments', { adminCode });
+      const data = await apiFetch('/api/settings', {
+        method: 'POST',
+        adminCode,
+        body: { action: 'listPayments' }
+      });
       setPaymentRows(data.players || []);
       setPaymentsLoaded(true);
       onStatus(`Pagos cargados: ${data.confirmedCount}/${data.playerCount} confirmados. Bote: ${data.prizePool} €.`);
@@ -1757,10 +1761,11 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
 
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-      const data = await apiFetch('/api/admin-payments', {
+      const data = await apiFetch('/api/settings', {
         method: 'POST',
         adminCode,
         body: {
+          action: 'updatePayment',
           playerId,
           paymentStatus: confirmed ? 'confirmed' : 'pending'
         }
