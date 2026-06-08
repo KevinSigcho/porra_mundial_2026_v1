@@ -237,6 +237,47 @@ function formatDate(date) {
   }).format(new Date(`${date}T12:00:00Z`));
 }
 
+
+function formatFixtureDateSpain(fixture) {
+  const date = fixture?.kickoffDateSpain || fixture?.date;
+  if (!date) return 'Fecha pendiente';
+
+  return new Intl.DateTimeFormat('es-ES', {
+    timeZone: 'Europe/Madrid',
+    weekday: 'short',
+    day: '2-digit',
+    month: 'short'
+  }).format(new Date(`${date}T12:00:00+02:00`));
+}
+
+function formatDateTimeSpain(value) {
+  if (!value) return 'pendiente';
+
+  return new Intl.DateTimeFormat('es-ES', {
+    timeZone: 'Europe/Madrid',
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(new Date(value));
+}
+
+function kickoffSpainLabel(fixture) {
+  if (fixture?.kickoffTimeSpain) {
+    return `${fixture.kickoffTimeSpain} h España`;
+  }
+
+  if (fixture?.kickoffAtSpain) {
+    return `${new Intl.DateTimeFormat('es-ES', {
+      timeZone: 'Europe/Madrid',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(new Date(fixture.kickoffAtSpain))} h España`;
+  }
+
+  return 'Hora pendiente';
+}
+
 function readStoredPlayer() {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_PLAYER) || 'null');
@@ -980,9 +1021,7 @@ function LoginForm({ onLoggedIn }) {
             <>
               <div className="paymentRegisterBox">
                 <strong>Pago de inscripción: 5 €</strong>
-                <span>
-                  Haz el Bizum al teléfono <strong>639 022 475</strong> indicando tu usuario de la porra en el concepto.
-                </span>
+                <span>Introduce tu teléfono para que el admin pueda enviarte o comprobar el Bizum.</span>
               </div>
 
               <label className="phoneBizumField">
@@ -995,9 +1034,7 @@ function LoginForm({ onLoggedIn }) {
                   autoComplete="tel"
                   required
                 />
-                <span className="fieldHint">
-                  Este teléfono se usará solo para comprobar tu Bizum. Envía 5 € al 639 022 475.
-                </span>
+                <span className="fieldHint">Solo se usará para identificar el pago de la porra.</span>
               </label>
 
               <label>
@@ -1140,9 +1177,15 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
     <article className="matchCard matchCardEnhanced">
       <div className="matchMeta">
         <span>#{fixture.matchNo}</span>
-        <span>{formatDate(fixture.date)}</span>
+        <span>{formatFixtureDateSpain(fixture)}</span>
+        <span>{kickoffSpainLabel(fixture)}</span>
         <span>{fixture.venue}</span>
       </div>
+      {fixture.lockAtSpain && (
+        <p className="matchTimingNote">
+          Cierre pronóstico: {formatDateTimeSpain(fixture.lockAtSpain)} h España
+        </p>
+      )}
       <div className="scoreRow scoreRowEnhanced">
         <span className="team home">
           <span className="teamName">{fixture.home}</span>
@@ -1744,11 +1787,7 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
 
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-      const data = await apiFetch('/api/settings', {
-        method: 'POST',
-        adminCode,
-        body: { action: 'listPayments' }
-      });
+      const data = await apiFetch('/api/admin-payments', { adminCode });
       setPaymentRows(data.players || []);
       setPaymentsLoaded(true);
       onStatus(`Pagos cargados: ${data.confirmedCount}/${data.playerCount} confirmados. Bote: ${data.prizePool} €.`);
@@ -1765,11 +1804,10 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
 
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-      const data = await apiFetch('/api/settings', {
+      const data = await apiFetch('/api/admin-payments', {
         method: 'POST',
         adminCode,
         body: {
-          action: 'updatePayment',
           playerId,
           paymentStatus: confirmed ? 'confirmed' : 'pending'
         }
