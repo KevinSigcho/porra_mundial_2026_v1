@@ -1646,12 +1646,13 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
 
-      await apiFetch('/api/admin', {
+      // No usamos /api/admin porque en tu despliegue está devolviendo 404.
+      // Esta llamada valida el ADMIN_CODE contra una ruta que ya sabemos que existe.
+      // Envía el mismo valor actual de locked para no cambiar el estado de la porra.
+      await apiFetch('/api/settings', {
         method: 'POST',
         adminCode,
-        body: {
-          action: 'verify'
-        }
+        body: { locked }
       });
 
       setAdminUnlocked(true);
@@ -1694,13 +1695,11 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
       localStorage.setItem(STORAGE_ADMIN, adminCode);
       const payload = normalizeForSave(results);
 
-      const data = await apiFetch('/api/admin', {
+      // Ruta existente y comprobada.
+      const data = await apiFetch('/api/results', {
         method: 'POST',
         adminCode,
-        body: {
-          action: 'saveResults',
-          results: payload
-        }
+        body: { results: payload }
       });
 
       onStatus(`Resultados guardados: ${data.completeCount}/${fixtures.length}.`);
@@ -1719,13 +1718,11 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
 
-      await apiFetch('/api/admin', {
+      // Ruta existente y comprobada.
+      await apiFetch('/api/settings', {
         method: 'POST',
         adminCode,
-        body: {
-          action: 'setLocked',
-          locked: nextLocked
-        }
+        body: { locked: nextLocked }
       });
 
       onStatus(nextLocked ? 'Porra cerrada.' : 'Porra abierta.');
@@ -1768,7 +1765,6 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
           paymentStatus: confirmed ? 'confirmed' : 'pending'
         }
       });
-
       setPaymentRows(data.players || []);
       setPaymentsLoaded(true);
       onStatus(confirmed ? 'Bizum confirmado. El jugador ya cuenta para el bote.' : 'Jugador marcado como pendiente de Bizum.');
@@ -1791,7 +1787,7 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
     return (
       <section className="panel adminGatePanel">
         <form className="adminGateCard" onSubmit={unlockAdmin}>
-          <div className="adminGateIcon">🔐</div>
+          <div className="adminGateIcon" aria-hidden="true">🔐</div>
 
           <p className="eyebrow">Zona privada</p>
           <h2>Acceso admin</h2>
