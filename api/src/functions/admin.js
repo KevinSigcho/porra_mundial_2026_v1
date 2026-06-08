@@ -22,15 +22,16 @@ app.http('admin', {
       requireAdmin(request);
 
       const body = await readJson(request);
+      const action = String(body?.action || '').trim();
 
-      if (body.action === 'verify') {
+      if (action === 'verify') {
         return ok({
           ok: true,
           admin: true
         });
       }
 
-      if (body.action === 'setLocked') {
+      if (action === 'setLocked') {
         const locked = body.locked === true;
 
         await upsertEntity({
@@ -43,7 +44,7 @@ app.http('admin', {
         return ok(await getSettings());
       }
 
-      if (body.action === 'saveResults') {
+      if (action === 'saveResults') {
         const results = normalizeScores(body.results || {});
         const completeCount = countComplete(results);
 
