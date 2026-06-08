@@ -61,9 +61,7 @@ const RULE_SECTIONS = [
       "5 puntos si aciertas el equipo que queda 1º de cada grupo.",
       "3 puntos si aciertas el equipo que queda 2º de cada grupo.",
       "1 punto si aciertas el equipo que queda 3º de cada grupo.",
-      "1 punto extra si aciertas el resultado exacto de cada partido.",
-      "La clasificación de cada grupo se calcula con tus marcadores: puntos, diferencia de goles, goles a favor y orden alfabético si persiste el empate.",
-    ],
+      "1 punto extra si aciertas el resultado exacto de cada partido."    ],
   },
   {
     title: "Desempates de la porra",
