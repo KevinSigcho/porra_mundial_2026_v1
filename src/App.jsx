@@ -980,7 +980,9 @@ function LoginForm({ onLoggedIn }) {
             <>
               <div className="paymentRegisterBox">
                 <strong>Pago de inscripción: 5 €</strong>
-                <span>Introduce tu teléfono para que el admin pueda enviarte o comprobar el Bizum.</span>
+                <span>
+                  Haz el Bizum al teléfono <strong>639 022 475</strong> indicando tu usuario de la porra en el concepto.
+                </span>
               </div>
 
               <label className="phoneBizumField">
@@ -993,7 +995,9 @@ function LoginForm({ onLoggedIn }) {
                   autoComplete="tel"
                   required
                 />
-                <span className="fieldHint">Solo se usará para identificar el pago de la porra.</span>
+                <span className="fieldHint">
+                  Este teléfono se usará solo para comprobar tu Bizum. Envía 5 € al 639 022 475.
+                </span>
               </label>
 
               <label>
