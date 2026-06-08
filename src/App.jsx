@@ -237,47 +237,6 @@ function formatDate(date) {
   }).format(new Date(`${date}T12:00:00Z`));
 }
 
-
-function formatFixtureDateSpain(fixture) {
-  const date = fixture?.kickoffDateSpain || fixture?.date;
-  if (!date) return 'Fecha pendiente';
-
-  return new Intl.DateTimeFormat('es-ES', {
-    timeZone: 'Europe/Madrid',
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short'
-  }).format(new Date(`${date}T12:00:00+02:00`));
-}
-
-function formatDateTimeSpain(value) {
-  if (!value) return 'pendiente';
-
-  return new Intl.DateTimeFormat('es-ES', {
-    timeZone: 'Europe/Madrid',
-    day: '2-digit',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(new Date(value));
-}
-
-function kickoffSpainLabel(fixture) {
-  if (fixture?.kickoffTimeSpain) {
-    return `${fixture.kickoffTimeSpain} h España`;
-  }
-
-  if (fixture?.kickoffAtSpain) {
-    return `${new Intl.DateTimeFormat('es-ES', {
-      timeZone: 'Europe/Madrid',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(fixture.kickoffAtSpain))} h España`;
-  }
-
-  return 'Hora pendiente';
-}
-
 function readStoredPlayer() {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_PLAYER) || 'null');
@@ -1177,15 +1136,9 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
     <article className="matchCard matchCardEnhanced">
       <div className="matchMeta">
         <span>#{fixture.matchNo}</span>
-        <span>{formatFixtureDateSpain(fixture)}</span>
-        <span>{kickoffSpainLabel(fixture)}</span>
+        <span>{formatDate(fixture.date)}</span>
         <span>{fixture.venue}</span>
       </div>
-      {fixture.lockAtSpain && (
-        <p className="matchTimingNote">
-          Cierre pronóstico: {formatDateTimeSpain(fixture.lockAtSpain)} h España
-        </p>
-      )}
       <div className="scoreRow scoreRowEnhanced">
         <span className="team home">
           <span className="teamName">{fixture.home}</span>
@@ -1693,13 +1646,12 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
 
-      // No usamos /api/admin porque en tu despliegue está devolviendo 404.
-      // Esta llamada valida el ADMIN_CODE contra una ruta que ya sabemos que existe.
-      // Envía el mismo valor actual de locked para no cambiar el estado de la porra.
       await apiFetch('/api/settings', {
         method: 'POST',
         adminCode,
-        body: { locked }
+        body: {
+          action: 'verify'
+        }
       });
 
       setAdminUnlocked(true);
@@ -1737,18 +1689,14 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
   async function saveResults() {
     setBusy(true);
     onStatus('');
-
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
       const payload = normalizeForSave(results);
-
-      // Ruta existente y comprobada.
       const data = await apiFetch('/api/results', {
         method: 'POST',
         adminCode,
         body: { results: payload }
       });
-
       onStatus(`Resultados guardados: ${data.completeCount}/${fixtures.length}.`);
       await onSaved();
     } catch (error) {
@@ -1761,17 +1709,13 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
   async function setLocked(nextLocked) {
     setBusy(true);
     onStatus('');
-
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-
-      // Ruta existente y comprobada.
       await apiFetch('/api/settings', {
         method: 'POST',
         adminCode,
         body: { locked: nextLocked }
       });
-
       onStatus(nextLocked ? 'Porra cerrada.' : 'Porra abierta.');
       await onSaved();
     } catch (error) {
@@ -1784,10 +1728,15 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
   async function loadPayments() {
     setPaymentsBusy(true);
     onStatus('');
-
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-      const data = await apiFetch('/api/admin-payments', { adminCode });
+      const data = await apiFetch('/api/settings', {
+        method: 'POST',
+        adminCode,
+        body: {
+          action: 'listPayments'
+        }
+      });
       setPaymentRows(data.players || []);
       setPaymentsLoaded(true);
       onStatus(`Pagos cargados: ${data.confirmedCount}/${data.playerCount} confirmados. Bote: ${data.prizePool} €.`);
@@ -1801,13 +1750,13 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
   async function updatePayment(playerId, confirmed) {
     setPaymentsBusy(true);
     onStatus('');
-
     try {
       localStorage.setItem(STORAGE_ADMIN, adminCode);
-      const data = await apiFetch('/api/admin-payments', {
+      const data = await apiFetch('/api/settings', {
         method: 'POST',
         adminCode,
         body: {
+          action: 'updatePayment',
           playerId,
           paymentStatus: confirmed ? 'confirmed' : 'pending'
         }
@@ -1835,10 +1784,8 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
       <section className="panel adminGatePanel">
         <form className="adminGateCard" onSubmit={unlockAdmin}>
           <div className="adminGateIcon" aria-hidden="true">🔐</div>
-
           <p className="eyebrow">Zona privada</p>
           <h2>Acceso admin</h2>
-
           <p className="muted">
             Introduce el código de administrador para ver la gestión de resultados,
             pagos y cierre de porra.
@@ -1850,7 +1797,7 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
               value={adminCode}
               onChange={(event) => setAdminCode(event.target.value)}
               type="password"
-              placeholder="Introduce ADMIN_CODE"
+              placeholder="Introduce tu ADMIN_CODE"
               autoComplete="off"
               autoFocus
             />
