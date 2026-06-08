@@ -64,14 +64,6 @@ const RULE_SECTIONS = [
       "1 punto extra si aciertas el resultado exacto de cada partido."    ],
   },
   {
-    title: "Desempates de la porra",
-    items: [
-      "1º: más puntos totales.",
-      "2º: más partidos con marcador exacto acertado.",
-      "3º: más partidos con diferencia de goles exacta acertada.",
-    ],
-  },
-  {
     title: "Fase de eliminatorias",
     items: [
       "Cuando termine la fase de grupos se cargan los 32 clasificados en el cuadro oficial.",
@@ -79,6 +71,14 @@ const RULE_SECTIONS = [
       "1 punto extra si aciertas el resultado del partido antes de tanda de penaltis.",
     ],
   },
+  {
+    title: "Desempates de la porra",
+    items: [
+      "1º: más puntos totales.",
+      "2º: más partidos con marcador exacto acertado.",
+      "3º: más partidos con diferencia de goles exacta acertada.",
+    ],
+  }
 ];
 
 const OFFICIAL_KNOCKOUT_BRACKET = {
