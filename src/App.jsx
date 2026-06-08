@@ -83,36 +83,36 @@ const OFFICIAL_KNOCKOUT_BRACKET = {
     {
       title: 'Dieciseisavos',
       matches: [
-        { id: 'M73', label: '2º Grupo A', other: '2º Grupo B' },
-        { id: 'M74', label: '1º Grupo C', other: '2º Grupo F' },
-        { id: 'M75', label: '1º Grupo E', other: '3º A/B/C/D/F' },
-        { id: 'M76', label: '1º Grupo F', other: '2º Grupo C' },
-        { id: 'M77', label: '2º Grupo E', other: '2º Grupo I' },
-        { id: 'M78', label: '1º Grupo I', other: '3º C/D/F/G/H' },
-        { id: 'M79', label: '1º Grupo A', other: '3º C/E/F/H/I' },
-        { id: 'M80', label: '1º Grupo L', other: '3º E/H/I/J/K' }
+        { id: 'M74', date: '29/06/2026', time: '22:30', label: '1º Grupo E', other: '3º A/B/C/D/F' },
+        { id: 'M77', date: '30/06/2026', time: '23:00', label: '1º Grupo I', other: '3º C/D/F/G/H' },
+        { id: 'M73', date: '28/06/2026', time: '21:00', label: '2º Grupo A', other: '2º Grupo B' },
+        { id: 'M75', date: '30/06/2026', time: '03:00', label: '1º Grupo F', other: '2º Grupo C' },
+        { id: 'M83', date: '03/07/2026', time: '01:00', label: '2º Grupo K', other: '2º Grupo L' },
+        { id: 'M84', date: '02/07/2026', time: '21:00', label: '1º Grupo H', other: '2º Grupo J' },
+        { id: 'M81', date: '02/07/2026', time: '02:00', label: '1º Grupo D', other: '3º B/E/F/I/J' },
+        { id: 'M82', date: '01/07/2026', time: '22:00', label: '1º Grupo G', other: '3º A/E/H/I/J' }
       ]
     },
     {
       title: 'Octavos',
       matches: [
-        { id: 'M89', label: 'Ganador M74', other: 'Ganador M77' },
-        { id: 'M90', label: 'Ganador M73', other: 'Ganador M75' },
-        { id: 'M91', label: 'Ganador M76', other: 'Ganador M78' },
-        { id: 'M92', label: 'Ganador M79', other: 'Ganador M80' }
+        { id: 'M89', date: '04/07/2026', time: '23:00', label: 'Ganador M74', other: 'Ganador M77' },
+        { id: 'M90', date: '04/07/2026', time: '19:00', label: 'Ganador M73', other: 'Ganador M75' },
+        { id: 'M93', date: '06/07/2026', time: '21:00', label: 'Ganador M83', other: 'Ganador M84' },
+        { id: 'M94', date: '07/07/2026', time: '02:00', label: 'Ganador M81', other: 'Ganador M82' }
       ]
     },
     {
       title: 'Cuartos',
       matches: [
-        { id: 'M97', label: 'Ganador M89', other: 'Ganador M90' },
-        { id: 'M98', label: 'Ganador M91', other: 'Ganador M92' }
+        { id: 'M97', date: '09/07/2026', time: '22:00', label: 'Ganador M89', other: 'Ganador M90' },
+        { id: 'M98', date: '10/07/2026', time: '21:00', label: 'Ganador M93', other: 'Ganador M94' }
       ]
     },
     {
       title: 'Semis',
       matches: [
-        { id: 'M101', label: 'Ganador M97', other: 'Ganador M98' }
+        { id: 'M101', date: '14/07/2026', time: '21:00', label: 'Ganador M97', other: 'Ganador M98' }
       ]
     }
   ],
@@ -120,39 +120,41 @@ const OFFICIAL_KNOCKOUT_BRACKET = {
     {
       title: 'Semis',
       matches: [
-        { id: 'M102', label: 'Ganador M99', other: 'Ganador M100' }
+        { id: 'M102', date: '15/07/2026', time: '21:00', label: 'Ganador M99', other: 'Ganador M100' }
       ]
     },
     {
       title: 'Cuartos',
       matches: [
-        { id: 'M99', label: 'Ganador M93', other: 'Ganador M94' },
-        { id: 'M100', label: 'Ganador M95', other: 'Ganador M96' }
+        { id: 'M99', date: '11/07/2026', time: '23:00', label: 'Ganador M91', other: 'Ganador M92' },
+        { id: 'M100', date: '12/07/2026', time: '03:00', label: 'Ganador M95', other: 'Ganador M96' }
       ]
     },
     {
       title: 'Octavos',
       matches: [
-        { id: 'M93', label: 'Ganador M83', other: 'Ganador M84' },
-        { id: 'M94', label: 'Ganador M81', other: 'Ganador M82' },
-        { id: 'M95', label: 'Ganador M86', other: 'Ganador M88' },
-        { id: 'M96', label: 'Ganador M85', other: 'Ganador M87' }
+        { id: 'M91', date: '05/07/2026', time: '22:00', label: 'Ganador M76', other: 'Ganador M78' },
+        { id: 'M92', date: '06/07/2026', time: '02:00', label: 'Ganador M79', other: 'Ganador M80' },
+        { id: 'M95', date: '07/07/2026', time: '18:00', label: 'Ganador M86', other: 'Ganador M88' },
+        { id: 'M96', date: '07/07/2026', time: '22:00', label: 'Ganador M85', other: 'Ganador M87' }
       ]
     },
     {
       title: 'Dieciseisavos',
       matches: [
-        { id: 'M81', label: '1º Grupo G', other: '3º A/E/H/I/J' },
-        { id: 'M82', label: '1º Grupo D', other: '3º B/E/F/I/J' },
-        { id: 'M83', label: '1º Grupo H', other: '2º Grupo J' },
-        { id: 'M84', label: '2º Grupo K', other: '2º Grupo L' },
-        { id: 'M85', label: '1º Grupo B', other: '3º E/F/G/I/J' },
-        { id: 'M86', label: '1º Grupo J', other: '2º Grupo H' },
-        { id: 'M87', label: '1º Grupo K', other: '3º D/E/I/J/L' },
-        { id: 'M88', label: '2º Grupo D', other: '2º Grupo G' }
+        { id: 'M76', date: '29/06/2026', time: '19:00', label: '1º Grupo C', other: '2º Grupo F' },
+        { id: 'M78', date: '30/06/2026', time: '19:00', label: '2º Grupo E', other: '2º Grupo I' },
+        { id: 'M79', date: '01/07/2026', time: '03:00', label: '1º Grupo A', other: '3º C/E/F/H/I' },
+        { id: 'M80', date: '01/07/2026', time: '18:00', label: '1º Grupo L', other: '3º E/H/J/K' },
+        { id: 'M86', date: '04/07/2026', time: '00:00', label: '1º Grupo J', other: '2º Grupo H' },
+        { id: 'M88', date: '03/07/2026', time: '20:00', label: '2º Grupo D', other: '2º Grupo G' },
+        { id: 'M85', date: '03/07/2026', time: '05:00', label: '1º Grupo B', other: '3º E/F/G/I/J' },
+        { id: 'M87', date: '04/07/2026', time: '03:30', label: '1º Grupo K', other: '3º D/E/I/J/L' }
       ]
     }
-  ]
+  ],
+  final: { id: 'M104', date: '19/07/2026', time: '21:00', label: 'Ganador M101', other: 'Ganador M102' },
+  thirdPlace: { id: 'M103', date: '18/07/2026', time: '23:00', label: 'Perdedor M101', other: 'Perdedor M102' }
 };
 
 const TEAM_FLAG_CODES = {
@@ -880,11 +882,11 @@ function OfficialKnockoutStagePanel() {
           <div className="finalColumn">
             <div className="tournamentLogoMini">🏆</div>
             <p className="eyebrow">Final</p>
-            <OfficialBracketBox match={{ id: 'M104', label: 'Ganador M101', other: 'Ganador M102' }} />
+            <OfficialBracketBox match={OFFICIAL_KNOCKOUT_BRACKET.final} />
             <p className="championLabel">Campeón</p>
             <div className="championPlaceholder">Pendiente</div>
             <p className="eyebrow thirdPlaceTitle">Tercer puesto</p>
-            <OfficialBracketBox match={{ id: 'M103', label: 'Perdedor M101', other: 'Perdedor M102' }} />
+            <OfficialBracketBox match={OFFICIAL_KNOCKOUT_BRACKET.thirdPlace} />
           </div>
           <BracketColumn columns={OFFICIAL_KNOCKOUT_BRACKET.right} side="right" />
         </div>
@@ -909,9 +911,11 @@ function BracketColumn({ columns, side }) {
 }
 
 function OfficialBracketBox({ match }) {
+  const meta = [match.id, match.date, match.time].filter(Boolean).join(' · ');
+
   return (
     <article className="officialSeedBox">
-      <div className="officialSeedMeta">{match.id}</div>
+      <div className="officialSeedMeta">{meta}</div>
       <OfficialSeedTeamLine label={match.label} team={match.labelTeam} />
       <OfficialSeedTeamLine label={match.other} team={match.otherTeam} />
       <div className="officialSeedPass">Pasa: <span>—</span></div>
@@ -1482,11 +1486,11 @@ function ProjectedOfficialBracketBoard({ qualifiedData }) {
           <div className="finalColumn">
             <div className="tournamentLogoMini">🏆</div>
             <p className="eyebrow">Final</p>
-            <OfficialBracketBox match={{ id: 'M104', label: 'Ganador M101', other: 'Ganador M102' }} />
+            <OfficialBracketBox match={OFFICIAL_KNOCKOUT_BRACKET.final} />
             <p className="championLabel">Campeón</p>
             <div className="championPlaceholder">Pendiente</div>
             <p className="eyebrow thirdPlaceTitle">Tercer puesto</p>
-            <OfficialBracketBox match={{ id: 'M103', label: 'Perdedor M101', other: 'Perdedor M102' }} />
+            <OfficialBracketBox match={OFFICIAL_KNOCKOUT_BRACKET.thirdPlace} />
           </div>
           <BracketColumn columns={projectedBracket.right} side="right" />
         </div>
