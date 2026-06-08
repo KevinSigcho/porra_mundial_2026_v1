@@ -23,15 +23,16 @@ app.http('admin', {
 
       const body = await readJson(request);
 
+      if (body.action === 'verify') {
+        return ok({
+          ok: true,
+          admin: true
+        });
+      }
+
       if (body.action === 'setLocked') {
         const locked = body.locked === true;
-        if (body.action === 'verify') {
-          return ok({
-            ok: true,
-            admin: true
-          });
-        }
-        
+
         await upsertEntity({
           partitionKey: 'settings',
           rowKey: 'global',
