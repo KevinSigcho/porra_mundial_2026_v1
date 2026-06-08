@@ -66,7 +66,8 @@ app.http('admin', {
       return {
         status: 400,
         jsonBody: {
-          error: 'Acción admin no reconocida.'
+          error: 'Acción admin no reconocida.',
+          receivedAction: action || null
         }
       };
     } catch (error) {
