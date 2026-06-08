@@ -1,4 +1,4 @@
-# Porra Mundial 2026 - fase de grupos
+# Porra Mundial 2026
 
 Web pública para jugar una porra privada con amigos. No usa Excel. Cada persona entra con:
 
@@ -18,13 +18,23 @@ Después pronostica el marcador de cada uno de los 72 partidos de la fase de gru
 - Panel admin para meter resultados reales.
 - Clasificación automática.
 
-## Puntuación incluida
+## Puntuación
 
-- Marcador exacto: 3 puntos.
-- Signo acertado sin marcador exacto: 1 punto.
-- Fallo: 0 puntos.
+### Fase de grupos (72 partidos)
 
-Puedes cambiarlo en `public/fixtures.json` y `api/src/data/fixtures.json`, campo `rules`.
+Por cada grupo (A-L):
+- **5 puntos** si aciertas qué equipo quedará **1º en el grupo**.
+- **3 puntos** si aciertas qué equipo quedará **2º en el grupo**.
+- **1 punto** si aciertas qué equipo quedará **3º en el grupo** (que clasifica a eliminatorias).
+- **+1 punto extra** por cada partido con **marcador exacto acertado** en la fase de grupos.
+
+Máximo posible por grupo: 5 + 3 + 1 = 9 puntos (más puntos extras por marcadores exactos).
+
+### Fase de eliminatorias
+
+Por cada partido de eliminatorias:
+- **5 puntos** si aciertas qué equipo **pasa a la siguiente ronda**.
+- **+1 punto extra** por cada partido con **marcador exacto acertado** en eliminatorias.
 
 ## Probar en local
 
@@ -66,7 +76,7 @@ Con los valores de ejemplo:
 ```bash
 git init
 git add .
-git commit -m "Porra Mundial 2026 fase de grupos"
+git commit -m "Porra Mundial 2026"
 git branch -M main
 git remote add origin https://github.com/TU_USUARIO/TU_REPO.git
 git push -u origin main
@@ -156,7 +166,10 @@ Edita estos dos archivos con los mismos cambios:
 ## Uso recomendado
 
 1. Antes del Mundial, deja la porra abierta.
-2. Cada amigo entra y guarda sus 72 marcadores.
+2. Cada amigo entra y guarda sus 72 marcadores de fase de grupos.
 3. Antes del primer partido, entra en Admin y pulsa `Cerrar porra`.
-4. Después de cada jornada, mete resultados reales en Admin.
-5. La clasificación se recalcula automáticamente.
+4. Después de cada jornada de fase de grupos, mete resultados reales en Admin.
+5. La clasificación de grupos se recalcula automáticamente.
+6. Cuando inicie la fase de eliminatorias, se habilitará la predicción de resultados y equipos que avanzan.
+7. Mete resultados de eliminatorias en Admin.
+8. La clasificación final se recalcula automáticamente.
