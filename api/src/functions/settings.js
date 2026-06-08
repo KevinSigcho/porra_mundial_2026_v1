@@ -154,6 +154,13 @@ app.http('settings', {
       const body = await readJson(request);
       const action = String(body?.action || '').trim();
 
+      if (action === 'verify') {
+        return ok({
+          ok: true,
+          admin: true
+        });
+      }
+
       if (action === 'listPayments') {
         return await listPaymentsResponse();
       }
