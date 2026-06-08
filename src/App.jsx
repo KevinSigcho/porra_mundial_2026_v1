@@ -1623,9 +1623,9 @@ function Leaderboard({ data, onRefresh }) {
 }
 
 function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSaved }) {
-  const [adminCode, setAdminCode] = useState('');
+  const [adminCode, setAdminCode] = useState(localStorage.getItem(STORAGE_ADMIN) || '');
   const [adminUnlocked, setAdminUnlocked] = useState(false);
-  const [adminAuthBusy, setAdminAuthBusy] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [results, setResults] = useState(initialResults || {});
   const [busy, setBusy] = useState(false);
   const [paymentRows, setPaymentRows] = useState([]);
@@ -1637,34 +1637,39 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
   }, [initialResults]);
 
   async function unlockAdmin(event) {
-    event?.preventDefault?.();
-    const cleanCode = String(adminCode || '').trim();
-
-    if (!cleanCode) {
-      onStatus('Introduce el código de admin.');
-      return;
-    }
-
-    setAdminAuthBusy(true);
-    onStatus('');
-
-    try {
-      const data = await apiFetch('/api/admin-payments', { adminCode: cleanCode });
-      localStorage.setItem(STORAGE_ADMIN, cleanCode);
-      setPaymentRows(data.players || []);
-      setPaymentsLoaded(true);
-      setAdminUnlocked(true);
-      onStatus('Acceso admin concedido.');
-    } catch (error) {
-      setAdminUnlocked(false);
-      setPaymentsLoaded(false);
-      setPaymentRows([]);
-      onStatus(error.message || 'Código admin incorrecto.');
-    } finally {
-      setAdminAuthBusy(false);
-    }
+  if (event) {
+    event.preventDefault();
   }
 
+  setBusy(true);
+  setStatus('');
+
+  try {
+    localStorage.setItem(STORAGE_ADMIN, adminCode);
+
+    await apiFetch('/api/admin', {
+      method: 'POST',
+      adminCode,
+      body: {
+        action: 'verify'
+      }
+    });
+
+    setAdminUnlocked(true);
+    setStatus('Panel admin desbloqueado.');
+
+    if (typeof loadPaymentAdmin === 'function') {
+      await loadPaymentAdmin();
+    }
+  } catch (error) {
+    setAdminUnlocked(false);
+    setStatus(error.message || 'Código admin incorrecto.');
+  } finally {
+    setBusy(false);
+  }
+}
+
+  
   function lockAdmin() {
     setAdminUnlocked(false);
     setAdminCode('');
@@ -1806,6 +1811,42 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
       </section>
     );
   }
+  if (!adminUnlocked) {
+  return (
+    <section className="panel adminGatePanel">
+      <form className="adminGateCard" onSubmit={unlockAdmin}>
+        <div className="adminGateIcon">🔐</div>
+
+        <p className="eyebrow">Zona privada</p>
+        <h2>Acceso admin</h2>
+
+        <p className="muted">
+          Introduce el código de administrador para ver la gestión de resultados,
+          pagos y cierre de porra.
+        </p>
+
+        <label>
+          Código admin
+          <input
+            value={adminCode}
+            onChange={(event) => setAdminCode(event.target.value)}
+            type="password"
+            placeholder="Introduce ADMIN_CODE"
+            autoComplete="off"
+          />
+        </label>
+
+        <button disabled={busy || !adminCode.trim()}>
+          {busy ? 'Comprobando...' : 'Entrar al panel admin'}
+        </button>
+
+        <p className="muted small">
+          Si no tienes el código, no podrás ver ni modificar ninguna información de administración.
+        </p>
+      </form>
+    </section>
+  );
+}
 
   return (
     <section className="panel adminPanelUnlocked">
