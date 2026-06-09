@@ -1780,7 +1780,7 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
 
       {fixture.lockAtSpain && (
         <p className="matchTimingNote">
-          Cierre pronóstico: {formatDateTimeSpain(fixture.lockAtSpain)} h España
+          Hora partido: {formatFixtureDateSpain(fixture)} h España
         </p>
       )}
 
