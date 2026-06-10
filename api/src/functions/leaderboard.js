@@ -1,7 +1,7 @@
 const { app } = require('@azure/functions');
+const { TableClient } = require('@azure/data-tables');
 const { ok, errorResponse } = require('../lib/response');
-const { listByPartition, getEntity } = require('../lib/storage');
-const { parseJson, computePlayerScore } = require('../lib/scoring');
+const { parseJson, computePlayerScore, normalizeScoreMap } = require('../lib/scoring');
 const { countComplete } = require('../lib/validation');
 const fixtureData = require('../data/fixtures.json');
 
@@ -11,8 +11,136 @@ function money(value) {
   return Math.round(Number(value || 0) * 100) / 100;
 }
 
+function getConnectionString() {
+  const value =
+    process.env.STORAGE_CONNECTION_STRING ||
+    process.env.AZURE_STORAGE_CONNECTION_STRING ||
+    process.env.AzureWebJobsStorage;
+
+  if (!value) {
+    const error = new Error('Falta la variable STORAGE_CONNECTION_STRING en Azure.');
+    error.status = 500;
+    throw error;
+  }
+
+  return value;
+}
+
+function getTableName() {
+  return process.env.STORAGE_TABLE_NAME || process.env.TABLE_NAME || 'PorraMundial2026';
+}
+
+function getTableClient() {
+  return TableClient.fromConnectionString(getConnectionString(), getTableName());
+}
+
+async function listByPartition(partitionKey) {
+  const client = getTableClient();
+  const rows = [];
+
+  for await (const entity of client.listEntities({
+    queryOptions: {
+      filter: `PartitionKey eq '${partitionKey}'`
+    }
+  })) {
+    rows.push(entity);
+  }
+
+  return rows;
+}
+
+async function getEntity(partitionKey, rowKey) {
+  const client = getTableClient();
+
+  try {
+    return await client.getEntity(partitionKey, rowKey);
+  } catch (error) {
+    if (error.statusCode === 404) return null;
+    throw error;
+  }
+}
+
 function isConfirmed(player) {
-  return player?.paymentStatus === 'confirmed' || player?.paymentConfirmed === true;
+  const status = String(player?.paymentStatus || '').trim().toLowerCase();
+  return status === 'confirmed' || player?.paymentConfirmed === true;
+}
+
+function isCompleteScore(score) {
+  if (!score) return false;
+  const homeGoals = Number(score.homeGoals);
+  const awayGoals = Number(score.awayGoals);
+  return Number.isInteger(homeGoals) && Number.isInteger(awayGoals) && homeGoals >= 0 && awayGoals >= 0;
+}
+
+function sameScore(a, b) {
+  return isCompleteScore(a) && isCompleteScore(b) &&
+    Number(a.homeGoals) === Number(b.homeGoals) &&
+    Number(a.awayGoals) === Number(b.awayGoals);
+}
+
+function publicPlayer(player) {
+  const paymentConfirmed = isConfirmed(player);
+
+  return {
+    playerId: player.rowKey,
+    name: player.name || player.rowKey,
+    phone: player.phone || player.bizumPhone || '',
+    avatarId: player.avatarId || player.avatarPreset || 'football-1',
+    avatarUrl: player.avatarUrl || player.profileImage || '',
+    paymentAmount: Number(player.paymentAmount || ENTRY_FEE),
+    paymentStatus: paymentConfirmed ? 'confirmed' : 'pending',
+    paymentConfirmed,
+    paymentConfirmedAt: player.paymentConfirmedAt || player.paymentUpdatedAt || null,
+    createdAt: player.createdAt || null,
+    updatedAt: player.updatedAt || null
+  };
+}
+
+function buildMatchDetails(fixtures, players, predictionsByPlayer, results) {
+  const normalizedResults = normalizeScoreMap(results);
+
+  return fixtures.map((fixture) => {
+    const result = normalizedResults[fixture.id] || null;
+    const hasResult = isCompleteScore(result);
+
+    const predictions = players.map((player) => {
+      const predictionEntity = predictionsByPlayer.get(player.rowKey);
+      const playerPredictions = normalizeScoreMap(parseJson(predictionEntity?.predictions, {}));
+      const prediction = playerPredictions[fixture.id] || null;
+      const hasPrediction = isCompleteScore(prediction);
+      const exactScoreBonus = hasResult && hasPrediction && sameScore(prediction, result);
+
+      return {
+        ...publicPlayer(player),
+        prediction,
+        hasPrediction,
+        exactScoreBonus,
+        exactScorePoints: exactScoreBonus ? 1 : 0,
+        predictionUpdatedAt: predictionEntity?.updatedAt || null
+      };
+    }).sort((a, b) => {
+      if (a.paymentConfirmed !== b.paymentConfirmed) return a.paymentConfirmed ? -1 : 1;
+      if (a.hasPrediction !== b.hasPrediction) return a.hasPrediction ? -1 : 1;
+      return String(a.name || '').localeCompare(String(b.name || ''), 'es', { sensitivity: 'base' });
+    });
+
+    return {
+      id: fixture.id,
+      matchNo: fixture.matchNo,
+      group: fixture.group,
+      date: fixture.date,
+      kickoffDateSpain: fixture.kickoffDateSpain || null,
+      kickoffTimeSpain: fixture.kickoffTimeSpain || null,
+      kickoffAtSpain: fixture.kickoffAtSpain || null,
+      lockAtSpain: fixture.lockAtSpain || null,
+      home: fixture.home,
+      away: fixture.away,
+      venue: fixture.venue,
+      result,
+      hasResult,
+      predictions
+    };
+  });
 }
 
 app.http('leaderboard', {
@@ -34,15 +162,7 @@ app.http('leaderboard', {
         const paymentConfirmed = isConfirmed(player);
 
         return {
-          playerId: player.rowKey,
-          name: player.name,
-          phone: player.phone || '',
-          avatarId: player.avatarId || 'football-1',
-          avatarUrl: player.avatarUrl || '',
-          paymentAmount: Number(player.paymentAmount || ENTRY_FEE),
-          paymentStatus: paymentConfirmed ? 'confirmed' : 'pending',
-          paymentConfirmed,
-          paymentConfirmedAt: player.paymentConfirmedAt || null,
+          ...publicPlayer(player),
           points: score.points,
           groupWinnersCorrect: score.groupWinnersCorrect,
           groupRunnersCorrect: score.groupRunnersCorrect,
@@ -51,7 +171,9 @@ app.http('leaderboard', {
           correctOutcomes: score.correctOutcomes,
           exactGoalDifferences: score.exactGoalDifferences,
           predictionsMade: countComplete(predictions),
-          updatedAt: entity?.updatedAt || null
+          updatedAt: entity?.updatedAt || player.updatedAt || null,
+          paymentStatus: paymentConfirmed ? 'confirmed' : 'pending',
+          paymentConfirmed
         };
       }).sort((a, b) => {
         if (a.paymentConfirmed !== b.paymentConfirmed) return a.paymentConfirmed ? -1 : 1;
@@ -60,7 +182,7 @@ app.http('leaderboard', {
         if (b.exactGoalDifferences !== a.exactGoalDifferences) return b.exactGoalDifferences - a.exactGoalDifferences;
         if (b.correctOutcomes !== a.correctOutcomes) return b.correctOutcomes - a.correctOutcomes;
         if (b.predictionsMade !== a.predictionsMade) return b.predictionsMade - a.predictionsMade;
-        return a.name.localeCompare(b.name, 'es');
+        return String(a.name || '').localeCompare(String(b.name || ''), 'es', { sensitivity: 'base' });
       });
 
       const playerCount = players.length;
@@ -75,19 +197,21 @@ app.http('leaderboard', {
 
       return ok({
         rows,
+        matchDetails: buildMatchDetails(fixtureData.fixtures || [], players, predictionsByPlayer, results),
         playerCount,
         confirmedPlayerCount,
         pendingPlayerCount,
         entryFee: ENTRY_FEE,
         prizePool,
         prizes,
-        resultCount: Object.keys(results).length,
+        resultCount: Object.keys(normalizeScoreMap(results)).length,
         fixtureCount: fixtureData.fixtures.length,
         scoring: {
           groupWinner: 5,
           groupRunner: 3,
           groupThirdQualified: 1,
-          description: 'Fase de grupos: 5 pts por acertar el 1º, 3 pts por acertar el 2º y 1 pt por acertar el 3º que entra a eliminatorias.'
+          exactScoreBonus: 1,
+          description: 'Fase de grupos: 5 pts por acertar el 1º, 3 pts por acertar el 2º, 1 pt por acertar el 3º y 1 pt extra por marcador exacto.'
         },
         tieBreakers: [
           'Puntos totales',
