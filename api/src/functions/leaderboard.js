@@ -67,15 +67,25 @@ function isConfirmed(player) {
 
 function isCompleteScore(score) {
   if (!score) return false;
+
   const homeGoals = Number(score.homeGoals);
   const awayGoals = Number(score.awayGoals);
-  return Number.isInteger(homeGoals) && Number.isInteger(awayGoals) && homeGoals >= 0 && awayGoals >= 0;
+
+  return (
+    Number.isInteger(homeGoals) &&
+    Number.isInteger(awayGoals) &&
+    homeGoals >= 0 &&
+    awayGoals >= 0
+  );
 }
 
 function sameScore(a, b) {
-  return isCompleteScore(a) && isCompleteScore(b) &&
+  return (
+    isCompleteScore(a) &&
+    isCompleteScore(b) &&
     Number(a.homeGoals) === Number(b.homeGoals) &&
-    Number(a.awayGoals) === Number(b.awayGoals);
+    Number(a.awayGoals) === Number(b.awayGoals)
+  );
 }
 
 function publicPlayer(player) {
@@ -99,11 +109,11 @@ function publicPlayer(player) {
 function buildMatchDetails(fixtures, players, predictionsByPlayer, results) {
   const normalizedResults = normalizeScoreMap(results);
 
-  return fixtures.map((fixture) => {
+  return (fixtures || []).map((fixture) => {
     const result = normalizedResults[fixture.id] || null;
     const hasResult = isCompleteScore(result);
 
-    const predictions = players.map((player) => {
+    const predictions = (players || []).map((player) => {
       const predictionEntity = predictionsByPlayer.get(player.rowKey);
       const playerPredictions = normalizeScoreMap(parseJson(predictionEntity?.predictions, {}));
       const prediction = playerPredictions[fixture.id] || null;
@@ -153,7 +163,10 @@ app.http('leaderboard', {
       const predictionEntities = await listByPartition('prediction');
       const resultEntity = await getEntity('result', 'groupStage');
       const results = parseJson(resultEntity?.results, {});
-      const predictionsByPlayer = new Map(predictionEntities.map((entity) => [entity.rowKey, entity]));
+
+      const predictionsByPlayer = new Map(
+        predictionEntities.map((entity) => [entity.rowKey, entity])
+      );
 
       const rows = players.map((player) => {
         const entity = predictionsByPlayer.get(player.rowKey);
@@ -189,23 +202,35 @@ app.http('leaderboard', {
       const confirmedPlayerCount = rows.filter((row) => row.paymentConfirmed).length;
       const pendingPlayerCount = playerCount - confirmedPlayerCount;
       const prizePool = money(confirmedPlayerCount * ENTRY_FEE);
+
       const prizes = {
         first: money(prizePool * 0.5),
         second: money(prizePool * 0.3),
         third: money(prizePool * 0.2)
       };
 
+      const normalizedResults = normalizeScoreMap(results);
+      const resultCount = Object.keys(normalizedResults).length;
+      const fixtureCount = fixtureData.fixtures.length;
+
+      const matchDetails = buildMatchDetails(
+        fixtureData.fixtures || [],
+        players,
+        predictionsByPlayer,
+        results
+      );
+
       return ok({
         rows,
-        matchDetails: buildMatchDetails(fixtureData.fixtures || [], players, predictionsByPlayer, results),
+        matchDetails,
         playerCount,
         confirmedPlayerCount,
         pendingPlayerCount,
         entryFee: ENTRY_FEE,
         prizePool,
         prizes,
-        resultCount: Object.keys(normalizeScoreMap(results)).length,
-        fixtureCount: fixtureData.fixtures.length,
+        resultCount,
+        fixtureCount,
         scoring: {
           groupWinner: 5,
           groupRunner: 3,
