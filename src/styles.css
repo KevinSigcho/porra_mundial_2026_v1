@@ -4454,3 +4454,112 @@ th {
     justify-content: flex-start;
   }
 }
+
+
+/* Calendario cronologico de partidos */
+.matchCalendarTableWrap {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.matchCalendarTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px;
+}
+
+.matchCalendarTable th,
+.matchCalendarTable td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e4edf8;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.matchCalendarTable th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5d6f86;
+  background: #f7fbff;
+}
+
+.calendarMatchTeams {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-weight: 800;
+}
+
+.calendarMatchTeams > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.calendarMatchTeams .dash {
+  margin: 0 0.25rem;
+  color: #6b7c92;
+  font-weight: 900;
+}
+
+.flagImg {
+  margin-right: 0.25rem;
+}
+
+.realResultBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: #e8f7ee;
+  color: #126b35;
+  font-weight: 900;
+}
+
+.predictionResultBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #174ea6;
+  font-weight: 900;
+}
+
+.exactIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.exactIconOk {
+  background: #e8f7ee;
+  color: #126b35;
+}
+
+.exactIconKo {
+  background: #fdecec;
+  color: #a32727;
+}
+
+.exactIconEmpty {
+  background: #f2f5f9;
+  color: #6b7c92;
+}
+
+@media (max-width: 760px) {
+  .matchCalendarTable {
+    min-width: 920px;
+  }
+}

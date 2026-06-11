@@ -774,6 +774,7 @@ export default function App() {
         <MatchCalendarPanel
           fixtures={fixtures}
           results={results}
+          predictions={predictions}
           onRefresh={refreshPrivateData}
         />
       )}
@@ -1252,6 +1253,17 @@ function resultText(result) {
   return `${result.homeGoals}-${result.awayGoals}`;
 }
 
+function isExactPrediction(prediction, result) {
+  if (!isCompleteScore(prediction) || !isCompleteScore(result)) {
+    return false;
+  }
+
+  return (
+    Number(prediction.homeGoals) === Number(result.homeGoals) &&
+    Number(prediction.awayGoals) === Number(result.awayGoals)
+  );
+}
+
 function matchTimestamp(fixture) {
   if (fixture?.kickoffAtSpain) {
     return new Date(fixture.kickoffAtSpain).getTime();
@@ -1264,7 +1276,7 @@ function matchTimestamp(fixture) {
   return new Date(`${fixture.date}T12:00:00Z`).getTime();
 }
 
-function MatchCalendarPanel({ fixtures, results, onRefresh }) {
+function MatchCalendarPanel({ fixtures, results, predictions, onRefresh }) {
   const sortedFixtures = useMemo(() => {
     return fixtures.slice().sort((a, b) => {
       const byDate = matchTimestamp(a) - matchTimestamp(b);
@@ -1305,12 +1317,18 @@ function MatchCalendarPanel({ fixtures, results, onRefresh }) {
               <th>Partido</th>
               <th>Sede</th>
               <th>Resultado real</th>
+              <th>Mi pronóstico</th>
+              <th>Exacto</th>
             </tr>
           </thead>
 
           <tbody>
             {sortedFixtures.map((fixture) => {
               const result = results?.[fixture.id];
+              const prediction = predictions?.[fixture.id];
+              const hasResult = isCompleteScore(result);
+              const hasPrediction = isCompleteScore(prediction);
+              const exact = isExactPrediction(prediction, result);
 
               return (
                 <tr key={fixture.id}>
@@ -1345,12 +1363,34 @@ function MatchCalendarPanel({ fixtures, results, onRefresh }) {
                   <td>{fixture.venue}</td>
 
                   <td>
-                    {isCompleteScore(result) ? (
+                    {hasResult ? (
                       <span className="realResultBadge">
                         {resultText(result)}
                       </span>
                     ) : (
                       <span className="muted">Pendiente</span>
+                    )}
+                  </td>
+
+                  <td>
+                    {hasPrediction ? (
+                      <span className="predictionResultBadge">
+                        {resultText(prediction)}
+                      </span>
+                    ) : (
+                      <span className="muted">Sin pronóstico</span>
+                    )}
+                  </td>
+
+                  <td>
+                    {!hasResult ? (
+                      <span className="muted">Pendiente</span>
+                    ) : !hasPrediction ? (
+                      <span className="exactIcon exactIconEmpty" title="Sin pronóstico">—</span>
+                    ) : exact ? (
+                      <span className="exactIcon exactIconOk" title="Resultado exacto acertado">✅ +1</span>
+                    ) : (
+                      <span className="exactIcon exactIconKo" title="No acertado">❌</span>
                     )}
                   </td>
                 </tr>
