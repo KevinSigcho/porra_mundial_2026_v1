@@ -695,7 +695,7 @@ export default function App() {
 
       <nav className="tabs" aria-label="Secciones principales">
         <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
-        <button className={tab === 'calendar' ? 'active' : ''} onClick={() => { setTab('calendar'); refreshPrivateData(); }}>Calendario y pronósticos</button>
+        <button className={tab === 'calendar' ? 'active' : ''} onClick={() => { setTab('calendar'); refreshPrivateData(); }}>Calendario partidos</button>
         <button className={tab === 'myBracket' ? 'active' : ''} onClick={() => { setTab('myBracket'); refreshPrivateData(); }}>Mi eliminatoria</button>
         <button className={tab === 'knockouts' ? 'active' : ''} onClick={() => setTab('knockouts')}>Pronósticos fase eliminatorias</button>
         <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
@@ -769,21 +769,11 @@ export default function App() {
           emptyMessage="Todavía no hay resultados reales cargados."
         />
       )}
+
       {tab === 'calendar' && (
-        <MatchTimelinePanel
-          fixtures={fixtures}
-           results={results}
-           leaderboard={leaderboard}
-           currentPlayer={player}
-            onRefresh={refreshPrivateData}
-         />
-      )}
-      {tab === 'calendar' && (
-        <MatchTimelinePanel
+        <MatchCalendarPanel
           fixtures={fixtures}
           results={results}
-          leaderboard={leaderboard}
-          currentPlayer={player}
           onRefresh={refreshPrivateData}
         />
       )}
@@ -1203,26 +1193,6 @@ function TeamBadge({ team }) {
   );
 }
 
-function scoreText(score) {
-  if (!isCompleteScore(score)) return 'Sin pronóstico';
-  return `${score.homeGoals}-${score.awayGoals}`;
-}
-
-function resultText(result) {
-  if (!isCompleteScore(result)) return 'Resultado pendiente';
-  return `${result.homeGoals}-${result.awayGoals}`;
-}
-
-function matchTimestamp(fixture) {
-  if (fixture?.kickoffAtSpain) return new Date(fixture.kickoffAtSpain).getTime();
-
-  if (fixture?.kickoffDateSpain && fixture?.kickoffTimeSpain) {
-    return new Date(`${fixture.kickoffDateSpain}T${fixture.kickoffTimeSpain}:00+02:00`).getTime();
-  }
-
-  return new Date(`${fixture.date}T12:00:00Z`).getTime();
-}
-
 function MatchCard({ fixture, score, result, onChange, disabled }) {
   return (
     <article className="matchCard matchCardEnhanced">
@@ -1277,247 +1247,117 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
 
 
 
-function scoreText(score) {
-  if (!isCompleteScore(score)) return 'Sin pronóstico';
-  return `${score.homeGoals}-${score.awayGoals}`;
-}
-
 function resultText(result) {
-  if (!isCompleteScore(result)) return 'Resultado pendiente';
+  if (!isCompleteScore(result)) return 'Pendiente';
   return `${result.homeGoals}-${result.awayGoals}`;
 }
 
 function matchTimestamp(fixture) {
-  if (fixture?.kickoffAtSpain) return new Date(fixture.kickoffAtSpain).getTime();
-  if (fixture?.kickoffDateSpain && fixture?.kickoffTimeSpain) return new Date(`${fixture.kickoffDateSpain}T${fixture.kickoffTimeSpain}:00+02:00`).getTime();
+  if (fixture?.kickoffAtSpain) {
+    return new Date(fixture.kickoffAtSpain).getTime();
+  }
+
+  if (fixture?.kickoffDateSpain && fixture?.kickoffTimeSpain) {
+    return new Date(`${fixture.kickoffDateSpain}T${fixture.kickoffTimeSpain}:00+02:00`).getTime();
+  }
+
   return new Date(`${fixture.date}T12:00:00Z`).getTime();
 }
 
-function MatchTimelinePanel({ fixtures, results, leaderboard, currentPlayer, onRefresh }) {
-  const matchDetailsById = useMemo(() => {
-    const entries = leaderboard?.matchDetails || [];
-    return new Map(entries.map((entry) => [entry.id, entry]));
-  }, [leaderboard]);
+function MatchCalendarPanel({ fixtures, results, onRefresh }) {
+  const sortedFixtures = useMemo(() => {
+    return fixtures.slice().sort((a, b) => {
+      const byDate = matchTimestamp(a) - matchTimestamp(b);
+      if (byDate !== 0) return byDate;
+      return Number(a.matchNo || 0) - Number(b.matchNo || 0);
+    });
+  }, [fixtures]);
 
-  const sortedFixtures = useMemo(() => fixtures.slice().sort((a, b) => {
-    const byDate = matchTimestamp(a) - matchTimestamp(b);
-    if (byDate !== 0) return byDate;
-    return Number(a.matchNo || 0) - Number(b.matchNo || 0);
-  }), [fixtures]);
-
-  const currentPlayerId = currentPlayer?.id || currentPlayer?.playerId || currentPlayer?.rowKey || '';
   const resultCount = Object.values(results || {}).filter(isCompleteScore).length;
 
   return (
-    <section className="panel matchTimelinePanel">
+    <section className="panel matchCalendarPanel">
       <div className="toolbar">
         <div>
           <p className="eyebrow">Calendario completo</p>
-          <h2>Partidos por orden cronológico</h2>
+          <h2>Partidos del Mundial en orden cronológico</h2>
           <p className="muted">
-            Horario de España peninsular, resultado real cargado por el admin y pronóstico de cada jugador.
+            Horarios en España peninsular y resultado real cargado por el admin.
           </p>
           <p className="muted small">
-            Resultados reales cargados: {resultCount}/{fixtures.length}. El punto extra se marca cuando el pronóstico coincide exactamente con el resultado real.
+            Resultados cargados: {resultCount}/{fixtures.length}
           </p>
         </div>
-        <button className="secondary" type="button" onClick={onRefresh}>Actualizar</button>
+
+        <button className="secondary" type="button" onClick={onRefresh}>
+          Actualizar
+        </button>
       </div>
 
-      <div className="matchTimelineList">
-        {sortedFixtures.map((fixture, index) => {
-          const detail = matchDetailsById.get(fixture.id) || {};
-          const realResult = detail.result || results?.[fixture.id] || null;
-          const hasRealResult = isCompleteScore(realResult);
-          const predictionRows = detail.predictions || [];
+      <div className="tableWrap matchCalendarTableWrap">
+        <table className="matchCalendarTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Hora España</th>
+              <th>Grupo</th>
+              <th>Partido</th>
+              <th>Sede</th>
+              <th>Resultado real</th>
+            </tr>
+          </thead>
 
-          return (
-            <details className="timelineMatchCard" key={fixture.id} open={index < 2}>
-              <summary>
-                <span className="timelineMatchMain">
-                  <strong>#{fixture.matchNo} · Grupo {fixture.group}</strong>
-                  <span className="timelineTeams">
-                    <TeamFlag team={fixture.home} /> {fixture.home} <span className="dash">-</span> <TeamFlag team={fixture.away} /> {fixture.away}
-                  </span>
-                </span>
-                <span className="timelineMatchSide">
-                  <span>{formatFixtureDateSpain(fixture)} · {kickoffSpainLabel(fixture)}</span>
-                  <strong>{resultText(realResult)}</strong>
-                </span>
-              </summary>
+          <tbody>
+            {sortedFixtures.map((fixture) => {
+              const result = results?.[fixture.id];
 
-              <div className="timelineMatchBody">
-                <div className="matchMeta timelineMeta">
-                  <span>{fixture.venue}</span>
-                  {fixture.lockAtSpain && <span>Cierre: {formatDateTimeSpain(fixture.lockAtSpain)} h España</span>}
-                  <span>{hasRealResult ? `Resultado real: ${resultText(realResult)}` : 'Resultado real pendiente'}</span>
-                </div>
+              return (
+                <tr key={fixture.id}>
+                  <td>
+                    <strong>{fixture.matchNo}</strong>
+                  </td>
 
-                {predictionRows.length === 0 ? (
-                  <div className="notice softNotice">Todavía no hay pronósticos guardados para este partido.</div>
-                ) : (
-                  <div className="tableWrap">
-                    <table className="matchPredictionsTable">
-                      <thead>
-                        <tr>
-                          <th>Jugador</th>
-                          <th>Bizum</th>
-                          <th>Pronóstico</th>
-                          <th>Resultado real</th>
-                          <th>Punto extra</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {predictionRows.map((row) => {
-                          const isCurrent = currentPlayerId && row.playerId === currentPlayerId;
-                          return (
-                            <tr key={row.playerId} className={`${isCurrent ? 'currentPlayerRow' : ''} ${!row.paymentConfirmed ? 'rankingPendingPaymentRow' : ''}`}>
-                              <td>
-                                <span className="leaderboardPlayer">
-                                  <PlayerAvatar player={row} size="sm" />
-                                  <span>{row.name}{isCurrent ? ' · tú' : ''}</span>
-                                </span>
-                              </td>
-                              <td>{row.paymentConfirmed ? 'Confirmado' : '⚠️ Pendiente'}</td>
-                              <td><strong>{scoreText(row.prediction)}</strong></td>
-                              <td>{resultText(realResult)}</td>
-                              <td>
-                                {hasRealResult && row.hasPrediction
-                                  ? row.exactScoreBonus
-                                    ? '✅ +1 exacto'
-                                    : '—'
-                                  : 'Pendiente'}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </details>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
+                  <td>{formatFixtureDateSpain(fixture)}</td>
 
-function MatchTimelinePanel({ fixtures, results, leaderboard, currentPlayer, onRefresh }) {
-  const matchDetailsById = useMemo(() => {
-    const entries = leaderboard?.matchDetails || [];
-    return new Map(entries.map((entry) => [entry.id, entry]));
-  }, [leaderboard]);
+                  <td>
+                    <strong>{kickoffSpainLabel(fixture)}</strong>
+                  </td>
 
-  const sortedFixtures = useMemo(() => fixtures.slice().sort((a, b) => {
-    const byDate = matchTimestamp(a) - matchTimestamp(b);
-    if (byDate !== 0) return byDate;
-    return Number(a.matchNo || 0) - Number(b.matchNo || 0);
-  }), [fixtures]);
+                  <td>Grupo {fixture.group}</td>
 
-  const currentPlayerId = currentPlayer?.id || currentPlayer?.playerId || currentPlayer?.rowKey || '';
-  const resultCount = Object.values(results || {}).filter(isCompleteScore).length;
+                  <td>
+                    <span className="calendarMatchTeams">
+                      <span>
+                        <TeamFlag team={fixture.home} />
+                        {fixture.home}
+                      </span>
 
-  return (
-    <section className="panel matchTimelinePanel">
-      <div className="toolbar">
-        <div>
-          <p className="eyebrow">Calendario completo</p>
-          <h2>Partidos por orden cronológico</h2>
-          <p className="muted">
-            Horario de España peninsular, resultado real cargado por el admin y pronóstico de cada jugador.
-          </p>
-          <p className="muted small">
-            Resultados reales cargados: {resultCount}/{fixtures.length}. El punto extra se marca cuando el pronóstico coincide exactamente con el resultado real.
-          </p>
-        </div>
-        <button className="secondary" type="button" onClick={onRefresh}>Actualizar</button>
-      </div>
+                      <span className="dash">-</span>
 
-      <div className="matchTimelineList">
-        {sortedFixtures.map((fixture, index) => {
-          const detail = matchDetailsById.get(fixture.id) || {};
-          const realResult = detail.result || results?.[fixture.id] || null;
-          const hasRealResult = isCompleteScore(realResult);
-          const predictionRows = detail.predictions || [];
+                      <span>
+                        <TeamFlag team={fixture.away} />
+                        {fixture.away}
+                      </span>
+                    </span>
+                  </td>
 
-          return (
-            <details className="timelineMatchCard" key={fixture.id} open={index < 2}>
-              <summary>
-                <span className="timelineMatchMain">
-                  <strong>#{fixture.matchNo} · Grupo {fixture.group}</strong>
-                  <span className="timelineTeams">
-                    <TeamFlag team={fixture.home} /> {fixture.home}
-                    <span className="dash">-</span>
-                    <TeamFlag team={fixture.away} /> {fixture.away}
-                  </span>
-                </span>
+                  <td>{fixture.venue}</td>
 
-                <span className="timelineMatchSide">
-                  <span>{formatFixtureDateSpain(fixture)} · {kickoffSpainLabel(fixture)}</span>
-                  <strong>{resultText(realResult)}</strong>
-                </span>
-              </summary>
-
-              <div className="timelineMatchBody">
-                <div className="matchMeta timelineMeta">
-                  <span>{fixture.venue}</span>
-                  {fixture.lockAtSpain && <span>Cierre: {formatDateTimeSpain(fixture.lockAtSpain)} h España</span>}
-                  <span>{hasRealResult ? `Resultado real: ${resultText(realResult)}` : 'Resultado real pendiente'}</span>
-                </div>
-
-                {predictionRows.length === 0 ? (
-                  <div className="notice softNotice">Todavía no hay pronósticos guardados para este partido.</div>
-                ) : (
-                  <div className="tableWrap">
-                    <table className="matchPredictionsTable">
-                      <thead>
-                        <tr>
-                          <th>Jugador</th>
-                          <th>Bizum</th>
-                          <th>Pronóstico</th>
-                          <th>Resultado real</th>
-                          <th>Punto extra</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {predictionRows.map((row) => {
-                          const isCurrent = currentPlayerId && row.playerId === currentPlayerId;
-
-                          return (
-                            <tr
-                              key={row.playerId}
-                              className={`${isCurrent ? 'currentPlayerRow' : ''} ${!row.paymentConfirmed ? 'rankingPendingPaymentRow' : ''}`}
-                            >
-                              <td>
-                                <span className="leaderboardPlayer">
-                                  <PlayerAvatar player={row} size="sm" />
-                                  <span>{row.name}{isCurrent ? ' · tú' : ''}</span>
-                                </span>
-                              </td>
-                              <td>{row.paymentConfirmed ? 'Confirmado' : '⚠️ Pendiente'}</td>
-                              <td><strong>{scoreText(row.prediction)}</strong></td>
-                              <td>{resultText(realResult)}</td>
-                              <td>
-                                {hasRealResult && row.hasPrediction
-                                  ? row.exactScoreBonus
-                                    ? '✅ +1 exacto'
-                                    : '—'
-                                  : 'Pendiente'}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </details>
-          );
-        })}
+                  <td>
+                    {isCompleteScore(result) ? (
+                      <span className="realResultBadge">
+                        {resultText(result)}
+                      </span>
+                    ) : (
+                      <span className="muted">Pendiente</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </section>
   );
