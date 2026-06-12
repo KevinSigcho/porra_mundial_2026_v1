@@ -9,7 +9,9 @@
     "groupThirdQualified": 1,
     "matchOutcomePoints": 2,
     "exactScoreBonusPoint": 1,
-    "description": "Fase de grupos: 5 pts por acertar el 1º de grupo, 3 pts por el 2º, 1 pt por el 3º que clasifica. Por partido: 2 pts por acertar el resultado (1, X o 2, incluido el empate) y +1 pt extra por el marcador exacto (3 pts en total)."
+    "description": "Fase de grupos: 5 pts por acertar el 1º de grupo, 3 pts por el 2º, 1 pt por el 3º que clasifica. Por partido: 2 pts por acertar el resultado (1, X o 2, incluido el empate) y +1 pt extra por el marcador exacto (3 pts en total).",
+    "knockoutWinner": 5,
+    "knockoutExactBonus": 2
   },
   "groups": {
     "A": [
@@ -733,6 +735,456 @@
       "home": "Ghana",
       "away": "Panamá",
       "venue": "Accra Stadium"
+    }
+  ],
+  "knockout": [
+    {
+      "id": "M73",
+      "matchNo": 73,
+      "round": "roundOf32",
+      "date": "2026-06-28",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "seed": "2A"
+      },
+      "away": {
+        "seed": "2B"
+      }
+    },
+    {
+      "id": "M74",
+      "matchNo": 74,
+      "round": "roundOf32",
+      "date": "2026-06-29",
+      "time": "22:30",
+      "side": "left",
+      "home": {
+        "seed": "1E"
+      },
+      "away": {
+        "seed": "3ABCDF"
+      }
+    },
+    {
+      "id": "M75",
+      "matchNo": 75,
+      "round": "roundOf32",
+      "date": "2026-06-30",
+      "time": "03:00",
+      "side": "left",
+      "home": {
+        "seed": "1F"
+      },
+      "away": {
+        "seed": "2C"
+      }
+    },
+    {
+      "id": "M76",
+      "matchNo": 76,
+      "round": "roundOf32",
+      "date": "2026-06-29",
+      "time": "19:00",
+      "side": "right",
+      "home": {
+        "seed": "1C"
+      },
+      "away": {
+        "seed": "2F"
+      }
+    },
+    {
+      "id": "M77",
+      "matchNo": 77,
+      "round": "roundOf32",
+      "date": "2026-06-30",
+      "time": "23:00",
+      "side": "left",
+      "home": {
+        "seed": "1I"
+      },
+      "away": {
+        "seed": "3CDFGH"
+      }
+    },
+    {
+      "id": "M78",
+      "matchNo": 78,
+      "round": "roundOf32",
+      "date": "2026-06-30",
+      "time": "19:00",
+      "side": "right",
+      "home": {
+        "seed": "2E"
+      },
+      "away": {
+        "seed": "2I"
+      }
+    },
+    {
+      "id": "M79",
+      "matchNo": 79,
+      "round": "roundOf32",
+      "date": "2026-07-01",
+      "time": "03:00",
+      "side": "right",
+      "home": {
+        "seed": "1A"
+      },
+      "away": {
+        "seed": "3CEFIH"
+      }
+    },
+    {
+      "id": "M80",
+      "matchNo": 80,
+      "round": "roundOf32",
+      "date": "2026-07-01",
+      "time": "18:00",
+      "side": "right",
+      "home": {
+        "seed": "1L"
+      },
+      "away": {
+        "seed": "3EHJK"
+      }
+    },
+    {
+      "id": "M81",
+      "matchNo": 81,
+      "round": "roundOf32",
+      "date": "2026-07-02",
+      "time": "02:00",
+      "side": "left",
+      "home": {
+        "seed": "1D"
+      },
+      "away": {
+        "seed": "3BEFIJ"
+      }
+    },
+    {
+      "id": "M82",
+      "matchNo": 82,
+      "round": "roundOf32",
+      "date": "2026-07-01",
+      "time": "22:00",
+      "side": "left",
+      "home": {
+        "seed": "1G"
+      },
+      "away": {
+        "seed": "3AEHIJ"
+      }
+    },
+    {
+      "id": "M83",
+      "matchNo": 83,
+      "round": "roundOf32",
+      "date": "2026-07-03",
+      "time": "01:00",
+      "side": "left",
+      "home": {
+        "seed": "2K"
+      },
+      "away": {
+        "seed": "2L"
+      }
+    },
+    {
+      "id": "M84",
+      "matchNo": 84,
+      "round": "roundOf32",
+      "date": "2026-07-02",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "seed": "1H"
+      },
+      "away": {
+        "seed": "2J"
+      }
+    },
+    {
+      "id": "M85",
+      "matchNo": 85,
+      "round": "roundOf32",
+      "date": "2026-07-03",
+      "time": "05:00",
+      "side": "right",
+      "home": {
+        "seed": "1B"
+      },
+      "away": {
+        "seed": "3EFGIJ"
+      }
+    },
+    {
+      "id": "M86",
+      "matchNo": 86,
+      "round": "roundOf32",
+      "date": "2026-07-04",
+      "time": "00:00",
+      "side": "right",
+      "home": {
+        "seed": "1J"
+      },
+      "away": {
+        "seed": "2H"
+      }
+    },
+    {
+      "id": "M87",
+      "matchNo": 87,
+      "round": "roundOf32",
+      "date": "2026-07-04",
+      "time": "03:30",
+      "side": "right",
+      "home": {
+        "seed": "1K"
+      },
+      "away": {
+        "seed": "3DEIJL"
+      }
+    },
+    {
+      "id": "M88",
+      "matchNo": 88,
+      "round": "roundOf32",
+      "date": "2026-07-03",
+      "time": "20:00",
+      "side": "right",
+      "home": {
+        "seed": "2D"
+      },
+      "away": {
+        "seed": "2G"
+      }
+    },
+    {
+      "id": "M89",
+      "matchNo": 89,
+      "round": "roundOf16",
+      "date": "2026-07-04",
+      "time": "23:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M74"
+      },
+      "away": {
+        "winnerOf": "M77"
+      }
+    },
+    {
+      "id": "M90",
+      "matchNo": 90,
+      "round": "roundOf16",
+      "date": "2026-07-04",
+      "time": "19:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M73"
+      },
+      "away": {
+        "winnerOf": "M75"
+      }
+    },
+    {
+      "id": "M91",
+      "matchNo": 91,
+      "round": "roundOf16",
+      "date": "2026-07-05",
+      "time": "22:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M76"
+      },
+      "away": {
+        "winnerOf": "M78"
+      }
+    },
+    {
+      "id": "M92",
+      "matchNo": 92,
+      "round": "roundOf16",
+      "date": "2026-07-06",
+      "time": "02:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M79"
+      },
+      "away": {
+        "winnerOf": "M80"
+      }
+    },
+    {
+      "id": "M93",
+      "matchNo": 93,
+      "round": "roundOf16",
+      "date": "2026-07-06",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M83"
+      },
+      "away": {
+        "winnerOf": "M84"
+      }
+    },
+    {
+      "id": "M94",
+      "matchNo": 94,
+      "round": "roundOf16",
+      "date": "2026-07-07",
+      "time": "02:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M81"
+      },
+      "away": {
+        "winnerOf": "M82"
+      }
+    },
+    {
+      "id": "M95",
+      "matchNo": 95,
+      "round": "roundOf16",
+      "date": "2026-07-07",
+      "time": "18:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M86"
+      },
+      "away": {
+        "winnerOf": "M88"
+      }
+    },
+    {
+      "id": "M96",
+      "matchNo": 96,
+      "round": "roundOf16",
+      "date": "2026-07-07",
+      "time": "22:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M85"
+      },
+      "away": {
+        "winnerOf": "M87"
+      }
+    },
+    {
+      "id": "M97",
+      "matchNo": 97,
+      "round": "quarter",
+      "date": "2026-07-09",
+      "time": "22:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M89"
+      },
+      "away": {
+        "winnerOf": "M90"
+      }
+    },
+    {
+      "id": "M98",
+      "matchNo": 98,
+      "round": "quarter",
+      "date": "2026-07-10",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M93"
+      },
+      "away": {
+        "winnerOf": "M94"
+      }
+    },
+    {
+      "id": "M99",
+      "matchNo": 99,
+      "round": "quarter",
+      "date": "2026-07-11",
+      "time": "23:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M91"
+      },
+      "away": {
+        "winnerOf": "M92"
+      }
+    },
+    {
+      "id": "M100",
+      "matchNo": 100,
+      "round": "quarter",
+      "date": "2026-07-12",
+      "time": "03:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M95"
+      },
+      "away": {
+        "winnerOf": "M96"
+      }
+    },
+    {
+      "id": "M101",
+      "matchNo": 101,
+      "round": "semi",
+      "date": "2026-07-14",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M97"
+      },
+      "away": {
+        "winnerOf": "M98"
+      }
+    },
+    {
+      "id": "M102",
+      "matchNo": 102,
+      "round": "semi",
+      "date": "2026-07-15",
+      "time": "21:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M99"
+      },
+      "away": {
+        "winnerOf": "M100"
+      }
+    },
+    {
+      "id": "M103",
+      "matchNo": 103,
+      "round": "third",
+      "date": "2026-07-18",
+      "time": "23:00",
+      "side": "final",
+      "home": {
+        "loserOf": "M101"
+      },
+      "away": {
+        "loserOf": "M102"
+      }
+    },
+    {
+      "id": "M104",
+      "matchNo": 104,
+      "round": "final",
+      "date": "2026-07-19",
+      "time": "21:00",
+      "side": "final",
+      "home": {
+        "winnerOf": "M101"
+      },
+      "away": {
+        "winnerOf": "M102"
+      }
     }
   ]
 }

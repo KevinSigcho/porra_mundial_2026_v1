@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiFetch } from './api.js';
+import { resolveBracket, ROUND_LABELS, ROUND_ORDER } from './lib/knockout.js';
 
 const STORAGE_TOKEN = 'porra2026.token';
 const STORAGE_PLAYER = 'porra2026.player';
@@ -60,9 +61,10 @@ const RULE_SECTIONS = [
   {
     title: 'Fase de eliminatorias',
     items: [
-      "Cuando termine la fase de grupos se cargan los 32 clasificados en el cuadro oficial.",
-      "5 puntos por acertar el equipo que pasa cada eliminatoria, incluyendo prórroga o penaltis.",
-      "1 punto extra si aciertas el resultado del partido antes de tanda de penaltis.",
+      "Cuando termine la fase de grupos se abre el cuadro y rellenas toda la eliminatoria de una vez; tus ganadores avanzan solos a la ronda siguiente.",
+      "5 puntos por acertar el equipo que pasa cada cruce, incluyendo prórroga o penaltis.",
+      "2 puntos extra si aciertas el marcador exacto del partido antes de la tanda de penaltis.",
+      "No hay empates: si tu marcador acaba en empate, eliges qué equipo pasa en penaltis.",
     ]
   },
   {
@@ -315,6 +317,22 @@ function isCompleteScore(score) {
   return Number.isInteger(homeGoals) && Number.isInteger(awayGoals) && homeGoals >= 0 && awayGoals >= 0;
 }
 
+// Como normalizeForSave pero conserva `advance` ('home'|'away') para los cruces de eliminatoria.
+function normalizeKnockoutForSave(scores) {
+  const out = {};
+  for (const [matchId, score] of Object.entries(scores || {})) {
+    if (score?.homeGoals === '' || score?.awayGoals === '') continue;
+    const homeGoals = Number(score?.homeGoals);
+    const awayGoals = Number(score?.awayGoals);
+    if (Number.isInteger(homeGoals) && Number.isInteger(awayGoals) && homeGoals >= 0 && awayGoals >= 0) {
+      const entry = { homeGoals, awayGoals };
+      if (score.advance === 'home' || score.advance === 'away') entry.advance = score.advance;
+      out[matchId] = entry;
+    }
+  }
+  return out;
+}
+
 function emptyStanding(team) {
   return {
     team,
@@ -548,8 +566,10 @@ export default function App() {
   const [tab, setTab] = useState('predictions');
   const [predictions, setPredictions] = useState({});
   const [results, setResults] = useState({});
+  const [knockoutPredictions, setKnockoutPredictions] = useState({});
+  const [knockoutResults, setKnockoutResults] = useState({});
   const [leaderboard, setLeaderboard] = useState(null);
-  const [settings, setSettings] = useState({ locked: false, scoring: null });
+  const [settings, setSettings] = useState({ locked: false, knockoutLocked: true, scoring: null });
   const [groupFilter, setGroupFilter] = useState('A');
   const [status, setStatus] = useState('');
   const [showRules, setShowRules] = useState(false);
@@ -576,7 +596,9 @@ export default function App() {
         apiFetch('/api/leaderboard')
       ]);
       setPredictions(predictionData.predictions || {});
+      setKnockoutPredictions(predictionData.knockout || {});
       setResults(resultData.results || {});
+      setKnockoutResults(resultData.knockout || {});
       setSettings(settingsData);
       setLeaderboard(leaderboardData);
     } catch (error) {
@@ -598,6 +620,7 @@ export default function App() {
     setToken('');
     setPlayer(null);
     setPredictions({});
+    setKnockoutPredictions({});
     setStatus('');
   }
 
@@ -626,6 +649,38 @@ export default function App() {
       });
       setPredictions(data.predictions || payload);
       setStatus(`Guardado: ${data.completeCount} de ${fixtureData.fixtures.length} partidos.`);
+      await refreshPrivateData();
+    } catch (error) {
+      setStatus(error.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function setKnockoutAdvance(matchId, advance) {
+    setKnockoutPredictions((current) => ({
+      ...current,
+      [matchId]: {
+        homeGoals: current[matchId]?.homeGoals ?? '',
+        awayGoals: current[matchId]?.awayGoals ?? '',
+        ...current[matchId],
+        advance
+      }
+    }));
+  }
+
+  async function saveKnockout() {
+    setBusy(true);
+    setStatus('');
+    try {
+      const payload = normalizeKnockoutForSave(knockoutPredictions);
+      const data = await apiFetch('/api/predictions', {
+        method: 'POST',
+        token,
+        body: { knockout: payload }
+      });
+      setKnockoutPredictions(data.knockout || payload);
+      setStatus(`Eliminatoria guardada: ${data.knockoutCompleteCount} de ${(fixtureData.knockout || []).length} cruces.`);
       await refreshPrivateData();
     } catch (error) {
       setStatus(error.message);
@@ -787,7 +842,20 @@ export default function App() {
       )}
 
       {tab === 'knockouts' && (
-        <OfficialKnockoutStagePanel />
+        <KnockoutPredictionsPanel
+          knockoutFixtures={fixtureData.knockout || []}
+          fixtures={fixtures}
+          groups={groups}
+          groupPredictions={predictions}
+          knockoutPredictions={knockoutPredictions}
+          knockoutResults={knockoutResults}
+          locked={settings.knockoutLocked}
+          busy={busy}
+          onScore={(matchId, field, value) => updateScore(setKnockoutPredictions, matchId, field, value)}
+          onAdvance={setKnockoutAdvance}
+          onSave={saveKnockout}
+          onRefresh={refreshPrivateData}
+        />
       )}
 
       {tab === 'leaderboard' && (
@@ -799,7 +867,10 @@ export default function App() {
           fixtures={fixtures}
           groups={groups}
           initialResults={results}
+          knockoutFixtures={fixtureData.knockout || []}
+          initialKnockoutResults={knockoutResults}
           locked={settings.locked}
+          knockoutLocked={settings.knockoutLocked}
           onStatus={setStatus}
           onSaved={async () => {
             await refreshPrivateData();
@@ -835,7 +906,7 @@ function RulesBanner({ showRules, onToggle }) {
       <div>
         <p className="eyebrow">Reglas de la porra</p>
         <strong>Fase de grupos: 5/3/1 pts por 1º, 2º y 3º de grupo · 2 pts por acertar el resultado de cada partido (1, X o 2) y 1 pt extra por marcador exacto.</strong>
-        <p>Después se abrirá la porra de eliminatorias con 5 pts por acertar quién pasa y 1 punto extra por resultado exacto sin tanda de penaltis.</p>
+        <p>Después se abrirá la porra de eliminatorias con 5 pts por acertar quién pasa cada cruce y 2 pts extra por el marcador exacto previo a la tanda de penaltis.</p>
       </div>
       <button className="secondary rulesButton" type="button" onClick={onToggle}>{showRules ? 'Ocultar reglas' : 'Ver reglas completas'}</button>
       {showRules && <RulesPanel />}
@@ -942,6 +1013,199 @@ function OfficialSeedTeamLine({ label, team }) {
         </span>
       )}
     </div>
+  );
+}
+
+// Etiqueta legible de un origen de cruce (seed de grupo o ganador/perdedor de otro cruce).
+function knockoutSourceLabel(source) {
+  if (!source) return '—';
+  if (source.winnerOf) return `Ganador ${source.winnerOf}`;
+  if (source.loserOf) return `Perdedor ${source.loserOf}`;
+  if (source.seed) {
+    const seed = source.seed;
+    const pos = seed[0];
+    const rest = seed.slice(1);
+    if (pos === '1') return `1º Grupo ${rest}`;
+    if (pos === '2') return `2º Grupo ${rest}`;
+    if (pos === '3') return `3º (${rest.split('').join('/')})`;
+    return seed;
+  }
+  return '—';
+}
+
+function formatKnockoutDate(date) {
+  if (!date) return '';
+  const parts = String(date).split('-');
+  if (parts.length === 3) return `${parts[2]}/${parts[1]}`;
+  return date;
+}
+
+function KnockoutPredictionsPanel({
+  knockoutFixtures,
+  fixtures,
+  groups,
+  groupPredictions,
+  knockoutPredictions,
+  knockoutResults,
+  locked,
+  busy,
+  onScore,
+  onAdvance,
+  onSave,
+  onRefresh
+}) {
+  const groupTables = useMemo(
+    () => buildGroupTables(fixtures, groups, groupPredictions),
+    [fixtures, groups, groupPredictions]
+  );
+  const bracket = useMemo(
+    () => resolveBracket(knockoutFixtures, knockoutPredictions, groupTables),
+    [knockoutFixtures, knockoutPredictions, groupTables]
+  );
+
+  const byRound = useMemo(() => {
+    const map = {};
+    for (const fixture of knockoutFixtures) {
+      (map[fixture.round] ||= []).push(fixture);
+    }
+    return map;
+  }, [knockoutFixtures]);
+
+  const total = knockoutFixtures.length;
+  const completed = knockoutFixtures.filter((fixture) => isCompleteScore(knockoutPredictions[fixture.id])).length;
+  const percent = total ? Math.round((completed / total) * 100) : 0;
+
+  return (
+    <section className="panel knockoutStagePanel">
+      <div className="toolbar">
+        <div>
+          <h2>Pronósticos fase de eliminatorias</h2>
+          <p className="muted">5 pts por acertar el equipo que pasa cada cruce y 2 pts extra por el marcador exacto previo a penaltis. Tus ganadores avanzan solos a la ronda siguiente.</p>
+          {locked
+            ? <p className="locked">La eliminatoria está cerrada. Se abrirá cuando termine la fase de grupos.</p>
+            : <p className="muted small">Rellena el cuadro con los equipos que proyectan tus pronósticos de grupos. Si pones empate, elige quién pasa en penaltis.</p>}
+        </div>
+        <div className="overallProgressCard" aria-label="Progreso de la eliminatoria">
+          <span className="progressNumber">{percent}%</span>
+          <span className="progressText">{completed}/{total} cruces</span>
+          <div className="progressTrack" aria-hidden="true">
+            <div className="progressFill" style={{ width: `${percent}%` }} />
+          </div>
+        </div>
+      </div>
+
+      {ROUND_ORDER.filter((round) => byRound[round]?.length).map((round) => (
+        <div className="knockoutRoundBlock" key={round}>
+          <h3>{ROUND_LABELS[round]}</h3>
+          <div className="knockoutCaptureGrid">
+            {byRound[round].map((fixture) => (
+              <KnockoutMatchCard
+                key={fixture.id}
+                fixture={fixture}
+                teams={bracket[fixture.id]}
+                pick={knockoutPredictions[fixture.id]}
+                result={knockoutResults[fixture.id]}
+                disabled={locked}
+                onScore={onScore}
+                onAdvance={onAdvance}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <div className="stickyActions predictionActions">
+        <button onClick={onSave} disabled={busy || locked}>{busy ? 'Guardando...' : 'Guardar mi eliminatoria'}</button>
+        <button className="secondary" onClick={onRefresh}>Recargar</button>
+      </div>
+    </section>
+  );
+}
+
+function KnockoutMatchCard({ fixture, teams, pick, result, disabled, onScore, onAdvance }) {
+  const homeTeam = teams?.homeTeam || null;
+  const awayTeam = teams?.awayTeam || null;
+  const homeLabel = homeTeam || knockoutSourceLabel(fixture.home);
+  const awayLabel = awayTeam || knockoutSourceLabel(fixture.away);
+
+  const homeGoals = pick?.homeGoals ?? '';
+  const awayGoals = pick?.awayGoals ?? '';
+  const isDraw =
+    homeGoals !== '' && awayGoals !== '' && Number(homeGoals) === Number(awayGoals);
+
+  const meta = [fixture.id, formatKnockoutDate(fixture.date), fixture.time].filter(Boolean).join(' · ');
+  const hasResult = isCompleteScore(result);
+
+  return (
+    <article className="matchCard matchCardEnhanced knockoutMatchCard">
+      <div className="matchMeta">{meta}</div>
+      <div className="scoreRow scoreRowEnhanced">
+        <span className="team home">
+          {homeTeam && <TeamFlag team={homeTeam} />}
+          {homeLabel}
+        </span>
+        <input
+          type="number"
+          min="0"
+          max="99"
+          value={homeGoals}
+          disabled={disabled}
+          onChange={(event) => onScore(fixture.id, 'homeGoals', event.target.value)}
+        />
+        <span className="dash">-</span>
+        <input
+          type="number"
+          min="0"
+          max="99"
+          value={awayGoals}
+          disabled={disabled}
+          onChange={(event) => onScore(fixture.id, 'awayGoals', event.target.value)}
+        />
+        <span className="team away">
+          {awayLabel}
+          {awayTeam && <TeamFlag team={awayTeam} />}
+        </span>
+      </div>
+
+      {isDraw && (
+        <div className="knockoutAdvance">
+          <span>Pasa en penaltis:</span>
+          <label>
+            <input
+              type="radio"
+              name={`advance-${fixture.id}`}
+              checked={pick?.advance === 'home'}
+              disabled={disabled}
+              onChange={() => onAdvance(fixture.id, 'home')}
+            />
+            {homeLabel}
+          </label>
+          <label>
+            <input
+              type="radio"
+              name={`advance-${fixture.id}`}
+              checked={pick?.advance === 'away'}
+              disabled={disabled}
+              onChange={() => onAdvance(fixture.id, 'away')}
+            />
+            {awayLabel}
+          </label>
+        </div>
+      )}
+
+      {!isDraw && teams?.advancerTeam && (
+        <div className="officialSeedPass">Pasa: <span>{teams.advancerTeam}</span></div>
+      )}
+
+      {hasResult && (
+        <p className="actualResult">
+          Resultado real: {result.homeGoals}-{result.awayGoals}
+          {Number(result.homeGoals) === Number(result.awayGoals) && result.advance
+            ? ` (pasa ${result.advance === 'home' ? 'local' : 'visitante'} en penaltis)`
+            : ''}
+        </p>
+      )}
+    </article>
   );
 }
 
@@ -1862,11 +2126,12 @@ function Leaderboard({ data, onRefresh }) {
   );
 }
 
-function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSaved }) {
+function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], initialKnockoutResults, locked, knockoutLocked, onStatus, onSaved }) {
   const [adminCode, setAdminCode] = useState(localStorage.getItem(STORAGE_ADMIN) || '');
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [results, setResults] = useState(initialResults || {});
+  const [knockoutResults, setKnockoutResults] = useState(initialKnockoutResults || {});
   const [paymentRows, setPaymentRows] = useState([]);
   const [paymentsLoaded, setPaymentsLoaded] = useState(false);
   const [paymentsBusy, setPaymentsBusy] = useState(false);
@@ -1874,6 +2139,23 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
   useEffect(() => {
     setResults(initialResults || {});
   }, [initialResults]);
+
+  useEffect(() => {
+    setKnockoutResults(initialKnockoutResults || {});
+  }, [initialKnockoutResults]);
+
+  const knockoutBracket = useMemo(
+    () => resolveBracket(knockoutFixtures, knockoutResults, buildGroupTables(fixtures, groups, results)),
+    [knockoutFixtures, knockoutResults, fixtures, groups, results]
+  );
+
+  const knockoutByRound = useMemo(() => {
+    const map = {};
+    for (const fixture of knockoutFixtures) {
+      (map[fixture.round] ||= []).push(fixture);
+    }
+    return map;
+  }, [knockoutFixtures]);
 
   async function unlockAdmin(event) {
     if (event) {
@@ -1957,6 +2239,70 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
         body: { locked: nextLocked }
       });
       onStatus(nextLocked ? 'Porra cerrada.' : 'Porra abierta.');
+      await onSaved();
+    } catch (error) {
+      onStatus(error.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function updateKnockoutResult(matchId, field, value) {
+    const clean = value === '' ? '' : Math.max(0, Math.min(99, Number(value)));
+    setKnockoutResults((current) => ({
+      ...current,
+      [matchId]: {
+        homeGoals: current[matchId]?.homeGoals ?? '',
+        awayGoals: current[matchId]?.awayGoals ?? '',
+        ...current[matchId],
+        [field]: clean
+      }
+    }));
+  }
+
+  function setKnockoutResultAdvance(matchId, advance) {
+    setKnockoutResults((current) => ({
+      ...current,
+      [matchId]: {
+        homeGoals: current[matchId]?.homeGoals ?? '',
+        awayGoals: current[matchId]?.awayGoals ?? '',
+        ...current[matchId],
+        advance
+      }
+    }));
+  }
+
+  async function saveKnockoutResults() {
+    setBusy(true);
+    onStatus('');
+    try {
+      localStorage.setItem(STORAGE_ADMIN, adminCode);
+      const payload = normalizeKnockoutForSave(knockoutResults);
+      const data = await apiFetch('/api/results', {
+        method: 'POST',
+        adminCode,
+        body: { phase: 'knockout', results: payload }
+      });
+      onStatus(`Resultados de eliminatoria guardados: ${data.completeCount}/${knockoutFixtures.length} cruces.`);
+      await onSaved();
+    } catch (error) {
+      onStatus(error.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function setKnockoutLocked(nextLocked) {
+    setBusy(true);
+    onStatus('');
+    try {
+      localStorage.setItem(STORAGE_ADMIN, adminCode);
+      await apiFetch('/api/settings', {
+        method: 'POST',
+        adminCode,
+        body: { knockoutLocked: nextLocked }
+      });
+      onStatus(nextLocked ? 'Eliminatoria cerrada.' : 'Eliminatoria abierta.');
       await onSaved();
     } catch (error) {
       onStatus(error.message);
@@ -2070,9 +2416,15 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
       </div>
 
       <div className="adminActions">
-        <button className="secondary" onClick={() => setLocked(true)} disabled={busy || locked}>Cerrar porra</button>
-        <button className="secondary" onClick={() => setLocked(false)} disabled={busy || !locked}>Reabrir porra</button>
-        <span className={locked ? 'locked pill' : 'pill'}>{locked ? 'Cerrada' : 'Abierta'}</span>
+        <button className="secondary" onClick={() => setLocked(true)} disabled={busy || locked}>Cerrar porra grupos</button>
+        <button className="secondary" onClick={() => setLocked(false)} disabled={busy || !locked}>Reabrir porra grupos</button>
+        <span className={locked ? 'locked pill' : 'pill'}>Grupos: {locked ? 'Cerrada' : 'Abierta'}</span>
+      </div>
+
+      <div className="adminActions">
+        <button className="secondary" onClick={() => setKnockoutLocked(false)} disabled={busy || !knockoutLocked}>Abrir eliminatoria</button>
+        <button className="secondary" onClick={() => setKnockoutLocked(true)} disabled={busy || knockoutLocked}>Cerrar eliminatoria</button>
+        <span className={knockoutLocked ? 'locked pill' : 'pill'}>Eliminatoria: {knockoutLocked ? 'Cerrada' : 'Abierta'}</span>
       </div>
 
       <section className="adminPaymentPanel">
@@ -2134,6 +2486,36 @@ function AdminPanel({ fixtures, groups, initialResults, locked, onStatus, onSave
       <div className="stickyActions">
         <button onClick={saveResults} disabled={busy}>{busy ? 'Guardando...' : 'Guardar resultados reales'}</button>
       </div>
+
+      {knockoutFixtures.length > 0 && (
+        <section className="adminKnockoutPanel">
+          <h3>Resultados de eliminatoria</h3>
+          <p className="muted small">Mete el marcador previo a penaltis de cada cruce. Si hay empate, elige qué equipo pasa en penaltis. Los equipos se calculan con los resultados reales de grupos y los ganadores de cruces anteriores.</p>
+
+          {ROUND_ORDER.filter((round) => knockoutByRound[round]?.length).map((round) => (
+            <div className="knockoutRoundBlock" key={round}>
+              <h4>{ROUND_LABELS[round]}</h4>
+              <div className="knockoutCaptureGrid">
+                {knockoutByRound[round].map((fixture) => (
+                  <KnockoutMatchCard
+                    key={fixture.id}
+                    fixture={fixture}
+                    teams={knockoutBracket[fixture.id]}
+                    pick={knockoutResults[fixture.id]}
+                    disabled={false}
+                    onScore={updateKnockoutResult}
+                    onAdvance={setKnockoutResultAdvance}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <div className="stickyActions">
+            <button onClick={saveKnockoutResults} disabled={busy}>{busy ? 'Guardando...' : 'Guardar resultados de eliminatoria'}</button>
+          </div>
+        </section>
+      )}
     </section>
   );
 }

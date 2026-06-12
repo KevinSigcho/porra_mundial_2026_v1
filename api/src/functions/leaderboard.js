@@ -185,6 +185,8 @@ app.http('leaderboard', {
       const predictionEntities = await listByPartition('prediction');
       const resultEntity = await getEntity('result', 'groupStage');
       const results = parseJson(resultEntity?.results, {});
+      const knockoutResultEntity = await getEntity('result', 'knockout');
+      const knockoutResults = parseJson(knockoutResultEntity?.results, {});
 
       const predictionsByPlayer = new Map(
         predictionEntities.map((entity) => [entity.rowKey, entity])
@@ -193,7 +195,8 @@ app.http('leaderboard', {
       const rows = players.map((player) => {
         const entity = predictionsByPlayer.get(player.rowKey);
         const predictions = parseJson(entity?.predictions, {});
-        const score = computePlayerScore(predictions, results);
+        const knockoutPredictions = parseJson(entity?.knockout, {});
+        const score = computePlayerScore(predictions, results, knockoutPredictions, knockoutResults);
         const paymentConfirmed = isConfirmed(player);
 
         return {
@@ -207,7 +210,11 @@ app.http('leaderboard', {
           matchOutcomePoints: score.matchOutcomePoints,
           exactScorePoints: score.exactScorePoints,
           exactGoalDifferences: score.exactGoalDifferences,
+          knockoutPoints: score.knockoutPoints,
+          knockoutWinnersCorrect: score.knockoutWinnersCorrect,
+          knockoutExactCorrect: score.knockoutExactCorrect,
           predictionsMade: countComplete(predictions),
+          knockoutMade: countComplete(knockoutPredictions),
           updatedAt: entity?.updatedAt || player.updatedAt || null,
           paymentStatus: paymentConfirmed ? 'confirmed' : 'pending',
           paymentConfirmed
@@ -261,7 +268,9 @@ app.http('leaderboard', {
           groupThirdQualified: 1,
           matchOutcome: 2,
           exactScoreBonus: 1,
-          description: 'Fase de grupos: 5 pts por acertar el 1º, 3 pts por acertar el 2º y 1 pt por acertar el 3º de cada grupo. En cada partido: 2 pts por acertar el resultado (1, X o 2, incluido el empate) y 1 pt extra por el marcador exacto (3 pts en total).'
+          knockoutWinner: 5,
+          knockoutExactBonus: 2,
+          description: 'Fase de grupos: 5 pts por acertar el 1º, 3 pts por acertar el 2º y 1 pt por acertar el 3º de cada grupo. En cada partido: 2 pts por acertar el resultado (1, X o 2, incluido el empate) y 1 pt extra por el marcador exacto (3 pts en total). Eliminatorias: 5 pts por acertar el equipo que pasa cada cruce y 2 pts extra por el marcador exacto previo a penaltis.'
         },
         tieBreakers: [
           'Puntos totales',

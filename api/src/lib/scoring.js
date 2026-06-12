@@ -1,10 +1,13 @@
 const fixtureData = require('../data/fixtures.json');
+const { resolveBracket, knockoutFixtures } = require('./knockout');
 
 const GROUP_WINNER_POINTS = 5;
 const GROUP_RUNNER_POINTS = 3;
 const GROUP_THIRD_POINTS = 1;
 const MATCH_OUTCOME_POINTS = 2;
 const EXACT_SCORE_POINTS = 1;
+const KNOCKOUT_WINNER_POINTS = 5;
+const KNOCKOUT_EXACT_POINTS = 2;
 
 function parseJson(value, fallback = {}) {
   if (!value) return fallback;
@@ -225,13 +228,77 @@ function computeTieBreakers(predictions, results) {
   };
 }
 
-function computePlayerScore(predictions, results) {
+function sameScore(a, b) {
+  return (
+    a && b &&
+    Number(a.homeGoals) === Number(b.homeGoals) &&
+    Number(a.awayGoals) === Number(b.awayGoals)
+  );
+}
+
+// Puntúa la eliminatoria por cruce: 5 pts por acertar quién pasa,
+// +2 pts adicionales por marcador exacto (solo si además se acierta quién pasa).
+// El cuadro del jugador se propaga desde SUS predicciones de grupo; el real, desde los resultados.
+function computeKnockoutScore(knockoutPred, knockoutResults, predGroupTables, resultGroupTables) {
+  const predBracket = resolveBracket(knockoutPred || {}, predGroupTables);
+  const realBracket = resolveBracket(knockoutResults || {}, resultGroupTables);
+
+  let knockoutPoints = 0;
+  let knockoutWinnersCorrect = 0;
+  let knockoutExactCorrect = 0;
+  const knockoutBreakdown = {};
+
+  for (const fixture of knockoutFixtures) {
+    const id = fixture.id;
+    const real = realBracket[id] || {};
+    const predicted = predBracket[id] || {};
+    const resultScore = (knockoutResults || {})[id];
+
+    let winnerPoints = 0;
+    let exactPoints = 0;
+    const winnerCorrect = Boolean(
+      real.advancerTeam && predicted.advancerTeam && predicted.advancerTeam === real.advancerTeam
+    );
+
+    if (winnerCorrect) {
+      winnerPoints = KNOCKOUT_WINNER_POINTS;
+      knockoutWinnersCorrect += 1;
+
+      if (sameScore((knockoutPred || {})[id], resultScore)) {
+        exactPoints = KNOCKOUT_EXACT_POINTS;
+        knockoutExactCorrect += 1;
+      }
+    }
+
+    knockoutPoints += winnerPoints + exactPoints;
+
+    knockoutBreakdown[id] = {
+      round: fixture.round,
+      points: winnerPoints + exactPoints,
+      winnerCorrect,
+      exactCorrect: exactPoints > 0,
+      predictedAdvancer: predicted.advancerTeam || null,
+      actualAdvancer: real.advancerTeam || null
+    };
+  }
+
+  return { knockoutPoints, knockoutWinnersCorrect, knockoutExactCorrect, knockoutBreakdown };
+}
+
+function computePlayerScore(predictions, results, knockoutPredictions, knockoutResults) {
   const normalizedPredictions = normalizeScoreMap(predictions);
   const normalizedResults = normalizeScoreMap(results);
 
   const predictedTables = buildGroupTables(normalizedPredictions);
   const actualTables = buildGroupTables(normalizedResults);
   const tieBreakers = computeTieBreakers(normalizedPredictions, normalizedResults);
+
+  const knockout = computeKnockoutScore(
+    knockoutPredictions,
+    knockoutResults,
+    predictedTables,
+    actualTables
+  );
 
   let groupPositionPoints = 0;
   let matchOutcomePoints = tieBreakers.correctOutcomes * MATCH_OUTCOME_POINTS;
@@ -292,13 +359,17 @@ function computePlayerScore(predictions, results) {
     };
   }
 
-  const points = groupPositionPoints + matchOutcomePoints + exactScorePoints;
+  const points =
+    groupPositionPoints + matchOutcomePoints + exactScorePoints + knockout.knockoutPoints;
 
   return {
     points,
     groupPositionPoints,
     matchOutcomePoints,
     exactScorePoints,
+    knockoutPoints: knockout.knockoutPoints,
+    knockoutWinnersCorrect: knockout.knockoutWinnersCorrect,
+    knockoutExactCorrect: knockout.knockoutExactCorrect,
     groupWinnersCorrect,
     groupRunnersCorrect,
     thirdsCorrect,
@@ -308,12 +379,15 @@ function computePlayerScore(predictions, results) {
     completeResultGroups: countCompleteGroups(normalizedResults),
     completePredictionGroups: countCompleteGroups(normalizedPredictions),
     groupBreakdown,
+    knockoutBreakdown: knockout.knockoutBreakdown,
     rules: {
       groupWinner: GROUP_WINNER_POINTS,
       groupRunner: GROUP_RUNNER_POINTS,
       groupThird: GROUP_THIRD_POINTS,
       matchOutcome: MATCH_OUTCOME_POINTS,
-      exactScore: EXACT_SCORE_POINTS
+      exactScore: EXACT_SCORE_POINTS,
+      knockoutWinner: KNOCKOUT_WINNER_POINTS,
+      knockoutExactBonus: KNOCKOUT_EXACT_POINTS
     }
   };
 }
@@ -347,6 +421,7 @@ function getQualifiedTeams(groupTables) {
 module.exports = {
   parseJson,
   computePlayerScore,
+  computeKnockoutScore,
   buildGroupTables,
   getQualifiedTeams,
   normalizeScoreMap,

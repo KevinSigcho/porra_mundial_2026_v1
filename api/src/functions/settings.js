@@ -169,14 +169,16 @@ app.http('settings', {
         return await updatePaymentResponse(body);
       }
 
-      const locked = body.locked === true;
-
-      await upsertEntity({
+      // Merge: solo se tocan los flags presentes en el body, sin pisar el otro.
+      const update = {
         partitionKey: 'settings',
         rowKey: 'global',
-        locked,
         updatedAt: new Date().toISOString()
-      }, 'Merge');
+      };
+      if (typeof body.locked === 'boolean') update.locked = body.locked;
+      if (typeof body.knockoutLocked === 'boolean') update.knockoutLocked = body.knockoutLocked;
+
+      await upsertEntity(update, 'Merge');
 
       return ok(await getSettings());
     } catch (error) {

@@ -11,94 +11,1758 @@
     },
     "matchOutcome": 2,
     "exactScore": 1,
-    "description": "Sistema de puntuación por clasificación de grupo (5-3-1). Por partido: 2 puntos por acertar el resultado (1, X o 2, incluido el empate) y 1 punto extra por el marcador exacto (3 puntos en total)"
+    "description": "Sistema de puntuación por clasificación de grupo (5-3-1). Por partido: 2 puntos por acertar el resultado (1, X o 2, incluido el empate) y 1 punto extra por el marcador exacto (3 puntos en total)",
+    "knockoutWinner": 5,
+    "knockoutExactBonus": 2
   },
   "groups": {
-    "A": ["México", "Corea del Sur", "Chequia", "Sudáfrica"],
-    "B": ["Canadá", "Bosnia y Herzegovina", "Qatar", "Suiza"],
-    "C": ["Brasil", "Marruecos", "Haití", "Escocia"],
-    "D": ["Estados Unidos", "Turquía", "Australia", "Paraguay"],
-    "E": ["Alemania", "Ecuador", "Costa de Marfil", "Curazao"],
-    "F": ["Países Bajos", "Japón", "Suecia", "Túnez"],
-    "G": ["Bélgica", "Egipto", "Irán", "Nueva Zelanda"],
-    "H": ["España", "Cabo Verde", "Arabia Saudí", "Uruguay"],
-    "I": ["Francia", "Senegal", "Irak", "Noruega"],
-    "J": ["Argentina", "Argelia", "Austria", "Jordania"],
-    "K": ["Portugal", "RD Congo", "Uzbekistán", "Colombia"],
-    "L": ["Inglaterra", "Croacia", "Ghana", "Panamá"]
+    "A": [
+      "México",
+      "Corea del Sur",
+      "Chequia",
+      "Sudáfrica"
+    ],
+    "B": [
+      "Canadá",
+      "Bosnia y Herzegovina",
+      "Qatar",
+      "Suiza"
+    ],
+    "C": [
+      "Brasil",
+      "Marruecos",
+      "Haití",
+      "Escocia"
+    ],
+    "D": [
+      "Estados Unidos",
+      "Turquía",
+      "Australia",
+      "Paraguay"
+    ],
+    "E": [
+      "Alemania",
+      "Ecuador",
+      "Costa de Marfil",
+      "Curazao"
+    ],
+    "F": [
+      "Países Bajos",
+      "Japón",
+      "Suecia",
+      "Túnez"
+    ],
+    "G": [
+      "Bélgica",
+      "Egipto",
+      "Irán",
+      "Nueva Zelanda"
+    ],
+    "H": [
+      "España",
+      "Cabo Verde",
+      "Arabia Saudí",
+      "Uruguay"
+    ],
+    "I": [
+      "Francia",
+      "Senegal",
+      "Irak",
+      "Noruega"
+    ],
+    "J": [
+      "Argentina",
+      "Argelia",
+      "Austria",
+      "Jordania"
+    ],
+    "K": [
+      "Portugal",
+      "RD Congo",
+      "Uzbekistán",
+      "Colombia"
+    ],
+    "L": [
+      "Inglaterra",
+      "Croacia",
+      "Ghana",
+      "Panamá"
+    ]
   },
   "fixtures": [
-    {"id": "M01", "matchNo": 1, "date": "2026-06-11", "group": "A", "home": "México", "away": "Sudáfrica", "venue": "Mexico City Stadium", "kickoffDateSpain": "2026-06-11", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-11T21:00:00+02:00", "lockAtSpain": "2026-06-10T21:00:00+02:00", "lockDateSpain": "2026-06-10", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M02", "matchNo": 2, "date": "2026-06-11", "group": "A", "home": "Corea del Sur", "away": "Chequia", "venue": "Estadio Guadalajara", "kickoffDateSpain": "2026-06-12", "kickoffTimeSpain": "04:00", "kickoffAtSpain": "2026-06-12T04:00:00+02:00", "lockAtSpain": "2026-06-11T04:00:00+02:00", "lockDateSpain": "2026-06-11", "lockTimeSpain": "04:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M03", "matchNo": 3, "date": "2026-06-12", "group": "B", "home": "Canadá", "away": "Bosnia y Herzegovina", "venue": "Toronto Stadium", "kickoffDateSpain": "2026-06-12", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-12T21:00:00+02:00", "lockAtSpain": "2026-06-11T21:00:00+02:00", "lockDateSpain": "2026-06-11", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M04", "matchNo": 4, "date": "2026-06-12", "group": "D", "home": "Estados Unidos", "away": "Paraguay", "venue": "Los Angeles Stadium", "kickoffDateSpain": "2026-06-13", "kickoffTimeSpain": "02:00", "kickoffAtSpain": "2026-06-13T02:00:00+02:00", "lockAtSpain": "2026-06-12T02:00:00+02:00", "lockDateSpain": "2026-06-12", "lockTimeSpain": "02:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M05", "matchNo": 5, "date": "2026-06-13", "group": "C", "home": "Haití", "away": "Escocia", "venue": "Boston Stadium", "kickoffDateSpain": "2026-06-14", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-14T03:00:00+02:00", "lockAtSpain": "2026-06-13T03:00:00+02:00", "lockDateSpain": "2026-06-13", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M06", "matchNo": 6, "date": "2026-06-13", "group": "D", "home": "Australia", "away": "Turquía", "venue": "BC Place Vancouver", "kickoffDateSpain": "2026-06-14", "kickoffTimeSpain": "06:00", "kickoffAtSpain": "2026-06-14T06:00:00+02:00", "lockAtSpain": "2026-06-13T06:00:00+02:00", "lockDateSpain": "2026-06-13", "lockTimeSpain": "06:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M07", "matchNo": 7, "date": "2026-06-13", "group": "C", "home": "Brasil", "away": "Marruecos", "venue": "New York New Jersey Stadium", "kickoffDateSpain": "2026-06-14", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-14T00:00:00+02:00", "lockAtSpain": "2026-06-13T00:00:00+02:00", "lockDateSpain": "2026-06-13", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M08", "matchNo": 8, "date": "2026-06-13", "group": "B", "home": "Qatar", "away": "Suiza", "venue": "San Francisco Bay Area Stadium", "kickoffDateSpain": "2026-06-13", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-13T21:00:00+02:00", "lockAtSpain": "2026-06-12T21:00:00+02:00", "lockDateSpain": "2026-06-12", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M09", "matchNo": 9, "date": "2026-06-14", "group": "E", "home": "Costa de Marfil", "away": "Ecuador", "venue": "Philadelphia Stadium", "kickoffDateSpain": "2026-06-15", "kickoffTimeSpain": "01:00", "kickoffAtSpain": "2026-06-15T01:00:00+02:00", "lockAtSpain": "2026-06-14T01:00:00+02:00", "lockDateSpain": "2026-06-14", "lockTimeSpain": "01:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M10", "matchNo": 10, "date": "2026-06-14", "group": "E", "home": "Alemania", "away": "Curazao", "venue": "Houston Stadium", "kickoffDateSpain": "2026-06-14", "kickoffTimeSpain": "19:00", "kickoffAtSpain": "2026-06-14T19:00:00+02:00", "lockAtSpain": "2026-06-13T19:00:00+02:00", "lockDateSpain": "2026-06-13", "lockTimeSpain": "19:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M11", "matchNo": 11, "date": "2026-06-14", "group": "F", "home": "Países Bajos", "away": "Japón", "venue": "Dallas Stadium", "kickoffDateSpain": "2026-06-14", "kickoffTimeSpain": "22:00", "kickoffAtSpain": "2026-06-14T22:00:00+02:00", "lockAtSpain": "2026-06-13T22:00:00+02:00", "lockDateSpain": "2026-06-13", "lockTimeSpain": "22:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M12", "matchNo": 12, "date": "2026-06-14", "group": "F", "home": "Suecia", "away": "Túnez", "venue": "Estadio Monterrey", "kickoffDateSpain": "2026-06-15", "kickoffTimeSpain": "04:00", "kickoffAtSpain": "2026-06-15T04:00:00+02:00", "lockAtSpain": "2026-06-14T04:00:00+02:00", "lockDateSpain": "2026-06-14", "lockTimeSpain": "04:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M13", "matchNo": 13, "date": "2026-06-15", "group": "H", "home": "Arabia Saudí", "away": "Uruguay", "venue": "Miami Stadium", "kickoffDateSpain": "2026-06-16", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-16T00:00:00+02:00", "lockAtSpain": "2026-06-15T00:00:00+02:00", "lockDateSpain": "2026-06-15", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M14", "matchNo": 14, "date": "2026-06-15", "group": "H", "home": "España", "away": "Cabo Verde", "venue": "Atlanta Stadium", "kickoffDateSpain": "2026-06-15", "kickoffTimeSpain": "18:00", "kickoffAtSpain": "2026-06-15T18:00:00+02:00", "lockAtSpain": "2026-06-14T18:00:00+02:00", "lockDateSpain": "2026-06-14", "lockTimeSpain": "18:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M15", "matchNo": 15, "date": "2026-06-15", "group": "G", "home": "Irán", "away": "Nueva Zelanda", "venue": "Los Angeles Stadium", "kickoffDateSpain": "2026-06-16", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-16T03:00:00+02:00", "lockAtSpain": "2026-06-15T03:00:00+02:00", "lockDateSpain": "2026-06-15", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M16", "matchNo": 16, "date": "2026-06-15", "group": "G", "home": "Bélgica", "away": "Egipto", "venue": "Seattle Stadium", "kickoffDateSpain": "2026-06-15", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-15T21:00:00+02:00", "lockAtSpain": "2026-06-14T21:00:00+02:00", "lockDateSpain": "2026-06-14", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M17", "matchNo": 17, "date": "2026-06-16", "group": "I", "home": "Francia", "away": "Senegal", "venue": "New York New Jersey Stadium", "kickoffDateSpain": "2026-06-16", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-16T21:00:00+02:00", "lockAtSpain": "2026-06-15T21:00:00+02:00", "lockDateSpain": "2026-06-15", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M18", "matchNo": 18, "date": "2026-06-16", "group": "I", "home": "Irak", "away": "Noruega", "venue": "Boston Stadium", "kickoffDateSpain": "2026-06-17", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-17T00:00:00+02:00", "lockAtSpain": "2026-06-16T00:00:00+02:00", "lockDateSpain": "2026-06-16", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M19", "matchNo": 19, "date": "2026-06-16", "group": "J", "home": "Argentina", "away": "Argelia", "venue": "Kansas City Stadium", "kickoffDateSpain": "2026-06-17", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-17T03:00:00+02:00", "lockAtSpain": "2026-06-16T03:00:00+02:00", "lockDateSpain": "2026-06-16", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M20", "matchNo": 20, "date": "2026-06-16", "group": "J", "home": "Austria", "away": "Jordania", "venue": "San Francisco Bay Area Stadium", "kickoffDateSpain": "2026-06-17", "kickoffTimeSpain": "06:00", "kickoffAtSpain": "2026-06-17T06:00:00+02:00", "lockAtSpain": "2026-06-16T06:00:00+02:00", "lockDateSpain": "2026-06-16", "lockTimeSpain": "06:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M21", "matchNo": 21, "date": "2026-06-17", "group": "L", "home": "Ghana", "away": "Panamá", "venue": "Toronto Stadium", "kickoffDateSpain": "2026-06-18", "kickoffTimeSpain": "01:00", "kickoffAtSpain": "2026-06-18T01:00:00+02:00", "lockAtSpain": "2026-06-17T01:00:00+02:00", "lockDateSpain": "2026-06-17", "lockTimeSpain": "01:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M22", "matchNo": 22, "date": "2026-06-17", "group": "L", "home": "Inglaterra", "away": "Croacia", "venue": "Dallas Stadium", "kickoffDateSpain": "2026-06-17", "kickoffTimeSpain": "22:00", "kickoffAtSpain": "2026-06-17T22:00:00+02:00", "lockAtSpain": "2026-06-16T22:00:00+02:00", "lockDateSpain": "2026-06-16", "lockTimeSpain": "22:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M23", "matchNo": 23, "date": "2026-06-17", "group": "K", "home": "Portugal", "away": "RD Congo", "venue": "Houston Stadium", "kickoffDateSpain": "2026-06-17", "kickoffTimeSpain": "19:00", "kickoffAtSpain": "2026-06-17T19:00:00+02:00", "lockAtSpain": "2026-06-16T19:00:00+02:00", "lockDateSpain": "2026-06-16", "lockTimeSpain": "19:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M24", "matchNo": 24, "date": "2026-06-17", "group": "K", "home": "Uzbekistán", "away": "Colombia", "venue": "Mexico City Stadium", "kickoffDateSpain": "2026-06-18", "kickoffTimeSpain": "04:00", "kickoffAtSpain": "2026-06-18T04:00:00+02:00", "lockAtSpain": "2026-06-17T04:00:00+02:00", "lockDateSpain": "2026-06-17", "lockTimeSpain": "04:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M25", "matchNo": 25, "date": "2026-06-18", "group": "A", "home": "Chequia", "away": "Sudáfrica", "venue": "Atlanta Stadium", "kickoffDateSpain": "2026-06-18", "kickoffTimeSpain": "18:00", "kickoffAtSpain": "2026-06-18T18:00:00+02:00", "lockAtSpain": "2026-06-17T18:00:00+02:00", "lockDateSpain": "2026-06-17", "lockTimeSpain": "18:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M26", "matchNo": 26, "date": "2026-06-18", "group": "B", "home": "Suiza", "away": "Bosnia y Herzegovina", "venue": "Los Angeles Stadium", "kickoffDateSpain": "2026-06-18", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-18T21:00:00+02:00", "lockAtSpain": "2026-06-17T21:00:00+02:00", "lockDateSpain": "2026-06-17", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M27", "matchNo": 27, "date": "2026-06-18", "group": "B", "home": "Canadá", "away": "Qatar", "venue": "BC Place Vancouver", "kickoffDateSpain": "2026-06-19", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-19T00:00:00+02:00", "lockAtSpain": "2026-06-18T00:00:00+02:00", "lockDateSpain": "2026-06-18", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M28", "matchNo": 28, "date": "2026-06-18", "group": "A", "home": "México", "away": "Corea del Sur", "venue": "Estadio Guadalajara", "kickoffDateSpain": "2026-06-19", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-19T03:00:00+02:00", "lockAtSpain": "2026-06-18T03:00:00+02:00", "lockDateSpain": "2026-06-18", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M29", "matchNo": 29, "date": "2026-06-19", "group": "C", "home": "Brasil", "away": "Haití", "venue": "Philadelphia Stadium", "kickoffDateSpain": "2026-06-20", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-20T03:00:00+02:00", "lockAtSpain": "2026-06-19T03:00:00+02:00", "lockDateSpain": "2026-06-19", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M30", "matchNo": 30, "date": "2026-06-19", "group": "C", "home": "Escocia", "away": "Marruecos", "venue": "Boston Stadium", "kickoffDateSpain": "2026-06-20", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-20T00:00:00+02:00", "lockAtSpain": "2026-06-19T00:00:00+02:00", "lockDateSpain": "2026-06-19", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M31", "matchNo": 31, "date": "2026-06-19", "group": "D", "home": "Turquía", "away": "Paraguay", "venue": "San Francisco Bay Area Stadium", "kickoffDateSpain": "2026-06-20", "kickoffTimeSpain": "06:00", "kickoffAtSpain": "2026-06-20T06:00:00+02:00", "lockAtSpain": "2026-06-19T06:00:00+02:00", "lockDateSpain": "2026-06-19", "lockTimeSpain": "06:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M32", "matchNo": 32, "date": "2026-06-19", "group": "D", "home": "Estados Unidos", "away": "Australia", "venue": "Seattle Stadium", "kickoffDateSpain": "2026-06-19", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-19T21:00:00+02:00", "lockAtSpain": "2026-06-18T21:00:00+02:00", "lockDateSpain": "2026-06-18", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M33", "matchNo": 33, "date": "2026-06-20", "group": "E", "home": "Alemania", "away": "Costa de Marfil", "venue": "Toronto Stadium", "kickoffDateSpain": "2026-06-20", "kickoffTimeSpain": "22:00", "kickoffAtSpain": "2026-06-20T22:00:00+02:00", "lockAtSpain": "2026-06-19T22:00:00+02:00", "lockDateSpain": "2026-06-19", "lockTimeSpain": "22:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M34", "matchNo": 34, "date": "2026-06-20", "group": "E", "home": "Ecuador", "away": "Curazao", "venue": "Kansas City Stadium", "kickoffDateSpain": "2026-06-21", "kickoffTimeSpain": "02:00", "kickoffAtSpain": "2026-06-21T02:00:00+02:00", "lockAtSpain": "2026-06-20T02:00:00+02:00", "lockDateSpain": "2026-06-20", "lockTimeSpain": "02:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M35", "matchNo": 35, "date": "2026-06-20", "group": "F", "home": "Países Bajos", "away": "Suecia", "venue": "Houston Stadium", "kickoffDateSpain": "2026-06-20", "kickoffTimeSpain": "19:00", "kickoffAtSpain": "2026-06-20T19:00:00+02:00", "lockAtSpain": "2026-06-19T19:00:00+02:00", "lockDateSpain": "2026-06-19", "lockTimeSpain": "19:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M36", "matchNo": 36, "date": "2026-06-20", "group": "F", "home": "Túnez", "away": "Japón", "venue": "Estadio Monterrey", "kickoffDateSpain": "2026-06-21", "kickoffTimeSpain": "06:00", "kickoffAtSpain": "2026-06-21T06:00:00+02:00", "lockAtSpain": "2026-06-20T06:00:00+02:00", "lockDateSpain": "2026-06-20", "lockTimeSpain": "06:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M37", "matchNo": 37, "date": "2026-06-21", "group": "H", "home": "Uruguay", "away": "Cabo Verde", "venue": "Miami Stadium", "kickoffDateSpain": "2026-06-22", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-22T00:00:00+02:00", "lockAtSpain": "2026-06-21T00:00:00+02:00", "lockDateSpain": "2026-06-21", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M38", "matchNo": 38, "date": "2026-06-21", "group": "H", "home": "España", "away": "Arabia Saudí", "venue": "Atlanta Stadium", "kickoffDateSpain": "2026-06-21", "kickoffTimeSpain": "18:00", "kickoffAtSpain": "2026-06-21T18:00:00+02:00", "lockAtSpain": "2026-06-20T18:00:00+02:00", "lockDateSpain": "2026-06-20", "lockTimeSpain": "18:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M39", "matchNo": 39, "date": "2026-06-21", "group": "G", "home": "Bélgica", "away": "Irán", "venue": "Los Angeles Stadium", "kickoffDateSpain": "2026-06-21", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-21T21:00:00+02:00", "lockAtSpain": "2026-06-20T21:00:00+02:00", "lockDateSpain": "2026-06-20", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M40", "matchNo": 40, "date": "2026-06-21", "group": "G", "home": "Nueva Zelanda", "away": "Egipto", "venue": "BC Place Vancouver", "kickoffDateSpain": "2026-06-22", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-22T03:00:00+02:00", "lockAtSpain": "2026-06-21T03:00:00+02:00", "lockDateSpain": "2026-06-21", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M41", "matchNo": 41, "date": "2026-06-22", "group": "I", "home": "Noruega", "away": "Senegal", "venue": "New York New Jersey Stadium", "kickoffDateSpain": "2026-06-23", "kickoffTimeSpain": "02:00", "kickoffAtSpain": "2026-06-23T02:00:00+02:00", "lockAtSpain": "2026-06-22T02:00:00+02:00", "lockDateSpain": "2026-06-22", "lockTimeSpain": "02:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M42", "matchNo": 42, "date": "2026-06-22", "group": "I", "home": "Francia", "away": "Irak", "venue": "Philadelphia Stadium", "kickoffDateSpain": "2026-06-22", "kickoffTimeSpain": "23:00", "kickoffAtSpain": "2026-06-22T23:00:00+02:00", "lockAtSpain": "2026-06-21T23:00:00+02:00", "lockDateSpain": "2026-06-21", "lockTimeSpain": "23:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M43", "matchNo": 43, "date": "2026-06-22", "group": "J", "home": "Argentina", "away": "Austria", "venue": "Dallas Stadium", "kickoffDateSpain": "2026-06-22", "kickoffTimeSpain": "19:00", "kickoffAtSpain": "2026-06-22T19:00:00+02:00", "lockAtSpain": "2026-06-21T19:00:00+02:00", "lockDateSpain": "2026-06-21", "lockTimeSpain": "19:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M44", "matchNo": 44, "date": "2026-06-22", "group": "J", "home": "Jordania", "away": "Argelia", "venue": "San Francisco Bay Area Stadium", "kickoffDateSpain": "2026-06-23", "kickoffTimeSpain": "05:00", "kickoffAtSpain": "2026-06-23T05:00:00+02:00", "lockAtSpain": "2026-06-22T05:00:00+02:00", "lockDateSpain": "2026-06-22", "lockTimeSpain": "05:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M45", "matchNo": 45, "date": "2026-06-23", "group": "L", "home": "Inglaterra", "away": "Ghana", "venue": "Boston Stadium", "kickoffDateSpain": "2026-06-23", "kickoffTimeSpain": "22:00", "kickoffAtSpain": "2026-06-23T22:00:00+02:00", "lockAtSpain": "2026-06-22T22:00:00+02:00", "lockDateSpain": "2026-06-22", "lockTimeSpain": "22:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M46", "matchNo": 46, "date": "2026-06-23", "group": "L", "home": "Panamá", "away": "Croacia", "venue": "Toronto Stadium", "kickoffDateSpain": "2026-06-24", "kickoffTimeSpain": "01:00", "kickoffAtSpain": "2026-06-24T01:00:00+02:00", "lockAtSpain": "2026-06-23T01:00:00+02:00", "lockDateSpain": "2026-06-23", "lockTimeSpain": "01:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M47", "matchNo": 47, "date": "2026-06-23", "group": "K", "home": "Portugal", "away": "Uzbekistán", "venue": "Houston Stadium", "kickoffDateSpain": "2026-06-23", "kickoffTimeSpain": "19:00", "kickoffAtSpain": "2026-06-23T19:00:00+02:00", "lockAtSpain": "2026-06-22T19:00:00+02:00", "lockDateSpain": "2026-06-22", "lockTimeSpain": "19:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M48", "matchNo": 48, "date": "2026-06-23", "group": "K", "home": "Colombia", "away": "RD Congo", "venue": "Estadio Guadalajara", "kickoffDateSpain": "2026-06-24", "kickoffTimeSpain": "04:00", "kickoffAtSpain": "2026-06-24T04:00:00+02:00", "lockAtSpain": "2026-06-23T04:00:00+02:00", "lockDateSpain": "2026-06-23", "lockTimeSpain": "04:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M49", "matchNo": 49, "date": "2026-06-24", "group": "C", "home": "Escocia", "away": "Brasil", "venue": "Miami Stadium", "kickoffDateSpain": "2026-06-25", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-25T00:00:00+02:00", "lockAtSpain": "2026-06-24T00:00:00+02:00", "lockDateSpain": "2026-06-24", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M50", "matchNo": 50, "date": "2026-06-24", "group": "C", "home": "Marruecos", "away": "Haití", "venue": "Atlanta Stadium", "kickoffDateSpain": "2026-06-25", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-25T00:00:00+02:00", "lockAtSpain": "2026-06-24T00:00:00+02:00", "lockDateSpain": "2026-06-24", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M51", "matchNo": 51, "date": "2026-06-24", "group": "B", "home": "Suiza", "away": "Canadá", "venue": "BC Place Vancouver", "kickoffDateSpain": "2026-06-24", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-24T21:00:00+02:00", "lockAtSpain": "2026-06-23T21:00:00+02:00", "lockDateSpain": "2026-06-23", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M52", "matchNo": 52, "date": "2026-06-24", "group": "B", "home": "Bosnia y Herzegovina", "away": "Qatar", "venue": "Seattle Stadium", "kickoffDateSpain": "2026-06-24", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-24T21:00:00+02:00", "lockAtSpain": "2026-06-23T21:00:00+02:00", "lockDateSpain": "2026-06-23", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M53", "matchNo": 53, "date": "2026-06-24", "group": "A", "home": "Chequia", "away": "México", "venue": "Mexico City Stadium", "kickoffDateSpain": "2026-06-25", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-25T03:00:00+02:00", "lockAtSpain": "2026-06-24T03:00:00+02:00", "lockDateSpain": "2026-06-24", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M54", "matchNo": 54, "date": "2026-06-24", "group": "A", "home": "Sudáfrica", "away": "Corea del Sur", "venue": "Estadio Monterrey", "kickoffDateSpain": "2026-06-25", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-25T03:00:00+02:00", "lockAtSpain": "2026-06-24T03:00:00+02:00", "lockDateSpain": "2026-06-24", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M55", "matchNo": 55, "date": "2026-06-25", "group": "E", "home": "Curazao", "away": "Costa de Marfil", "venue": "Philadelphia Stadium", "kickoffDateSpain": "2026-06-25", "kickoffTimeSpain": "01:00", "kickoffAtSpain": "2026-06-25T01:00:00+02:00", "lockAtSpain": "2026-06-24T01:00:00+02:00", "lockDateSpain": "2026-06-24", "lockTimeSpain": "01:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M56", "matchNo": 56, "date": "2026-06-25", "group": "E", "home": "Ecuador", "away": "Alemania", "venue": "New York New Jersey Stadium", "kickoffDateSpain": "2026-06-25", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-25T21:00:00+02:00", "lockAtSpain": "2026-06-24T21:00:00+02:00", "lockDateSpain": "2026-06-24", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M57", "matchNo": 57, "date": "2026-06-25", "group": "F", "home": "Japón", "away": "Suecia", "venue": "Dallas Stadium", "kickoffDateSpain": "2026-06-25", "kickoffTimeSpain": "18:00", "kickoffAtSpain": "2026-06-25T18:00:00+02:00", "lockAtSpain": "2026-06-24T18:00:00+02:00", "lockDateSpain": "2026-06-24", "lockTimeSpain": "18:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M58", "matchNo": 58, "date": "2026-06-25", "group": "F", "home": "Túnez", "away": "Países Bajos", "venue": "Kansas City Stadium", "kickoffDateSpain": "2026-06-26", "kickoffTimeSpain": "00:00", "kickoffAtSpain": "2026-06-26T00:00:00+02:00", "lockAtSpain": "2026-06-25T00:00:00+02:00", "lockDateSpain": "2026-06-25", "lockTimeSpain": "00:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M59", "matchNo": 59, "date": "2026-06-25", "group": "D", "home": "Turquía", "away": "Estados Unidos", "venue": "Los Angeles Stadium", "kickoffDateSpain": "2026-06-25", "kickoffTimeSpain": "22:00", "kickoffAtSpain": "2026-06-25T22:00:00+02:00", "lockAtSpain": "2026-06-24T22:00:00+02:00", "lockDateSpain": "2026-06-24", "lockTimeSpain": "22:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M60", "matchNo": 60, "date": "2026-06-25", "group": "D", "home": "Paraguay", "away": "Australia", "venue": "San Francisco Bay Area Stadium", "kickoffDateSpain": "2026-06-26", "kickoffTimeSpain": "02:00", "kickoffAtSpain": "2026-06-26T02:00:00+02:00", "lockAtSpain": "2026-06-25T02:00:00+02:00", "lockDateSpain": "2026-06-25", "lockTimeSpain": "02:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M61", "matchNo": 61, "date": "2026-06-26", "group": "I", "home": "Noruega", "away": "Francia", "venue": "Boston Stadium", "kickoffDateSpain": "2026-06-26", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-26T21:00:00+02:00", "lockAtSpain": "2026-06-25T21:00:00+02:00", "lockDateSpain": "2026-06-25", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M62", "matchNo": 62, "date": "2026-06-26", "group": "I", "home": "Senegal", "away": "Irak", "venue": "Toronto Stadium", "kickoffDateSpain": "2026-06-27", "kickoffTimeSpain": "01:00", "kickoffAtSpain": "2026-06-27T01:00:00+02:00", "lockAtSpain": "2026-06-26T01:00:00+02:00", "lockDateSpain": "2026-06-26", "lockTimeSpain": "01:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M63", "matchNo": 63, "date": "2026-06-26", "group": "G", "home": "Egipto", "away": "Irán", "venue": "Seattle Stadium", "kickoffDateSpain": "2026-06-26", "kickoffTimeSpain": "18:00", "kickoffAtSpain": "2026-06-26T18:00:00+02:00", "lockAtSpain": "2026-06-25T18:00:00+02:00", "lockDateSpain": "2026-06-25", "lockTimeSpain": "18:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M64", "matchNo": 64, "date": "2026-06-26", "group": "G", "home": "Nueva Zelanda", "away": "Bélgica", "venue": "BC Place Vancouver", "kickoffDateSpain": "2026-06-27", "kickoffTimeSpain": "03:00", "kickoffAtSpain": "2026-06-27T03:00:00+02:00", "lockAtSpain": "2026-06-26T03:00:00+02:00", "lockDateSpain": "2026-06-26", "lockTimeSpain": "03:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M65", "matchNo": 65, "date": "2026-06-26", "group": "H", "home": "Cabo Verde", "away": "Arabia Saudí", "venue": "Houston Stadium", "kickoffDateSpain": "2026-06-26", "kickoffTimeSpain": "22:00", "kickoffAtSpain": "2026-06-26T22:00:00+02:00", "lockAtSpain": "2026-06-25T22:00:00+02:00", "lockDateSpain": "2026-06-25", "lockTimeSpain": "22:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M66", "matchNo": 66, "date": "2026-06-26", "group": "H", "home": "Uruguay", "away": "España", "venue": "Estadio Guadalajara", "kickoffDateSpain": "2026-06-27", "kickoffTimeSpain": "02:00", "kickoffAtSpain": "2026-06-27T02:00:00+02:00", "lockAtSpain": "2026-06-26T02:00:00+02:00", "lockDateSpain": "2026-06-26", "lockTimeSpain": "02:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M67", "matchNo": 67, "date": "2026-06-27", "group": "L", "home": "Panamá", "away": "Inglaterra", "venue": "New York New Jersey Stadium", "kickoffDateSpain": "2026-06-27", "kickoffTimeSpain": "19:00", "kickoffAtSpain": "2026-06-27T19:00:00+02:00", "lockAtSpain": "2026-06-26T19:00:00+02:00", "lockDateSpain": "2026-06-26", "lockTimeSpain": "19:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M68", "matchNo": 68, "date": "2026-06-27", "group": "L", "home": "Croacia", "away": "Ghana", "venue": "Philadelphia Stadium", "kickoffDateSpain": "2026-06-28", "kickoffTimeSpain": "01:00", "kickoffAtSpain": "2026-06-28T01:00:00+02:00", "lockAtSpain": "2026-06-27T01:00:00+02:00", "lockDateSpain": "2026-06-27", "lockTimeSpain": "01:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M69", "matchNo": 69, "date": "2026-06-27", "group": "J", "home": "Argelia", "away": "Austria", "venue": "Kansas City Stadium", "kickoffDateSpain": "2026-06-27", "kickoffTimeSpain": "22:00", "kickoffAtSpain": "2026-06-27T22:00:00+02:00", "lockAtSpain": "2026-06-26T22:00:00+02:00", "lockDateSpain": "2026-06-26", "lockTimeSpain": "22:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M70", "matchNo": 70, "date": "2026-06-27", "group": "J", "home": "Jordania", "away": "Argentina", "venue": "Dallas Stadium", "kickoffDateSpain": "2026-06-28", "kickoffTimeSpain": "02:00", "kickoffAtSpain": "2026-06-28T02:00:00+02:00", "lockAtSpain": "2026-06-27T02:00:00+02:00", "lockDateSpain": "2026-06-27", "lockTimeSpain": "02:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M71", "matchNo": 71, "date": "2026-06-27", "group": "K", "home": "Colombia", "away": "Portugal", "venue": "Miami Stadium", "kickoffDateSpain": "2026-06-27", "kickoffTimeSpain": "21:00", "kickoffAtSpain": "2026-06-27T21:00:00+02:00", "lockAtSpain": "2026-06-26T21:00:00+02:00", "lockDateSpain": "2026-06-26", "lockTimeSpain": "21:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"},
-    {"id": "M72", "matchNo": 72, "date": "2026-06-27", "group": "K", "home": "RD Congo", "away": "Uzbekistán", "venue": "Atlanta Stadium", "kickoffDateSpain": "2026-06-28", "kickoffTimeSpain": "01:00", "kickoffAtSpain": "2026-06-28T01:00:00+02:00", "lockAtSpain": "2026-06-27T01:00:00+02:00", "lockDateSpain": "2026-06-27", "lockTimeSpain": "01:00", "timeZone": "Europe/Madrid", "lockRule": "24h_before_kickoff"}
+    {
+      "id": "M01",
+      "matchNo": 1,
+      "date": "2026-06-11",
+      "group": "A",
+      "home": "México",
+      "away": "Sudáfrica",
+      "venue": "Mexico City Stadium",
+      "kickoffDateSpain": "2026-06-11",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-11T21:00:00+02:00",
+      "lockAtSpain": "2026-06-10T21:00:00+02:00",
+      "lockDateSpain": "2026-06-10",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M02",
+      "matchNo": 2,
+      "date": "2026-06-11",
+      "group": "A",
+      "home": "Corea del Sur",
+      "away": "Chequia",
+      "venue": "Estadio Guadalajara",
+      "kickoffDateSpain": "2026-06-12",
+      "kickoffTimeSpain": "04:00",
+      "kickoffAtSpain": "2026-06-12T04:00:00+02:00",
+      "lockAtSpain": "2026-06-11T04:00:00+02:00",
+      "lockDateSpain": "2026-06-11",
+      "lockTimeSpain": "04:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M03",
+      "matchNo": 3,
+      "date": "2026-06-12",
+      "group": "B",
+      "home": "Canadá",
+      "away": "Bosnia y Herzegovina",
+      "venue": "Toronto Stadium",
+      "kickoffDateSpain": "2026-06-12",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-12T21:00:00+02:00",
+      "lockAtSpain": "2026-06-11T21:00:00+02:00",
+      "lockDateSpain": "2026-06-11",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M04",
+      "matchNo": 4,
+      "date": "2026-06-12",
+      "group": "D",
+      "home": "Estados Unidos",
+      "away": "Paraguay",
+      "venue": "Los Angeles Stadium",
+      "kickoffDateSpain": "2026-06-13",
+      "kickoffTimeSpain": "02:00",
+      "kickoffAtSpain": "2026-06-13T02:00:00+02:00",
+      "lockAtSpain": "2026-06-12T02:00:00+02:00",
+      "lockDateSpain": "2026-06-12",
+      "lockTimeSpain": "02:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M05",
+      "matchNo": 5,
+      "date": "2026-06-13",
+      "group": "C",
+      "home": "Haití",
+      "away": "Escocia",
+      "venue": "Boston Stadium",
+      "kickoffDateSpain": "2026-06-14",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-14T03:00:00+02:00",
+      "lockAtSpain": "2026-06-13T03:00:00+02:00",
+      "lockDateSpain": "2026-06-13",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M06",
+      "matchNo": 6,
+      "date": "2026-06-13",
+      "group": "D",
+      "home": "Australia",
+      "away": "Turquía",
+      "venue": "BC Place Vancouver",
+      "kickoffDateSpain": "2026-06-14",
+      "kickoffTimeSpain": "06:00",
+      "kickoffAtSpain": "2026-06-14T06:00:00+02:00",
+      "lockAtSpain": "2026-06-13T06:00:00+02:00",
+      "lockDateSpain": "2026-06-13",
+      "lockTimeSpain": "06:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M07",
+      "matchNo": 7,
+      "date": "2026-06-13",
+      "group": "C",
+      "home": "Brasil",
+      "away": "Marruecos",
+      "venue": "New York New Jersey Stadium",
+      "kickoffDateSpain": "2026-06-14",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-14T00:00:00+02:00",
+      "lockAtSpain": "2026-06-13T00:00:00+02:00",
+      "lockDateSpain": "2026-06-13",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M08",
+      "matchNo": 8,
+      "date": "2026-06-13",
+      "group": "B",
+      "home": "Qatar",
+      "away": "Suiza",
+      "venue": "San Francisco Bay Area Stadium",
+      "kickoffDateSpain": "2026-06-13",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-13T21:00:00+02:00",
+      "lockAtSpain": "2026-06-12T21:00:00+02:00",
+      "lockDateSpain": "2026-06-12",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M09",
+      "matchNo": 9,
+      "date": "2026-06-14",
+      "group": "E",
+      "home": "Costa de Marfil",
+      "away": "Ecuador",
+      "venue": "Philadelphia Stadium",
+      "kickoffDateSpain": "2026-06-15",
+      "kickoffTimeSpain": "01:00",
+      "kickoffAtSpain": "2026-06-15T01:00:00+02:00",
+      "lockAtSpain": "2026-06-14T01:00:00+02:00",
+      "lockDateSpain": "2026-06-14",
+      "lockTimeSpain": "01:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M10",
+      "matchNo": 10,
+      "date": "2026-06-14",
+      "group": "E",
+      "home": "Alemania",
+      "away": "Curazao",
+      "venue": "Houston Stadium",
+      "kickoffDateSpain": "2026-06-14",
+      "kickoffTimeSpain": "19:00",
+      "kickoffAtSpain": "2026-06-14T19:00:00+02:00",
+      "lockAtSpain": "2026-06-13T19:00:00+02:00",
+      "lockDateSpain": "2026-06-13",
+      "lockTimeSpain": "19:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M11",
+      "matchNo": 11,
+      "date": "2026-06-14",
+      "group": "F",
+      "home": "Países Bajos",
+      "away": "Japón",
+      "venue": "Dallas Stadium",
+      "kickoffDateSpain": "2026-06-14",
+      "kickoffTimeSpain": "22:00",
+      "kickoffAtSpain": "2026-06-14T22:00:00+02:00",
+      "lockAtSpain": "2026-06-13T22:00:00+02:00",
+      "lockDateSpain": "2026-06-13",
+      "lockTimeSpain": "22:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M12",
+      "matchNo": 12,
+      "date": "2026-06-14",
+      "group": "F",
+      "home": "Suecia",
+      "away": "Túnez",
+      "venue": "Estadio Monterrey",
+      "kickoffDateSpain": "2026-06-15",
+      "kickoffTimeSpain": "04:00",
+      "kickoffAtSpain": "2026-06-15T04:00:00+02:00",
+      "lockAtSpain": "2026-06-14T04:00:00+02:00",
+      "lockDateSpain": "2026-06-14",
+      "lockTimeSpain": "04:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M13",
+      "matchNo": 13,
+      "date": "2026-06-15",
+      "group": "H",
+      "home": "Arabia Saudí",
+      "away": "Uruguay",
+      "venue": "Miami Stadium",
+      "kickoffDateSpain": "2026-06-16",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-16T00:00:00+02:00",
+      "lockAtSpain": "2026-06-15T00:00:00+02:00",
+      "lockDateSpain": "2026-06-15",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M14",
+      "matchNo": 14,
+      "date": "2026-06-15",
+      "group": "H",
+      "home": "España",
+      "away": "Cabo Verde",
+      "venue": "Atlanta Stadium",
+      "kickoffDateSpain": "2026-06-15",
+      "kickoffTimeSpain": "18:00",
+      "kickoffAtSpain": "2026-06-15T18:00:00+02:00",
+      "lockAtSpain": "2026-06-14T18:00:00+02:00",
+      "lockDateSpain": "2026-06-14",
+      "lockTimeSpain": "18:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M15",
+      "matchNo": 15,
+      "date": "2026-06-15",
+      "group": "G",
+      "home": "Irán",
+      "away": "Nueva Zelanda",
+      "venue": "Los Angeles Stadium",
+      "kickoffDateSpain": "2026-06-16",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-16T03:00:00+02:00",
+      "lockAtSpain": "2026-06-15T03:00:00+02:00",
+      "lockDateSpain": "2026-06-15",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M16",
+      "matchNo": 16,
+      "date": "2026-06-15",
+      "group": "G",
+      "home": "Bélgica",
+      "away": "Egipto",
+      "venue": "Seattle Stadium",
+      "kickoffDateSpain": "2026-06-15",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-15T21:00:00+02:00",
+      "lockAtSpain": "2026-06-14T21:00:00+02:00",
+      "lockDateSpain": "2026-06-14",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M17",
+      "matchNo": 17,
+      "date": "2026-06-16",
+      "group": "I",
+      "home": "Francia",
+      "away": "Senegal",
+      "venue": "New York New Jersey Stadium",
+      "kickoffDateSpain": "2026-06-16",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-16T21:00:00+02:00",
+      "lockAtSpain": "2026-06-15T21:00:00+02:00",
+      "lockDateSpain": "2026-06-15",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M18",
+      "matchNo": 18,
+      "date": "2026-06-16",
+      "group": "I",
+      "home": "Irak",
+      "away": "Noruega",
+      "venue": "Boston Stadium",
+      "kickoffDateSpain": "2026-06-17",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-17T00:00:00+02:00",
+      "lockAtSpain": "2026-06-16T00:00:00+02:00",
+      "lockDateSpain": "2026-06-16",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M19",
+      "matchNo": 19,
+      "date": "2026-06-16",
+      "group": "J",
+      "home": "Argentina",
+      "away": "Argelia",
+      "venue": "Kansas City Stadium",
+      "kickoffDateSpain": "2026-06-17",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-17T03:00:00+02:00",
+      "lockAtSpain": "2026-06-16T03:00:00+02:00",
+      "lockDateSpain": "2026-06-16",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M20",
+      "matchNo": 20,
+      "date": "2026-06-16",
+      "group": "J",
+      "home": "Austria",
+      "away": "Jordania",
+      "venue": "San Francisco Bay Area Stadium",
+      "kickoffDateSpain": "2026-06-17",
+      "kickoffTimeSpain": "06:00",
+      "kickoffAtSpain": "2026-06-17T06:00:00+02:00",
+      "lockAtSpain": "2026-06-16T06:00:00+02:00",
+      "lockDateSpain": "2026-06-16",
+      "lockTimeSpain": "06:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M21",
+      "matchNo": 21,
+      "date": "2026-06-17",
+      "group": "L",
+      "home": "Ghana",
+      "away": "Panamá",
+      "venue": "Toronto Stadium",
+      "kickoffDateSpain": "2026-06-18",
+      "kickoffTimeSpain": "01:00",
+      "kickoffAtSpain": "2026-06-18T01:00:00+02:00",
+      "lockAtSpain": "2026-06-17T01:00:00+02:00",
+      "lockDateSpain": "2026-06-17",
+      "lockTimeSpain": "01:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M22",
+      "matchNo": 22,
+      "date": "2026-06-17",
+      "group": "L",
+      "home": "Inglaterra",
+      "away": "Croacia",
+      "venue": "Dallas Stadium",
+      "kickoffDateSpain": "2026-06-17",
+      "kickoffTimeSpain": "22:00",
+      "kickoffAtSpain": "2026-06-17T22:00:00+02:00",
+      "lockAtSpain": "2026-06-16T22:00:00+02:00",
+      "lockDateSpain": "2026-06-16",
+      "lockTimeSpain": "22:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M23",
+      "matchNo": 23,
+      "date": "2026-06-17",
+      "group": "K",
+      "home": "Portugal",
+      "away": "RD Congo",
+      "venue": "Houston Stadium",
+      "kickoffDateSpain": "2026-06-17",
+      "kickoffTimeSpain": "19:00",
+      "kickoffAtSpain": "2026-06-17T19:00:00+02:00",
+      "lockAtSpain": "2026-06-16T19:00:00+02:00",
+      "lockDateSpain": "2026-06-16",
+      "lockTimeSpain": "19:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M24",
+      "matchNo": 24,
+      "date": "2026-06-17",
+      "group": "K",
+      "home": "Uzbekistán",
+      "away": "Colombia",
+      "venue": "Mexico City Stadium",
+      "kickoffDateSpain": "2026-06-18",
+      "kickoffTimeSpain": "04:00",
+      "kickoffAtSpain": "2026-06-18T04:00:00+02:00",
+      "lockAtSpain": "2026-06-17T04:00:00+02:00",
+      "lockDateSpain": "2026-06-17",
+      "lockTimeSpain": "04:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M25",
+      "matchNo": 25,
+      "date": "2026-06-18",
+      "group": "A",
+      "home": "Chequia",
+      "away": "Sudáfrica",
+      "venue": "Atlanta Stadium",
+      "kickoffDateSpain": "2026-06-18",
+      "kickoffTimeSpain": "18:00",
+      "kickoffAtSpain": "2026-06-18T18:00:00+02:00",
+      "lockAtSpain": "2026-06-17T18:00:00+02:00",
+      "lockDateSpain": "2026-06-17",
+      "lockTimeSpain": "18:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M26",
+      "matchNo": 26,
+      "date": "2026-06-18",
+      "group": "B",
+      "home": "Suiza",
+      "away": "Bosnia y Herzegovina",
+      "venue": "Los Angeles Stadium",
+      "kickoffDateSpain": "2026-06-18",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-18T21:00:00+02:00",
+      "lockAtSpain": "2026-06-17T21:00:00+02:00",
+      "lockDateSpain": "2026-06-17",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M27",
+      "matchNo": 27,
+      "date": "2026-06-18",
+      "group": "B",
+      "home": "Canadá",
+      "away": "Qatar",
+      "venue": "BC Place Vancouver",
+      "kickoffDateSpain": "2026-06-19",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-19T00:00:00+02:00",
+      "lockAtSpain": "2026-06-18T00:00:00+02:00",
+      "lockDateSpain": "2026-06-18",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M28",
+      "matchNo": 28,
+      "date": "2026-06-18",
+      "group": "A",
+      "home": "México",
+      "away": "Corea del Sur",
+      "venue": "Estadio Guadalajara",
+      "kickoffDateSpain": "2026-06-19",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-19T03:00:00+02:00",
+      "lockAtSpain": "2026-06-18T03:00:00+02:00",
+      "lockDateSpain": "2026-06-18",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M29",
+      "matchNo": 29,
+      "date": "2026-06-19",
+      "group": "C",
+      "home": "Brasil",
+      "away": "Haití",
+      "venue": "Philadelphia Stadium",
+      "kickoffDateSpain": "2026-06-20",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-20T03:00:00+02:00",
+      "lockAtSpain": "2026-06-19T03:00:00+02:00",
+      "lockDateSpain": "2026-06-19",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M30",
+      "matchNo": 30,
+      "date": "2026-06-19",
+      "group": "C",
+      "home": "Escocia",
+      "away": "Marruecos",
+      "venue": "Boston Stadium",
+      "kickoffDateSpain": "2026-06-20",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-20T00:00:00+02:00",
+      "lockAtSpain": "2026-06-19T00:00:00+02:00",
+      "lockDateSpain": "2026-06-19",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M31",
+      "matchNo": 31,
+      "date": "2026-06-19",
+      "group": "D",
+      "home": "Turquía",
+      "away": "Paraguay",
+      "venue": "San Francisco Bay Area Stadium",
+      "kickoffDateSpain": "2026-06-20",
+      "kickoffTimeSpain": "06:00",
+      "kickoffAtSpain": "2026-06-20T06:00:00+02:00",
+      "lockAtSpain": "2026-06-19T06:00:00+02:00",
+      "lockDateSpain": "2026-06-19",
+      "lockTimeSpain": "06:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M32",
+      "matchNo": 32,
+      "date": "2026-06-19",
+      "group": "D",
+      "home": "Estados Unidos",
+      "away": "Australia",
+      "venue": "Seattle Stadium",
+      "kickoffDateSpain": "2026-06-19",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-19T21:00:00+02:00",
+      "lockAtSpain": "2026-06-18T21:00:00+02:00",
+      "lockDateSpain": "2026-06-18",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M33",
+      "matchNo": 33,
+      "date": "2026-06-20",
+      "group": "E",
+      "home": "Alemania",
+      "away": "Costa de Marfil",
+      "venue": "Toronto Stadium",
+      "kickoffDateSpain": "2026-06-20",
+      "kickoffTimeSpain": "22:00",
+      "kickoffAtSpain": "2026-06-20T22:00:00+02:00",
+      "lockAtSpain": "2026-06-19T22:00:00+02:00",
+      "lockDateSpain": "2026-06-19",
+      "lockTimeSpain": "22:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M34",
+      "matchNo": 34,
+      "date": "2026-06-20",
+      "group": "E",
+      "home": "Ecuador",
+      "away": "Curazao",
+      "venue": "Kansas City Stadium",
+      "kickoffDateSpain": "2026-06-21",
+      "kickoffTimeSpain": "02:00",
+      "kickoffAtSpain": "2026-06-21T02:00:00+02:00",
+      "lockAtSpain": "2026-06-20T02:00:00+02:00",
+      "lockDateSpain": "2026-06-20",
+      "lockTimeSpain": "02:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M35",
+      "matchNo": 35,
+      "date": "2026-06-20",
+      "group": "F",
+      "home": "Países Bajos",
+      "away": "Suecia",
+      "venue": "Houston Stadium",
+      "kickoffDateSpain": "2026-06-20",
+      "kickoffTimeSpain": "19:00",
+      "kickoffAtSpain": "2026-06-20T19:00:00+02:00",
+      "lockAtSpain": "2026-06-19T19:00:00+02:00",
+      "lockDateSpain": "2026-06-19",
+      "lockTimeSpain": "19:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M36",
+      "matchNo": 36,
+      "date": "2026-06-20",
+      "group": "F",
+      "home": "Túnez",
+      "away": "Japón",
+      "venue": "Estadio Monterrey",
+      "kickoffDateSpain": "2026-06-21",
+      "kickoffTimeSpain": "06:00",
+      "kickoffAtSpain": "2026-06-21T06:00:00+02:00",
+      "lockAtSpain": "2026-06-20T06:00:00+02:00",
+      "lockDateSpain": "2026-06-20",
+      "lockTimeSpain": "06:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M37",
+      "matchNo": 37,
+      "date": "2026-06-21",
+      "group": "H",
+      "home": "Uruguay",
+      "away": "Cabo Verde",
+      "venue": "Miami Stadium",
+      "kickoffDateSpain": "2026-06-22",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-22T00:00:00+02:00",
+      "lockAtSpain": "2026-06-21T00:00:00+02:00",
+      "lockDateSpain": "2026-06-21",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M38",
+      "matchNo": 38,
+      "date": "2026-06-21",
+      "group": "H",
+      "home": "España",
+      "away": "Arabia Saudí",
+      "venue": "Atlanta Stadium",
+      "kickoffDateSpain": "2026-06-21",
+      "kickoffTimeSpain": "18:00",
+      "kickoffAtSpain": "2026-06-21T18:00:00+02:00",
+      "lockAtSpain": "2026-06-20T18:00:00+02:00",
+      "lockDateSpain": "2026-06-20",
+      "lockTimeSpain": "18:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M39",
+      "matchNo": 39,
+      "date": "2026-06-21",
+      "group": "G",
+      "home": "Bélgica",
+      "away": "Irán",
+      "venue": "Los Angeles Stadium",
+      "kickoffDateSpain": "2026-06-21",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-21T21:00:00+02:00",
+      "lockAtSpain": "2026-06-20T21:00:00+02:00",
+      "lockDateSpain": "2026-06-20",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M40",
+      "matchNo": 40,
+      "date": "2026-06-21",
+      "group": "G",
+      "home": "Nueva Zelanda",
+      "away": "Egipto",
+      "venue": "BC Place Vancouver",
+      "kickoffDateSpain": "2026-06-22",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-22T03:00:00+02:00",
+      "lockAtSpain": "2026-06-21T03:00:00+02:00",
+      "lockDateSpain": "2026-06-21",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M41",
+      "matchNo": 41,
+      "date": "2026-06-22",
+      "group": "I",
+      "home": "Noruega",
+      "away": "Senegal",
+      "venue": "New York New Jersey Stadium",
+      "kickoffDateSpain": "2026-06-23",
+      "kickoffTimeSpain": "02:00",
+      "kickoffAtSpain": "2026-06-23T02:00:00+02:00",
+      "lockAtSpain": "2026-06-22T02:00:00+02:00",
+      "lockDateSpain": "2026-06-22",
+      "lockTimeSpain": "02:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M42",
+      "matchNo": 42,
+      "date": "2026-06-22",
+      "group": "I",
+      "home": "Francia",
+      "away": "Irak",
+      "venue": "Philadelphia Stadium",
+      "kickoffDateSpain": "2026-06-22",
+      "kickoffTimeSpain": "23:00",
+      "kickoffAtSpain": "2026-06-22T23:00:00+02:00",
+      "lockAtSpain": "2026-06-21T23:00:00+02:00",
+      "lockDateSpain": "2026-06-21",
+      "lockTimeSpain": "23:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M43",
+      "matchNo": 43,
+      "date": "2026-06-22",
+      "group": "J",
+      "home": "Argentina",
+      "away": "Austria",
+      "venue": "Dallas Stadium",
+      "kickoffDateSpain": "2026-06-22",
+      "kickoffTimeSpain": "19:00",
+      "kickoffAtSpain": "2026-06-22T19:00:00+02:00",
+      "lockAtSpain": "2026-06-21T19:00:00+02:00",
+      "lockDateSpain": "2026-06-21",
+      "lockTimeSpain": "19:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M44",
+      "matchNo": 44,
+      "date": "2026-06-22",
+      "group": "J",
+      "home": "Jordania",
+      "away": "Argelia",
+      "venue": "San Francisco Bay Area Stadium",
+      "kickoffDateSpain": "2026-06-23",
+      "kickoffTimeSpain": "05:00",
+      "kickoffAtSpain": "2026-06-23T05:00:00+02:00",
+      "lockAtSpain": "2026-06-22T05:00:00+02:00",
+      "lockDateSpain": "2026-06-22",
+      "lockTimeSpain": "05:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M45",
+      "matchNo": 45,
+      "date": "2026-06-23",
+      "group": "L",
+      "home": "Inglaterra",
+      "away": "Ghana",
+      "venue": "Boston Stadium",
+      "kickoffDateSpain": "2026-06-23",
+      "kickoffTimeSpain": "22:00",
+      "kickoffAtSpain": "2026-06-23T22:00:00+02:00",
+      "lockAtSpain": "2026-06-22T22:00:00+02:00",
+      "lockDateSpain": "2026-06-22",
+      "lockTimeSpain": "22:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M46",
+      "matchNo": 46,
+      "date": "2026-06-23",
+      "group": "L",
+      "home": "Panamá",
+      "away": "Croacia",
+      "venue": "Toronto Stadium",
+      "kickoffDateSpain": "2026-06-24",
+      "kickoffTimeSpain": "01:00",
+      "kickoffAtSpain": "2026-06-24T01:00:00+02:00",
+      "lockAtSpain": "2026-06-23T01:00:00+02:00",
+      "lockDateSpain": "2026-06-23",
+      "lockTimeSpain": "01:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M47",
+      "matchNo": 47,
+      "date": "2026-06-23",
+      "group": "K",
+      "home": "Portugal",
+      "away": "Uzbekistán",
+      "venue": "Houston Stadium",
+      "kickoffDateSpain": "2026-06-23",
+      "kickoffTimeSpain": "19:00",
+      "kickoffAtSpain": "2026-06-23T19:00:00+02:00",
+      "lockAtSpain": "2026-06-22T19:00:00+02:00",
+      "lockDateSpain": "2026-06-22",
+      "lockTimeSpain": "19:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M48",
+      "matchNo": 48,
+      "date": "2026-06-23",
+      "group": "K",
+      "home": "Colombia",
+      "away": "RD Congo",
+      "venue": "Estadio Guadalajara",
+      "kickoffDateSpain": "2026-06-24",
+      "kickoffTimeSpain": "04:00",
+      "kickoffAtSpain": "2026-06-24T04:00:00+02:00",
+      "lockAtSpain": "2026-06-23T04:00:00+02:00",
+      "lockDateSpain": "2026-06-23",
+      "lockTimeSpain": "04:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M49",
+      "matchNo": 49,
+      "date": "2026-06-24",
+      "group": "C",
+      "home": "Escocia",
+      "away": "Brasil",
+      "venue": "Miami Stadium",
+      "kickoffDateSpain": "2026-06-25",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-25T00:00:00+02:00",
+      "lockAtSpain": "2026-06-24T00:00:00+02:00",
+      "lockDateSpain": "2026-06-24",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M50",
+      "matchNo": 50,
+      "date": "2026-06-24",
+      "group": "C",
+      "home": "Marruecos",
+      "away": "Haití",
+      "venue": "Atlanta Stadium",
+      "kickoffDateSpain": "2026-06-25",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-25T00:00:00+02:00",
+      "lockAtSpain": "2026-06-24T00:00:00+02:00",
+      "lockDateSpain": "2026-06-24",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M51",
+      "matchNo": 51,
+      "date": "2026-06-24",
+      "group": "B",
+      "home": "Suiza",
+      "away": "Canadá",
+      "venue": "BC Place Vancouver",
+      "kickoffDateSpain": "2026-06-24",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-24T21:00:00+02:00",
+      "lockAtSpain": "2026-06-23T21:00:00+02:00",
+      "lockDateSpain": "2026-06-23",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M52",
+      "matchNo": 52,
+      "date": "2026-06-24",
+      "group": "B",
+      "home": "Bosnia y Herzegovina",
+      "away": "Qatar",
+      "venue": "Seattle Stadium",
+      "kickoffDateSpain": "2026-06-24",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-24T21:00:00+02:00",
+      "lockAtSpain": "2026-06-23T21:00:00+02:00",
+      "lockDateSpain": "2026-06-23",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M53",
+      "matchNo": 53,
+      "date": "2026-06-24",
+      "group": "A",
+      "home": "Chequia",
+      "away": "México",
+      "venue": "Mexico City Stadium",
+      "kickoffDateSpain": "2026-06-25",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-25T03:00:00+02:00",
+      "lockAtSpain": "2026-06-24T03:00:00+02:00",
+      "lockDateSpain": "2026-06-24",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M54",
+      "matchNo": 54,
+      "date": "2026-06-24",
+      "group": "A",
+      "home": "Sudáfrica",
+      "away": "Corea del Sur",
+      "venue": "Estadio Monterrey",
+      "kickoffDateSpain": "2026-06-25",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-25T03:00:00+02:00",
+      "lockAtSpain": "2026-06-24T03:00:00+02:00",
+      "lockDateSpain": "2026-06-24",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M55",
+      "matchNo": 55,
+      "date": "2026-06-25",
+      "group": "E",
+      "home": "Curazao",
+      "away": "Costa de Marfil",
+      "venue": "Philadelphia Stadium",
+      "kickoffDateSpain": "2026-06-25",
+      "kickoffTimeSpain": "01:00",
+      "kickoffAtSpain": "2026-06-25T01:00:00+02:00",
+      "lockAtSpain": "2026-06-24T01:00:00+02:00",
+      "lockDateSpain": "2026-06-24",
+      "lockTimeSpain": "01:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M56",
+      "matchNo": 56,
+      "date": "2026-06-25",
+      "group": "E",
+      "home": "Ecuador",
+      "away": "Alemania",
+      "venue": "New York New Jersey Stadium",
+      "kickoffDateSpain": "2026-06-25",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-25T21:00:00+02:00",
+      "lockAtSpain": "2026-06-24T21:00:00+02:00",
+      "lockDateSpain": "2026-06-24",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M57",
+      "matchNo": 57,
+      "date": "2026-06-25",
+      "group": "F",
+      "home": "Japón",
+      "away": "Suecia",
+      "venue": "Dallas Stadium",
+      "kickoffDateSpain": "2026-06-25",
+      "kickoffTimeSpain": "18:00",
+      "kickoffAtSpain": "2026-06-25T18:00:00+02:00",
+      "lockAtSpain": "2026-06-24T18:00:00+02:00",
+      "lockDateSpain": "2026-06-24",
+      "lockTimeSpain": "18:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M58",
+      "matchNo": 58,
+      "date": "2026-06-25",
+      "group": "F",
+      "home": "Túnez",
+      "away": "Países Bajos",
+      "venue": "Kansas City Stadium",
+      "kickoffDateSpain": "2026-06-26",
+      "kickoffTimeSpain": "00:00",
+      "kickoffAtSpain": "2026-06-26T00:00:00+02:00",
+      "lockAtSpain": "2026-06-25T00:00:00+02:00",
+      "lockDateSpain": "2026-06-25",
+      "lockTimeSpain": "00:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M59",
+      "matchNo": 59,
+      "date": "2026-06-25",
+      "group": "D",
+      "home": "Turquía",
+      "away": "Estados Unidos",
+      "venue": "Los Angeles Stadium",
+      "kickoffDateSpain": "2026-06-25",
+      "kickoffTimeSpain": "22:00",
+      "kickoffAtSpain": "2026-06-25T22:00:00+02:00",
+      "lockAtSpain": "2026-06-24T22:00:00+02:00",
+      "lockDateSpain": "2026-06-24",
+      "lockTimeSpain": "22:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M60",
+      "matchNo": 60,
+      "date": "2026-06-25",
+      "group": "D",
+      "home": "Paraguay",
+      "away": "Australia",
+      "venue": "San Francisco Bay Area Stadium",
+      "kickoffDateSpain": "2026-06-26",
+      "kickoffTimeSpain": "02:00",
+      "kickoffAtSpain": "2026-06-26T02:00:00+02:00",
+      "lockAtSpain": "2026-06-25T02:00:00+02:00",
+      "lockDateSpain": "2026-06-25",
+      "lockTimeSpain": "02:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M61",
+      "matchNo": 61,
+      "date": "2026-06-26",
+      "group": "I",
+      "home": "Noruega",
+      "away": "Francia",
+      "venue": "Boston Stadium",
+      "kickoffDateSpain": "2026-06-26",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-26T21:00:00+02:00",
+      "lockAtSpain": "2026-06-25T21:00:00+02:00",
+      "lockDateSpain": "2026-06-25",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M62",
+      "matchNo": 62,
+      "date": "2026-06-26",
+      "group": "I",
+      "home": "Senegal",
+      "away": "Irak",
+      "venue": "Toronto Stadium",
+      "kickoffDateSpain": "2026-06-27",
+      "kickoffTimeSpain": "01:00",
+      "kickoffAtSpain": "2026-06-27T01:00:00+02:00",
+      "lockAtSpain": "2026-06-26T01:00:00+02:00",
+      "lockDateSpain": "2026-06-26",
+      "lockTimeSpain": "01:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M63",
+      "matchNo": 63,
+      "date": "2026-06-26",
+      "group": "G",
+      "home": "Egipto",
+      "away": "Irán",
+      "venue": "Seattle Stadium",
+      "kickoffDateSpain": "2026-06-26",
+      "kickoffTimeSpain": "18:00",
+      "kickoffAtSpain": "2026-06-26T18:00:00+02:00",
+      "lockAtSpain": "2026-06-25T18:00:00+02:00",
+      "lockDateSpain": "2026-06-25",
+      "lockTimeSpain": "18:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M64",
+      "matchNo": 64,
+      "date": "2026-06-26",
+      "group": "G",
+      "home": "Nueva Zelanda",
+      "away": "Bélgica",
+      "venue": "BC Place Vancouver",
+      "kickoffDateSpain": "2026-06-27",
+      "kickoffTimeSpain": "03:00",
+      "kickoffAtSpain": "2026-06-27T03:00:00+02:00",
+      "lockAtSpain": "2026-06-26T03:00:00+02:00",
+      "lockDateSpain": "2026-06-26",
+      "lockTimeSpain": "03:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M65",
+      "matchNo": 65,
+      "date": "2026-06-26",
+      "group": "H",
+      "home": "Cabo Verde",
+      "away": "Arabia Saudí",
+      "venue": "Houston Stadium",
+      "kickoffDateSpain": "2026-06-26",
+      "kickoffTimeSpain": "22:00",
+      "kickoffAtSpain": "2026-06-26T22:00:00+02:00",
+      "lockAtSpain": "2026-06-25T22:00:00+02:00",
+      "lockDateSpain": "2026-06-25",
+      "lockTimeSpain": "22:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M66",
+      "matchNo": 66,
+      "date": "2026-06-26",
+      "group": "H",
+      "home": "Uruguay",
+      "away": "España",
+      "venue": "Estadio Guadalajara",
+      "kickoffDateSpain": "2026-06-27",
+      "kickoffTimeSpain": "02:00",
+      "kickoffAtSpain": "2026-06-27T02:00:00+02:00",
+      "lockAtSpain": "2026-06-26T02:00:00+02:00",
+      "lockDateSpain": "2026-06-26",
+      "lockTimeSpain": "02:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M67",
+      "matchNo": 67,
+      "date": "2026-06-27",
+      "group": "L",
+      "home": "Panamá",
+      "away": "Inglaterra",
+      "venue": "New York New Jersey Stadium",
+      "kickoffDateSpain": "2026-06-27",
+      "kickoffTimeSpain": "19:00",
+      "kickoffAtSpain": "2026-06-27T19:00:00+02:00",
+      "lockAtSpain": "2026-06-26T19:00:00+02:00",
+      "lockDateSpain": "2026-06-26",
+      "lockTimeSpain": "19:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M68",
+      "matchNo": 68,
+      "date": "2026-06-27",
+      "group": "L",
+      "home": "Croacia",
+      "away": "Ghana",
+      "venue": "Philadelphia Stadium",
+      "kickoffDateSpain": "2026-06-28",
+      "kickoffTimeSpain": "01:00",
+      "kickoffAtSpain": "2026-06-28T01:00:00+02:00",
+      "lockAtSpain": "2026-06-27T01:00:00+02:00",
+      "lockDateSpain": "2026-06-27",
+      "lockTimeSpain": "01:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M69",
+      "matchNo": 69,
+      "date": "2026-06-27",
+      "group": "J",
+      "home": "Argelia",
+      "away": "Austria",
+      "venue": "Kansas City Stadium",
+      "kickoffDateSpain": "2026-06-27",
+      "kickoffTimeSpain": "22:00",
+      "kickoffAtSpain": "2026-06-27T22:00:00+02:00",
+      "lockAtSpain": "2026-06-26T22:00:00+02:00",
+      "lockDateSpain": "2026-06-26",
+      "lockTimeSpain": "22:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M70",
+      "matchNo": 70,
+      "date": "2026-06-27",
+      "group": "J",
+      "home": "Jordania",
+      "away": "Argentina",
+      "venue": "Dallas Stadium",
+      "kickoffDateSpain": "2026-06-28",
+      "kickoffTimeSpain": "02:00",
+      "kickoffAtSpain": "2026-06-28T02:00:00+02:00",
+      "lockAtSpain": "2026-06-27T02:00:00+02:00",
+      "lockDateSpain": "2026-06-27",
+      "lockTimeSpain": "02:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M71",
+      "matchNo": 71,
+      "date": "2026-06-27",
+      "group": "K",
+      "home": "Colombia",
+      "away": "Portugal",
+      "venue": "Miami Stadium",
+      "kickoffDateSpain": "2026-06-27",
+      "kickoffTimeSpain": "21:00",
+      "kickoffAtSpain": "2026-06-27T21:00:00+02:00",
+      "lockAtSpain": "2026-06-26T21:00:00+02:00",
+      "lockDateSpain": "2026-06-26",
+      "lockTimeSpain": "21:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    },
+    {
+      "id": "M72",
+      "matchNo": 72,
+      "date": "2026-06-27",
+      "group": "K",
+      "home": "RD Congo",
+      "away": "Uzbekistán",
+      "venue": "Atlanta Stadium",
+      "kickoffDateSpain": "2026-06-28",
+      "kickoffTimeSpain": "01:00",
+      "kickoffAtSpain": "2026-06-28T01:00:00+02:00",
+      "lockAtSpain": "2026-06-27T01:00:00+02:00",
+      "lockDateSpain": "2026-06-27",
+      "lockTimeSpain": "01:00",
+      "timeZone": "Europe/Madrid",
+      "lockRule": "24h_before_kickoff"
+    }
+  ],
+  "knockout": [
+    {
+      "id": "M73",
+      "matchNo": 73,
+      "round": "roundOf32",
+      "date": "2026-06-28",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "seed": "2A"
+      },
+      "away": {
+        "seed": "2B"
+      }
+    },
+    {
+      "id": "M74",
+      "matchNo": 74,
+      "round": "roundOf32",
+      "date": "2026-06-29",
+      "time": "22:30",
+      "side": "left",
+      "home": {
+        "seed": "1E"
+      },
+      "away": {
+        "seed": "3ABCDF"
+      }
+    },
+    {
+      "id": "M75",
+      "matchNo": 75,
+      "round": "roundOf32",
+      "date": "2026-06-30",
+      "time": "03:00",
+      "side": "left",
+      "home": {
+        "seed": "1F"
+      },
+      "away": {
+        "seed": "2C"
+      }
+    },
+    {
+      "id": "M76",
+      "matchNo": 76,
+      "round": "roundOf32",
+      "date": "2026-06-29",
+      "time": "19:00",
+      "side": "right",
+      "home": {
+        "seed": "1C"
+      },
+      "away": {
+        "seed": "2F"
+      }
+    },
+    {
+      "id": "M77",
+      "matchNo": 77,
+      "round": "roundOf32",
+      "date": "2026-06-30",
+      "time": "23:00",
+      "side": "left",
+      "home": {
+        "seed": "1I"
+      },
+      "away": {
+        "seed": "3CDFGH"
+      }
+    },
+    {
+      "id": "M78",
+      "matchNo": 78,
+      "round": "roundOf32",
+      "date": "2026-06-30",
+      "time": "19:00",
+      "side": "right",
+      "home": {
+        "seed": "2E"
+      },
+      "away": {
+        "seed": "2I"
+      }
+    },
+    {
+      "id": "M79",
+      "matchNo": 79,
+      "round": "roundOf32",
+      "date": "2026-07-01",
+      "time": "03:00",
+      "side": "right",
+      "home": {
+        "seed": "1A"
+      },
+      "away": {
+        "seed": "3CEFIH"
+      }
+    },
+    {
+      "id": "M80",
+      "matchNo": 80,
+      "round": "roundOf32",
+      "date": "2026-07-01",
+      "time": "18:00",
+      "side": "right",
+      "home": {
+        "seed": "1L"
+      },
+      "away": {
+        "seed": "3EHJK"
+      }
+    },
+    {
+      "id": "M81",
+      "matchNo": 81,
+      "round": "roundOf32",
+      "date": "2026-07-02",
+      "time": "02:00",
+      "side": "left",
+      "home": {
+        "seed": "1D"
+      },
+      "away": {
+        "seed": "3BEFIJ"
+      }
+    },
+    {
+      "id": "M82",
+      "matchNo": 82,
+      "round": "roundOf32",
+      "date": "2026-07-01",
+      "time": "22:00",
+      "side": "left",
+      "home": {
+        "seed": "1G"
+      },
+      "away": {
+        "seed": "3AEHIJ"
+      }
+    },
+    {
+      "id": "M83",
+      "matchNo": 83,
+      "round": "roundOf32",
+      "date": "2026-07-03",
+      "time": "01:00",
+      "side": "left",
+      "home": {
+        "seed": "2K"
+      },
+      "away": {
+        "seed": "2L"
+      }
+    },
+    {
+      "id": "M84",
+      "matchNo": 84,
+      "round": "roundOf32",
+      "date": "2026-07-02",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "seed": "1H"
+      },
+      "away": {
+        "seed": "2J"
+      }
+    },
+    {
+      "id": "M85",
+      "matchNo": 85,
+      "round": "roundOf32",
+      "date": "2026-07-03",
+      "time": "05:00",
+      "side": "right",
+      "home": {
+        "seed": "1B"
+      },
+      "away": {
+        "seed": "3EFGIJ"
+      }
+    },
+    {
+      "id": "M86",
+      "matchNo": 86,
+      "round": "roundOf32",
+      "date": "2026-07-04",
+      "time": "00:00",
+      "side": "right",
+      "home": {
+        "seed": "1J"
+      },
+      "away": {
+        "seed": "2H"
+      }
+    },
+    {
+      "id": "M87",
+      "matchNo": 87,
+      "round": "roundOf32",
+      "date": "2026-07-04",
+      "time": "03:30",
+      "side": "right",
+      "home": {
+        "seed": "1K"
+      },
+      "away": {
+        "seed": "3DEIJL"
+      }
+    },
+    {
+      "id": "M88",
+      "matchNo": 88,
+      "round": "roundOf32",
+      "date": "2026-07-03",
+      "time": "20:00",
+      "side": "right",
+      "home": {
+        "seed": "2D"
+      },
+      "away": {
+        "seed": "2G"
+      }
+    },
+    {
+      "id": "M89",
+      "matchNo": 89,
+      "round": "roundOf16",
+      "date": "2026-07-04",
+      "time": "23:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M74"
+      },
+      "away": {
+        "winnerOf": "M77"
+      }
+    },
+    {
+      "id": "M90",
+      "matchNo": 90,
+      "round": "roundOf16",
+      "date": "2026-07-04",
+      "time": "19:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M73"
+      },
+      "away": {
+        "winnerOf": "M75"
+      }
+    },
+    {
+      "id": "M91",
+      "matchNo": 91,
+      "round": "roundOf16",
+      "date": "2026-07-05",
+      "time": "22:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M76"
+      },
+      "away": {
+        "winnerOf": "M78"
+      }
+    },
+    {
+      "id": "M92",
+      "matchNo": 92,
+      "round": "roundOf16",
+      "date": "2026-07-06",
+      "time": "02:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M79"
+      },
+      "away": {
+        "winnerOf": "M80"
+      }
+    },
+    {
+      "id": "M93",
+      "matchNo": 93,
+      "round": "roundOf16",
+      "date": "2026-07-06",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M83"
+      },
+      "away": {
+        "winnerOf": "M84"
+      }
+    },
+    {
+      "id": "M94",
+      "matchNo": 94,
+      "round": "roundOf16",
+      "date": "2026-07-07",
+      "time": "02:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M81"
+      },
+      "away": {
+        "winnerOf": "M82"
+      }
+    },
+    {
+      "id": "M95",
+      "matchNo": 95,
+      "round": "roundOf16",
+      "date": "2026-07-07",
+      "time": "18:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M86"
+      },
+      "away": {
+        "winnerOf": "M88"
+      }
+    },
+    {
+      "id": "M96",
+      "matchNo": 96,
+      "round": "roundOf16",
+      "date": "2026-07-07",
+      "time": "22:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M85"
+      },
+      "away": {
+        "winnerOf": "M87"
+      }
+    },
+    {
+      "id": "M97",
+      "matchNo": 97,
+      "round": "quarter",
+      "date": "2026-07-09",
+      "time": "22:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M89"
+      },
+      "away": {
+        "winnerOf": "M90"
+      }
+    },
+    {
+      "id": "M98",
+      "matchNo": 98,
+      "round": "quarter",
+      "date": "2026-07-10",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M93"
+      },
+      "away": {
+        "winnerOf": "M94"
+      }
+    },
+    {
+      "id": "M99",
+      "matchNo": 99,
+      "round": "quarter",
+      "date": "2026-07-11",
+      "time": "23:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M91"
+      },
+      "away": {
+        "winnerOf": "M92"
+      }
+    },
+    {
+      "id": "M100",
+      "matchNo": 100,
+      "round": "quarter",
+      "date": "2026-07-12",
+      "time": "03:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M95"
+      },
+      "away": {
+        "winnerOf": "M96"
+      }
+    },
+    {
+      "id": "M101",
+      "matchNo": 101,
+      "round": "semi",
+      "date": "2026-07-14",
+      "time": "21:00",
+      "side": "left",
+      "home": {
+        "winnerOf": "M97"
+      },
+      "away": {
+        "winnerOf": "M98"
+      }
+    },
+    {
+      "id": "M102",
+      "matchNo": 102,
+      "round": "semi",
+      "date": "2026-07-15",
+      "time": "21:00",
+      "side": "right",
+      "home": {
+        "winnerOf": "M99"
+      },
+      "away": {
+        "winnerOf": "M100"
+      }
+    },
+    {
+      "id": "M103",
+      "matchNo": 103,
+      "round": "third",
+      "date": "2026-07-18",
+      "time": "23:00",
+      "side": "final",
+      "home": {
+        "loserOf": "M101"
+      },
+      "away": {
+        "loserOf": "M102"
+      }
+    },
+    {
+      "id": "M104",
+      "matchNo": 104,
+      "round": "final",
+      "date": "2026-07-19",
+      "time": "21:00",
+      "side": "final",
+      "home": {
+        "winnerOf": "M101"
+      },
+      "away": {
+        "winnerOf": "M102"
+      }
+    }
   ]
 }
