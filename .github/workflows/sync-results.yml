@@ -1,0 +1,41 @@
+name: Sync football results
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Probar sin guardar resultados"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+  schedule:
+    - cron: "30 6 * 6,7 *"
+
+jobs:
+  sync-results:
+    name: Sync results
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run sync script
+        env:
+          PORRA_APP_URL: ${{ secrets.PORRA_APP_URL }}
+          PORRA_ADMIN_CODE: ${{ secrets.PORRA_ADMIN_CODE }}
+          FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
+          FOOTBALL_DATA_COMPETITION: ${{ secrets.FOOTBALL_DATA_COMPETITION }}
+          DELAY_AFTER_KICKOFF_HOURS: "3"
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: node scripts/sync-results.js
