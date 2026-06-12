@@ -2063,6 +2063,7 @@ function Leaderboard({ data, onRefresh }) {
                   <div className="rankingPlayerInfo">
                     <strong>{row.name}</strong>
                     <span>{row.groupWinnersCorrect || 0} primeros · {row.groupRunnersCorrect || 0} segundos · {row.thirdsCorrect || 0} terceros</span>
+                    <span>· {row.correctOutcomes || 0} signos · {row.exactScores || 0} exactos</span>
                     {!row.paymentConfirmed && <em className="pendingPaymentText">Pendiente confirmar Bizum</em>}
                   </div>
                   <div className="rankingPoints">
@@ -2086,7 +2087,8 @@ function Leaderboard({ data, onRefresh }) {
                   <th>Premio</th>
                   <th>1º grupo</th>
                   <th>2º grupo</th>
-                  <th>3º KO</th>
+                  <th>3º grupo</th>
+                  <th title="Partidos con resultado (1, X o 2) acertado">Signos (1/X/2)</th>
                   <th>Exactos</th>
                   <th>DG exacta</th>
                   <th>Pronósticos</th>
@@ -2108,6 +2110,7 @@ function Leaderboard({ data, onRefresh }) {
                     <td>{row.groupWinnersCorrect || 0}</td>
                     <td>{row.groupRunnersCorrect || 0}</td>
                     <td>{row.thirdsCorrect || 0}</td>
+                    <td>{row.correctOutcomes || 0}</td>
                     <td>{row.exactScores || 0}</td>
                     <td>{row.exactGoalDifferences || 0}</td>
                     <td>{row.predictionsMade}</td>
@@ -2185,7 +2188,31 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
       setBusy(false);
     }
   }
-
+  function PlayerDetailModal({ player, matchDetails, onClose }) {
+    const matches = matchDetails.filter(m => m.hasResult);
+    return (
+      <dialog open className="playerModal">
+        <h3>{player.name}</h3>
+        <table>
+          <thead><tr><th>Partido</th><th>Pronóstico</th><th>Real</th><th>Pts</th></tr></thead>
+          <tbody>
+            {matches.map(m => {
+              const pred = m.predictions.find(p => p.playerId === player.playerId);
+              return (
+                <tr key={m.id}>
+                  <td>{m.home} - {m.away}</td>
+                  <td>{pred?.hasPrediction ? `${pred.prediction.homeGoals}-${pred.prediction.awayGoals}` : '—'}</td>
+                  <td>{m.result.homeGoals}-{m.result.awayGoals}</td>
+                  <td>{pred?.matchPoints || 0}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <button onClick={onClose}>Cerrar</button>
+      </dialog>
+    );
+  }
   function lockAdmin() {
     setAdminUnlocked(false);
     setAdminCode('');
