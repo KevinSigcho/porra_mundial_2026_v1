@@ -9,8 +9,9 @@
       "third": 1,
       "description": "5 puntos por acertar el 1º de grupo, 3 puntos por el 2º y 1 punto por el 3º clasificado"
     },
+    "matchOutcome": 2,
     "exactScore": 1,
-    "description": "Sistema de puntuación por clasificación de grupo (5-3-1) + 1 punto extra por marcador exacto acertado en cada partido"
+    "description": "Sistema de puntuación por clasificación de grupo (5-3-1). Por partido: 2 puntos por acertar el resultado (1, X o 2, incluido el empate) y 1 punto extra por el marcador exacto (3 puntos en total)"
   },
   "groups": {
     "A": ["México", "Corea del Sur", "Chequia", "Sudáfrica"],

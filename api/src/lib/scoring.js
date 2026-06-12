@@ -3,6 +3,7 @@ const fixtureData = require('../data/fixtures.json');
 const GROUP_WINNER_POINTS = 5;
 const GROUP_RUNNER_POINTS = 3;
 const GROUP_THIRD_POINTS = 1;
+const MATCH_OUTCOME_POINTS = 2;
 const EXACT_SCORE_POINTS = 1;
 
 function parseJson(value, fallback = {}) {
@@ -207,6 +208,7 @@ function computeTieBreakers(predictions, results) {
       exactScores += 1;
     }
 
+    // Acertar el signo del partido (1, X o 2); el empate también cuenta.
     if (outcome(prediction) === outcome(result)) {
       correctOutcomes += 1;
     }
@@ -232,6 +234,7 @@ function computePlayerScore(predictions, results) {
   const tieBreakers = computeTieBreakers(normalizedPredictions, normalizedResults);
 
   let groupPositionPoints = 0;
+  let matchOutcomePoints = tieBreakers.correctOutcomes * MATCH_OUTCOME_POINTS;
   let exactScorePoints = tieBreakers.exactScores * EXACT_SCORE_POINTS;
   let groupWinnersCorrect = 0;
   let groupRunnersCorrect = 0;
@@ -289,11 +292,12 @@ function computePlayerScore(predictions, results) {
     };
   }
 
-  const points = groupPositionPoints + exactScorePoints;
+  const points = groupPositionPoints + matchOutcomePoints + exactScorePoints;
 
   return {
     points,
     groupPositionPoints,
+    matchOutcomePoints,
     exactScorePoints,
     groupWinnersCorrect,
     groupRunnersCorrect,
@@ -308,6 +312,7 @@ function computePlayerScore(predictions, results) {
       groupWinner: GROUP_WINNER_POINTS,
       groupRunner: GROUP_RUNNER_POINTS,
       groupThird: GROUP_THIRD_POINTS,
+      matchOutcome: MATCH_OUTCOME_POINTS,
       exactScore: EXACT_SCORE_POINTS
     }
   };

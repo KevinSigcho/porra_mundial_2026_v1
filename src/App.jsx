@@ -41,7 +41,7 @@ function PlayerAvatar({ player, size = 'md', rank = null }) {
 
 
 
-const GROUP_SCORING_SUMMARY = 'Fase de grupos: 5 pts por acertar el 1º de grupo, 3 pts por acertar el 2º y 1 pt por acertar el 3º que entra a eliminatorias.';
+const GROUP_SCORING_SUMMARY = 'Fase de grupos: 5/3/1 pts por acertar el 1º, 2º y 3º de grupo. Por partido: 2 pts por el resultado (1, X o 2) y 1 pt extra por el marcador exacto (3 pts en total).';
 
 const KNOCKOUT_AVAILABLE_DATE = '27 de junio de 2026';
 const KNOCKOUT_START_DATE = '28 de junio de 2026';
@@ -53,7 +53,8 @@ const RULE_SECTIONS = [
       "5 puntos si aciertas el equipo que queda 1º de cada grupo.",
       "3 puntos si aciertas el equipo que queda 2º de cada grupo.",
       "1 punto si aciertas el equipo que queda 3º de cada grupo.",
-      "1 punto extra si aciertas el resultado exacto de cada partido.",
+      "2 puntos por cada partido en el que aciertes el resultado (1, X o 2); el empate también cuenta.",
+      "1 punto extra si además aciertas el marcador exacto del partido (3 pts en total).",
     ],
   },
   {
@@ -833,7 +834,7 @@ function RulesBanner({ showRules, onToggle }) {
     <section className="rulesBanner" aria-label="Reglas de puntuación">
       <div>
         <p className="eyebrow">Reglas de la porra</p>
-        <strong>Fase de grupos: 5 pts por 1º, 3 pts por 2º y 1 pt por 3º clasificado a eliminatorias.</strong>
+        <strong>Fase de grupos: 5/3/1 pts por 1º, 2º y 3º de grupo · 2 pts por acertar el resultado de cada partido (1, X o 2) y 1 pt extra por marcador exacto.</strong>
         <p>Después se abrirá la porra de eliminatorias con 5 pts por acertar quién pasa y 1 punto extra por resultado exacto sin tanda de penaltis.</p>
       </div>
       <button className="secondary rulesButton" type="button" onClick={onToggle}>{showRules ? 'Ocultar reglas' : 'Ver reglas completas'}</button>

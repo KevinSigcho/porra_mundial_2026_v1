@@ -88,6 +88,22 @@ function sameScore(a, b) {
   );
 }
 
+function outcome(score) {
+  const homeGoals = Number(score.homeGoals);
+  const awayGoals = Number(score.awayGoals);
+
+  if (homeGoals > awayGoals) return 'H';
+  if (homeGoals < awayGoals) return 'A';
+  return 'D';
+}
+
+// Acertar el signo del partido (1, X o 2); el empate también cuenta.
+function correctOutcome(prediction, result) {
+  if (!isCompleteScore(prediction) || !isCompleteScore(result)) return false;
+
+  return outcome(prediction) === outcome(result);
+}
+
 function publicPlayer(player) {
   const paymentConfirmed = isConfirmed(player);
 
@@ -119,13 +135,19 @@ function buildMatchDetails(fixtures, players, predictionsByPlayer, results) {
       const prediction = playerPredictions[fixture.id] || null;
       const hasPrediction = isCompleteScore(prediction);
       const exactScoreBonus = hasResult && hasPrediction && sameScore(prediction, result);
+      const outcomeBonus = hasResult && hasPrediction && correctOutcome(prediction, result);
+      const outcomePoints = outcomeBonus ? 2 : 0;
+      const exactScorePoints = exactScoreBonus ? 1 : 0;
 
       return {
         ...publicPlayer(player),
         prediction,
         hasPrediction,
+        outcomeBonus,
+        outcomePoints,
         exactScoreBonus,
-        exactScorePoints: exactScoreBonus ? 1 : 0,
+        exactScorePoints,
+        matchPoints: outcomePoints + exactScorePoints,
         predictionUpdatedAt: predictionEntity?.updatedAt || null
       };
     }).sort((a, b) => {
@@ -182,6 +204,8 @@ app.http('leaderboard', {
           thirdsCorrect: score.thirdsCorrect,
           exactScores: score.exactScores,
           correctOutcomes: score.correctOutcomes,
+          matchOutcomePoints: score.matchOutcomePoints,
+          exactScorePoints: score.exactScorePoints,
           exactGoalDifferences: score.exactGoalDifferences,
           predictionsMade: countComplete(predictions),
           updatedAt: entity?.updatedAt || player.updatedAt || null,
@@ -235,8 +259,9 @@ app.http('leaderboard', {
           groupWinner: 5,
           groupRunner: 3,
           groupThirdQualified: 1,
+          matchOutcome: 2,
           exactScoreBonus: 1,
-          description: 'Fase de grupos: 5 pts por acertar el 1º, 3 pts por acertar el 2º, 1 pt por acertar el 3º y 1 pt extra por marcador exacto.'
+          description: 'Fase de grupos: 5 pts por acertar el 1º, 3 pts por acertar el 2º y 1 pt por acertar el 3º de cada grupo. En cada partido: 2 pts por acertar el resultado (1, X o 2, incluido el empate) y 1 pt extra por el marcador exacto (3 pts en total).'
         },
         tieBreakers: [
           'Puntos totales',

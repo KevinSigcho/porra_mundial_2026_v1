@@ -7,8 +7,9 @@
     "groupWinner": 5,
     "groupRunner": 3,
     "groupThirdQualified": 1,
+    "matchOutcomePoints": 2,
     "exactScoreBonusPoint": 1,
-    "description": "Fase de grupos: 5 pts por acertar el 1º de grupo, 3 pts por el 2º, 1 pt por el 3º que clasifica. +1 pt extra por cada marcador exacto acertado."
+    "description": "Fase de grupos: 5 pts por acertar el 1º de grupo, 3 pts por el 2º, 1 pt por el 3º que clasifica. Por partido: 2 pts por acertar el resultado (1, X o 2, incluido el empate) y +1 pt extra por el marcador exacto (3 pts en total)."
   },
   "groups": {
     "A": [
