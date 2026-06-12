@@ -50,32 +50,29 @@ const RULE_SECTIONS = [
   {
     title: 'Fase de grupos',
     items: [
-      '5 puntos si aciertas el equipo que queda 1º de cada grupo.',
-      '3 puntos si aciertas el equipo que queda 2º de cada grupo.',
-      '1 punto si aciertas el 3º de grupo que se clasifica a eliminatorias.',
-      'La clasificación de cada grupo se calcula con tus marcadores: puntos, diferencia de goles, goles a favor y orden alfabético si persiste el empate.'
+      "5 puntos si aciertas el equipo que queda 1º de cada grupo.",
+      "3 puntos si aciertas el equipo que queda 2º de cada grupo.",
+      "1 punto si aciertas el equipo que queda 3º de cada grupo.",
+      "1 punto extra si aciertas el resultado exacto de cada partido.",
+    ],
+  },
+  {
+    title: 'Fase de eliminatorias',
+    items: [
+      "Cuando termine la fase de grupos se cargan los 32 clasificados en el cuadro oficial.",
+      "5 puntos por acertar el equipo que pasa cada eliminatoria, incluyendo prórroga o penaltis.",
+      "1 punto extra si aciertas el resultado del partido antes de tanda de penaltis.",
     ]
   },
   {
     title: 'Desempates de la porra',
     items: [
-      '1º: más puntos totales.',
-      '2º: más partidos con marcador exacto acertado.',
-      '3º: más partidos con diferencia de goles exacta acertada.',
-      '4º: más signos acertados en los partidos.',
-      '5º: más pronósticos completados.',
-      '6º: orden alfabético del jugador para evitar empates técnicos.'
-    ]
+      "1º: más puntos totales.",
+      "2º: más partidos con marcador exacto acertado.",
+      "3º: más partidos con diferencia de goles exacta acertada.",
+    ],
   },
-  {
-    title: 'Fase de eliminatorias',
-    items: [
-      'Cuando termine la fase de grupos se cargan los 32 clasificados en el cuadro oficial.',
-      '5 puntos por acertar el equipo que pasa cada eliminatoria, incluyendo prórroga o penaltis.',
-      '1 punto extra si aciertas el resultado del partido antes de tanda de penaltis.',
-      'Desempate recomendado en eliminatorias: más finalistas acertados, campeón acertado, más clasificados a semifinales, más clasificados a cuartos, más resultados exactos y mayor diferencia de goles exacta.'
-    ]
-  }
+ 
 ];
 
 const OFFICIAL_KNOCKOUT_BRACKET = {
