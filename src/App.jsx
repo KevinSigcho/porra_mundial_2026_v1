@@ -1466,12 +1466,6 @@ function MatchCard({ fixture, score, result, onChange, disabled }) {
         <span>{fixture.venue}</span>
       </div>
 
-      {fixture.lockAtSpain && (
-        <p className="matchTimingNote">
-          Cierre pronóstico: {formatDateTimeSpain(fixture.lockAtSpain)} h España
-        </p>
-      )}
-
       <div className="scoreRow scoreRowEnhanced">
         <span className="team home">
           <span className="teamName">{fixture.home}</span>
