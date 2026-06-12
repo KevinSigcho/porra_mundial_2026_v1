@@ -2042,11 +2042,9 @@ function Leaderboard({ data, onRefresh }) {
           <small>20% del bote confirmado</small>
         </article>
       </div>
-
       <p className="muted small leaderboardMeta">
-        Resultados reales cargados: {data?.resultCount || 0}/{data?.fixtureCount || 72}. Entrada: {euro(entryFee)} por jugador. Los usuarios pendientes de Bizum aparecen en gris y no suman al bote.
+        Resultados reales cargados: {data?.resultCount || 0}/{data?.fixtureCount || 72}. Entrada: {euro(entryFee)} por jugador.
       </p>
-
       {rows.length === 0 ? (
         <div className="notice softNotice">Todavía no hay jugadores con pronósticos.</div>
       ) : (
@@ -2076,51 +2074,82 @@ function Leaderboard({ data, onRefresh }) {
           </div>
 
           <div className="tableWrap leaderboardTableWrap desktopOnlyTable">
-            <table>
+            <table className="leaderboardBreakdownTable">
               <thead>
                 <tr>
                   <th>#</th>
                   <th>Jugador</th>
-                  <th>Bizum</th>
                   <th>Puntos</th>
                   <th>Premio</th>
-                  <th>1º grupo</th>
-                  <th>2º grupo</th>
-                  <th>3º grupo</th>
-                  <th title="Partidos con resultado (1, X o 2) acertado">Nº partidos acertados (1/X/2)</th>
-                  <th>Exactos</th>
+                  <th className="pointsBreakdownCell pointsGroupStart" title="5 puntos por cada primero de grupo acertado">1º grupo</th>
+                  <th className="pointsBreakdownCell" title="3 puntos por cada segundo de grupo acertado">2º grupo</th>
+                  <th className="pointsBreakdownCell" title="1 punto por cada tercero de grupo acertado">3º grupo</th>
+                  <th className="pointsBreakdownCell" title="2 puntos por cada signo acertado: local, empate o visitante">Pts 1/X/2</th>
+                  <th className="pointsBreakdownCell pointsGroupEnd" title="1 punto extra por cada marcador exacto acertado">Pts exacto</th>
                   <th>DG</th>
-                  <th>Pronósticos</th>
                 </tr>
               </thead>
+
               <tbody>
-                {rows.map((row, index) => (
-                  <tr key={row.playerId} className={!row.paymentConfirmed ? 'rankingPendingPaymentRow' : ''}>
-                    <td>{row.paymentConfirmed ? index + 1 : '—'}</td>
-                    <td>
-                      <span className="leaderboardPlayer">
-                        <PlayerAvatar player={row} size="sm" />
-                        <span>{row.name}</span>
-                      </span>
-                    </td>
-                    <td>{row.paymentConfirmed ? 'Confirmado' : '⚠️ Pendiente Bizum'}</td>
-                    <td><strong>{row.points}</strong></td>
-                    <td>{prizeForRank(index + 1, row) ? euro(prizeForRank(index + 1, row)) : '—'}</td>
-                    <td>{row.groupWinnersCorrect || 0}</td>
-                    <td>{row.groupRunnersCorrect || 0}</td>
-                    <td>{row.thirdsCorrect || 0}</td>
-                    <td>{row.correctOutcomes || 0}</td>
-                    <td>{row.exactScores || 0}</td>
-                    <td>{row.exactGoalDifferences || 0}</td>
-                    <td>{row.predictionsMade}</td>
-                  </tr>
-                ))}
+                {rows.map((row, index) => {
+                  const firstGroupPoints = (row.groupWinnersCorrect || 0) * 5;
+                  const secondGroupPoints = (row.groupRunnersCorrect || 0) * 3;
+                  const thirdGroupPoints = (row.thirdsCorrect || 0) * 1;
+                  const signPoints = row.matchOutcomePoints ?? ((row.correctOutcomes || 0) * 2);
+                  const exactPoints = row.exactScorePoints ?? ((row.exactScores || 0) * 1);
+
+                  return (
+                    <tr key={row.playerId}>
+                      <td>{index + 1}</td>
+
+                      <td>
+                        <span className="leaderboardPlayer">
+                          <PlayerAvatar player={row} size="sm" />
+                          <span>{row.name}</span>
+                        </span>
+                      </td>
+
+                      <td><strong>{row.points}</strong></td>
+
+                      <td>
+                        {prizeForRank(index + 1, row) ? euro(prizeForRank(index + 1, row)) : '—'}
+                      </td>
+
+                      <td className="pointsBreakdownCell pointsGroupStart">
+                        <strong>{firstGroupPoints}</strong>
+                        <small>{row.groupWinnersCorrect || 0} aciertos</small>
+                      </td>
+
+                      <td className="pointsBreakdownCell">
+                        <strong>{secondGroupPoints}</strong>
+                        <small>{row.groupRunnersCorrect || 0} aciertos</small>
+                      </td>
+
+                      <td className="pointsBreakdownCell">
+                        <strong>{thirdGroupPoints}</strong>
+                        <small>{row.thirdsCorrect || 0} aciertos</small>
+                      </td>
+
+                      <td className="pointsBreakdownCell">
+                        <strong>{signPoints}</strong>
+                        <small>{row.correctOutcomes || 0} signos</small>
+                      </td>
+
+                      <td className="pointsBreakdownCell pointsGroupEnd">
+                        <strong>{exactPoints}</strong>
+                        <small>{row.exactScores || 0} exactos</small>
+                      </td>
+
+                      <td>{row.exactGoalDifferences || 0}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
 
           <div className="notice softNotice rankingInfo">
-            Bote actual: {euro(prizePool)} calculado con {confirmedPlayerCount} pagos confirmados de {euro(entryFee)}. Pendientes de Bizum: {pendingRows.length}.
+            La zona sombreada desglosa los puntos que forman el total: posiciones de grupo, signos acertados y marcador exacto.
           </div>
         </>
       )}
