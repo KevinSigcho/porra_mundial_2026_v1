@@ -13,8 +13,20 @@ on:
           - "false"
 
   schedule:
+    # Horarios en UTC.
+    # España peninsular en junio/julio = UTC+2.
+    #
+    # 20:15 UTC = 22:15 España
+    # 22:15 UTC = 00:15 España
+    # 01:15 UTC = 03:15 España
+    # 06:30 UTC = 08:30 España
+    #
+    # El script solo guarda partidos que la API devuelva como FINISHED.
+    - cron: "15 20 * 6,7 *"
+    - cron: "15 22 * 6,7 *"
+    - cron: "15 1 * 6,7 *"
     - cron: "30 6 * 6,7 *"
-    - cron: "0 22 * 6,7 *"
+
 jobs:
   sync-results:
     name: Sync results
@@ -36,6 +48,5 @@ jobs:
           PORRA_ADMIN_CODE: ${{ secrets.PORRA_ADMIN_CODE }}
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
           FOOTBALL_DATA_COMPETITION: ${{ secrets.FOOTBALL_DATA_COMPETITION }}
-          DELAY_AFTER_KICKOFF_HOURS: "3"
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
         run: node scripts/sync-results.js

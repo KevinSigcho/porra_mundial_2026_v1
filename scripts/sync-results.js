@@ -4,7 +4,6 @@ const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
 const COMPETITION = process.env.FOOTBALL_DATA_COMPETITION || 'WC';
 
 const DRY_RUN = String(process.env.DRY_RUN || 'false').toLowerCase() === 'true';
-const DELAY_AFTER_KICKOFF_HOURS = Number(process.env.DELAY_AFTER_KICKOFF_HOURS || 3);
 
 const TEAM_NAME_ALIASES = {
   'Mexico': 'México',
@@ -108,29 +107,15 @@ function kickoffTimestamp(fixture) {
   return new Date(`${fixture.date}T12:00:00Z`).getTime();
 }
 
-function shouldCheckFixture(fixture, existingResults, now) {
+function shouldCheckFixture(fixture, existingResults) {
   if (isCompleteScore(existingResults[fixture.id])) {
-    return false;
-  }
-
-  const kickoff = kickoffTimestamp(fixture);
-
-  if (!Number.isFinite(kickoff)) {
-    console.log(`Fecha inválida para ${fixture.id}: ${fixture.home} vs ${fixture.away}`);
-    return false;
-  }
-
-  const readyAt = kickoff + DELAY_AFTER_KICKOFF_HOURS * 60 * 60 * 1000;
-
-  const shouldCheck = now >= readyAt;
-
-  if (!shouldCheck && Number(fixture.matchNo || 0) <= 5) {
     console.log(
-      `Todavía no revisa ${fixture.id}. Ahora=${new Date(now).toISOString()} ReadyAt=${new Date(readyAt).toISOString()} Kickoff=${new Date(kickoff).toISOString()}`
+      `Ya existe resultado para ${fixture.id}: ${fixture.home} ${existingResults[fixture.id].homeGoals}-${existingResults[fixture.id].awayGoals} ${fixture.away}`
     );
+    return false;
   }
 
-  return shouldCheck;
+  return true;
 }
 
 async function getJson(url, options = {}) {
@@ -223,7 +208,7 @@ async function main() {
   console.log(`Sincronizando resultados. DRY_RUN=${DRY_RUN}`);
   console.log(`APP_URL=${APP_URL}`);
   console.log(`COMPETITION=${COMPETITION}`);
-  console.log(`DELAY_AFTER_KICKOFF_HOURS=${DELAY_AFTER_KICKOFF_HOURS}`);
+  console.log('Modo: revisa partidos sin resultado y solo guarda si la API devuelve FINISHED.');
   
   const fixtureData = await fetchFixtures();
   const fixtures = fixtureData.fixtures || [];
@@ -238,14 +223,6 @@ async function main() {
   console.log(`Partidos recibidos de la API: ${apiMatches.length}`);
   console.log(`Hora actual GitHub runner: ${new Date(now).toISOString()}`);
 
-  for (const fixture of fixtures.slice(0, 5)) {
-    const kickoff = kickoffTimestamp(fixture);
-    const readyAt = kickoff + DELAY_AFTER_KICKOFF_HOURS * 60 * 60 * 1000;
-
-    console.log(
-      `Fixture ${fixture.id} #${fixture.matchNo}: ${fixture.home} vs ${fixture.away} | kickoff=${new Date(kickoff).toISOString()} | readyAt=${new Date(readyAt).toISOString()}`
-    );
-  }
 
  
   let checked = 0;
@@ -253,7 +230,7 @@ async function main() {
   let notFound = 0;
 
   for (const fixture of fixtures) {
-    if (!shouldCheckFixture(fixture, currentResults, now)) {
+    if (!shouldCheckFixture(fixture, currentResults)) {
       continue;
     }
 
