@@ -2063,7 +2063,6 @@ function Leaderboard({ data, onRefresh }) {
                   <div className="rankingPlayerInfo">
                     <strong>{row.name}</strong>
                     <span>{row.groupWinnersCorrect || 0} primeros · {row.groupRunnersCorrect || 0} segundos · {row.thirdsCorrect || 0} terceros</span>
-                    <span>· {row.correctOutcomes || 0} signos · {row.exactScores || 0} exactos</span>
                     {!row.paymentConfirmed && <em className="pendingPaymentText">Pendiente confirmar Bizum</em>}
                   </div>
                   <div className="rankingPoints">
@@ -2090,7 +2089,7 @@ function Leaderboard({ data, onRefresh }) {
                   <th>3º grupo</th>
                   <th title="Partidos con resultado (1, X o 2) acertado">Signos (1/X/2)</th>
                   <th>Exactos</th>
-                  <th>DG exacta</th>
+                  <th>DG</th>
                   <th>Pronósticos</th>
                 </tr>
               </thead>
