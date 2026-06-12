@@ -2087,7 +2087,7 @@ function Leaderboard({ data, onRefresh }) {
                   <th>1º grupo</th>
                   <th>2º grupo</th>
                   <th>3º grupo</th>
-                  <th title="Partidos con resultado (1, X o 2) acertado">Signos (1/X/2)</th>
+                  <th title="Partidos con resultado (1, X o 2) acertado">Nº partidos acertados (1/X/2)</th>
                   <th>Exactos</th>
                   <th>DG</th>
                   <th>Pronósticos</th>
