@@ -26,7 +26,6 @@ on:
     - cron: "15 22 * 6,7 *"
     - cron: "15 1 * 6,7 *"
     - cron: "30 6 * 6,7 *"
-
 jobs:
   sync-results:
     name: Sync results
