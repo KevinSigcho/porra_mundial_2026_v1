@@ -113,9 +113,24 @@ function shouldCheckFixture(fixture, existingResults, now) {
     return false;
   }
 
-  const readyAt = kickoffTimestamp(fixture) + DELAY_AFTER_KICKOFF_HOURS * 60 * 60 * 1000;
+  const kickoff = kickoffTimestamp(fixture);
 
-  return now >= readyAt;
+  if (!Number.isFinite(kickoff)) {
+    console.log(`Fecha inválida para ${fixture.id}: ${fixture.home} vs ${fixture.away}`);
+    return false;
+  }
+
+  const readyAt = kickoff + DELAY_AFTER_KICKOFF_HOURS * 60 * 60 * 1000;
+
+  const shouldCheck = now >= readyAt;
+
+  if (!shouldCheck && Number(fixture.matchNo || 0) <= 5) {
+    console.log(
+      `Todavía no revisa ${fixture.id}. Ahora=${new Date(now).toISOString()} ReadyAt=${new Date(readyAt).toISOString()} Kickoff=${new Date(kickoff).toISOString()}`
+    );
+  }
+
+  return shouldCheck;
 }
 
 async function getJson(url, options = {}) {
@@ -209,7 +224,7 @@ async function main() {
   console.log(`APP_URL=${APP_URL}`);
   console.log(`COMPETITION=${COMPETITION}`);
   console.log(`DELAY_AFTER_KICKOFF_HOURS=${DELAY_AFTER_KICKOFF_HOURS}`);
-
+  
   const fixtureData = await fetchFixtures();
   const fixtures = fixtureData.fixtures || [];
   const currentResults = await fetchCurrentResults();
@@ -218,6 +233,21 @@ async function main() {
   const now = Date.now();
   const nextResults = { ...currentResults };
 
+  console.log(`Fixtures cargados: ${fixtures.length}`);
+  console.log(`Resultados actuales cargados: ${Object.keys(currentResults || {}).length}`);
+  console.log(`Partidos recibidos de la API: ${apiMatches.length}`);
+  console.log(`Hora actual GitHub runner: ${new Date(now).toISOString()}`);
+
+  for (const fixture of fixtures.slice(0, 5)) {
+    const kickoff = kickoffTimestamp(fixture);
+    const readyAt = kickoff + DELAY_AFTER_KICKOFF_HOURS * 60 * 60 * 1000;
+
+    console.log(
+      `Fixture ${fixture.id} #${fixture.matchNo}: ${fixture.home} vs ${fixture.away} | kickoff=${new Date(kickoff).toISOString()} | readyAt=${new Date(readyAt).toISOString()}`
+    );
+  }
+
+ 
   let checked = 0;
   let updated = 0;
   let notFound = 0;
