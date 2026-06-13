@@ -563,7 +563,7 @@ export default function App() {
   const [fixtureData, setFixtureData] = useState(null);
   const [token, setToken] = useState(localStorage.getItem(STORAGE_TOKEN) || '');
   const [player, setPlayer] = useState(readStoredPlayer());
-  const [tab, setTab] = useState('predictions');
+  const [tab, setTab] = useState('leaderboard');
   const [predictions, setPredictions] = useState({});
   const [results, setResults] = useState({});
   const [knockoutPredictions, setKnockoutPredictions] = useState({});
