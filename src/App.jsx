@@ -745,13 +745,14 @@ export default function App() {
       <DesktopModeBanner />
 
       <RulesBanner showRules={showRules} onToggle={() => setShowRules((value) => !value)} />
-
+      
       <nav className="tabs" aria-label="Secciones principales">
-        <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
+        <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'calendar' ? 'active' : ''} onClick={() => { setTab('calendar'); refreshPrivateData(); }}>Calendario partidos</button>
+        <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
         <button className={tab === 'myBracket' ? 'active' : ''} onClick={() => { setTab('myBracket'); refreshPrivateData(); }}>Mi eliminatoria</button>
         <button className={tab === 'knockouts' ? 'active' : ''} onClick={() => setTab('knockouts')}>Pronósticos fase eliminatorias</button>
-        <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
+        
       </nav>
 
       {tab === 'predictions' && (
