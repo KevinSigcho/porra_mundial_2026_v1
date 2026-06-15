@@ -1521,6 +1521,21 @@ function isExactPrediction(prediction, result) {
   );
 }
 
+function matchOutcome(score) {
+  if (!isCompleteScore(score)) return null;
+  const h = Number(score.homeGoals);
+  const a = Number(score.awayGoals);
+  if (h > a) return 'home';
+  if (h < a) return 'away';
+  return 'draw';
+}
+
+function isCorrectOutcome(prediction, result) {
+  const p = matchOutcome(prediction);
+  const r = matchOutcome(result);
+  return p !== null && r !== null && p === r;
+}
+
 function matchTimestamp(fixture) {
   if (fixture?.kickoffAtSpain) {
     return new Date(fixture.kickoffAtSpain).getTime();
@@ -1575,7 +1590,7 @@ function MatchCalendarPanel({ fixtures, results, predictions, onRefresh }) {
               <th>Sede</th>
               <th>Resultado real</th>
               <th>Mi pronóstico</th>
-              <th>Exacto</th>
+              <th>Puntuación</th>
             </tr>
           </thead>
 
@@ -1586,6 +1601,7 @@ function MatchCalendarPanel({ fixtures, results, predictions, onRefresh }) {
               const hasResult = isCompleteScore(result);
               const hasPrediction = isCompleteScore(prediction);
               const exact = isExactPrediction(prediction, result);
+              const correctSign = isCorrectOutcome(prediction, result);
 
               return (
                 <tr key={fixture.id}>
@@ -1645,9 +1661,11 @@ function MatchCalendarPanel({ fixtures, results, predictions, onRefresh }) {
                     ) : !hasPrediction ? (
                       <span className="exactIcon exactIconEmpty" title="Sin pronóstico">—</span>
                     ) : exact ? (
-                      <span className="exactIcon exactIconOk" title="Resultado exacto acertado">✅ +1</span>
+                      <span className="exactIcon exactIconOk" title="Marcador exacto acertado">✅ +1</span>
+                    ) : correctSign ? (
+                      <span className="exactIcon exactIconOk" title="Resultado 1/X/2 acertado">✅</span>
                     ) : (
-                      <span className="exactIcon exactIconKo" title="No acertado">❌</span>
+                      <span className="exactIcon exactIconKo" title="Resultado fallado">❌</span>
                     )}
                   </td>
                 </tr>
