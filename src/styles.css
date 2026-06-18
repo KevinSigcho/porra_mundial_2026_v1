@@ -1771,6 +1771,39 @@ th {
   font-size: 1.35rem;
   font-weight: 950;
   color: #0f172a;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  line-height: 1;
+}
+
+.rankingDeltaUp {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #16a34a;
+  letter-spacing: -0.01em;
+}
+
+.rankingDeltaDown {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #dc2626;
+  letter-spacing: -0.01em;
+}
+
+.rankingDeltaNeutral {
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.tablePositionCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  line-height: 1;
 }
 
 .rankingMedal {

@@ -1521,21 +1521,6 @@ function isExactPrediction(prediction, result) {
   );
 }
 
-function matchOutcome(score) {
-  if (!isCompleteScore(score)) return null;
-  const h = Number(score.homeGoals);
-  const a = Number(score.awayGoals);
-  if (h > a) return 'home';
-  if (h < a) return 'away';
-  return 'draw';
-}
-
-function isCorrectOutcome(prediction, result) {
-  const p = matchOutcome(prediction);
-  const r = matchOutcome(result);
-  return p !== null && r !== null && p === r;
-}
-
 function matchTimestamp(fixture) {
   if (fixture?.kickoffAtSpain) {
     return new Date(fixture.kickoffAtSpain).getTime();
@@ -1590,7 +1575,7 @@ function MatchCalendarPanel({ fixtures, results, predictions, onRefresh }) {
               <th>Sede</th>
               <th>Resultado real</th>
               <th>Mi pronóstico</th>
-              <th>Puntuación</th>
+              <th>Exacto</th>
             </tr>
           </thead>
 
@@ -1601,7 +1586,6 @@ function MatchCalendarPanel({ fixtures, results, predictions, onRefresh }) {
               const hasResult = isCompleteScore(result);
               const hasPrediction = isCompleteScore(prediction);
               const exact = isExactPrediction(prediction, result);
-              const correctSign = isCorrectOutcome(prediction, result);
 
               return (
                 <tr key={fixture.id}>
@@ -1661,11 +1645,9 @@ function MatchCalendarPanel({ fixtures, results, predictions, onRefresh }) {
                     ) : !hasPrediction ? (
                       <span className="exactIcon exactIconEmpty" title="Sin pronóstico">—</span>
                     ) : exact ? (
-                      <span className="exactIcon exactIconOk" title="Marcador exacto acertado">✅ +1</span>
-                    ) : correctSign ? (
-                      <span className="exactIcon exactIconOk" title="Resultado 1/X/2 acertado">✅</span>
+                      <span className="exactIcon exactIconOk" title="Resultado exacto acertado">✅ +1</span>
                     ) : (
-                      <span className="exactIcon exactIconKo" title="Resultado fallado">❌</span>
+                      <span className="exactIcon exactIconKo" title="No acertado">❌</span>
                     )}
                   </td>
                 </tr>
@@ -2010,6 +1992,44 @@ function Leaderboard({ data, onRefresh }) {
   };
   const medals = ['🏆', '🥈', '🥉'];
 
+  const [prevRankMap, setPrevRankMap] = useState(() => {
+    try {
+      const prev = JSON.parse(localStorage.getItem('porra2026.prevRanking') || 'null');
+      return prev?.rankMap || {};
+    } catch { return {}; }
+  });
+
+  useEffect(() => {
+    if (!rows.length) return;
+    try {
+      const stored = JSON.parse(localStorage.getItem('porra2026.curRanking') || 'null');
+      const currentResultCount = data?.resultCount || 0;
+      if (stored && stored.resultCount !== currentResultCount) {
+        localStorage.setItem('porra2026.prevRanking', JSON.stringify(stored));
+        setPrevRankMap(stored.rankMap || {});
+      }
+      const newRankMap = {};
+      rows.forEach((row, index) => {
+        if (row.paymentConfirmed) newRankMap[row.playerId] = index + 1;
+      });
+      localStorage.setItem('porra2026.curRanking', JSON.stringify({ resultCount: currentResultCount, rankMap: newRankMap }));
+    } catch {}
+  }, [data]);
+
+  function getPositionDelta(playerId, currentRank) {
+    const prev = prevRankMap[playerId];
+    if (prev == null) return null;
+    return prev - currentRank;
+  }
+
+  function renderPositionDelta(playerId, currentRank) {
+    const delta = getPositionDelta(playerId, currentRank);
+    if (delta === null) return null;
+    if (delta === 0) return <span className="rankingDeltaNeutral">—</span>;
+    if (delta > 0) return <span className="rankingDeltaUp">▲{delta}</span>;
+    return <span className="rankingDeltaDown">▼{Math.abs(delta)}</span>;
+  }
+
   function euro(value) {
     return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(Number(value || 0));
   }
@@ -2068,7 +2088,10 @@ function Leaderboard({ data, onRefresh }) {
               const prize = prizeForRank(rank, row);
               return (
                 <article key={row.playerId} className={`rankingRowCard ${!row.paymentConfirmed ? 'rankingPendingPayment' : ''} ${rank <= 3 && row.paymentConfirmed ? `rankingTop rankingTop${rank}` : ''}`}>
-                  <div className="rankingPosition">{row.paymentConfirmed ? `${rank}º` : '—'}</div>
+                  <div className="rankingPosition">
+                    <span>{row.paymentConfirmed ? `${rank}º` : '—'}</span>
+                    {row.paymentConfirmed && renderPositionDelta(row.playerId, rank)}
+                  </div>
                   <div className="rankingMedal">{rank <= 3 && row.paymentConfirmed ? medals[index] : '⚠️'}</div>
                   <PlayerAvatar player={row} size="md" />
                   <div className="rankingPlayerInfo">
@@ -2113,7 +2136,12 @@ function Leaderboard({ data, onRefresh }) {
 
                   return (
                     <tr key={row.playerId}>
-                      <td>{index + 1}</td>
+                      <td>
+                        <div className="tablePositionCell">
+                          <span>{index + 1}</span>
+                          {row.paymentConfirmed && renderPositionDelta(row.playerId, index + 1)}
+                        </div>
+                      </td>
 
                       <td>
                         <span className="leaderboardPlayer">
