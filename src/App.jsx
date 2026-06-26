@@ -812,10 +812,10 @@ export default function App() {
         <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'calendar' ? 'active' : ''} onClick={() => { setTab('calendar'); refreshPrivateData(); }}>Calendario partidos</button>
         <button className={tab === 'realBracket' ? 'active' : ''} onClick={() => {setTab('realBracket'); refreshPrivateData();}}>Cuadro real eliminatorias</button>
+        <button className={tab === 'knockoutPredictions' ? 'active' : ''} onClick={() => {setTab('knockoutPredictions'); refreshPrivateData();}}>Pronósticos cuadro eliminatorias</button>
         <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
         <button className={tab === 'myBracket' ? 'active' : ''} onClick={() => { setTab('myBracket'); refreshPrivateData(); }}>Mi eliminatoria</button>
         <button className={tab === 'knockouts' ? 'active' : ''} onClick={() => setTab('knockouts')}>Pronósticos fase eliminatorias</button>
-        
       </nav>
 
       {tab === 'predictions' && (
@@ -909,6 +909,12 @@ export default function App() {
         <RealKnockoutBracketPanel
           knockoutData={settings.knockoutData}
           knockoutUpdatedAt={settings.knockoutUpdatedAt}
+          knockoutPredictions={knockoutPredictions}
+          locked={settings.knockoutLocked}
+          busy={busy}
+          onScore={(matchId, field, value) => updateScore(setKnockoutPredictions, matchId, field, value)}
+          onAdvance={setKnockoutAdvance}
+          onSave={saveKnockout}
           onRefresh={refreshPrivateData}
         />
       )}
@@ -1022,7 +1028,17 @@ function flattenOfficialKnockoutMatches() {
   return map;
 }
 
-function RealKnockoutBracketPanel({ knockoutData, knockoutUpdatedAt, onRefresh }) {
+function RealKnockoutBracketPanel({
+  knockoutData,
+  knockoutUpdatedAt,
+  knockoutPredictions,
+  locked,
+  busy,
+  onScore,
+  onAdvance,
+  onSave,
+  onRefresh
+}) {
   const officialMatches = useMemo(() => flattenOfficialKnockoutMatches(), []);
   const bracketMatches = knockoutData?.bracketMatches || {};
 
@@ -1143,6 +1159,17 @@ function RealKnockoutBracketPanel({ knockoutData, knockoutUpdatedAt, onRefresh }
               />
             </div>
           </div>
+
+          <RealBracketPredictionList
+            knockoutData={knockoutData}
+            knockoutPredictions={knockoutPredictions}
+            locked={locked}
+            busy={busy}
+            onScore={onScore}
+            onAdvance={onAdvance}
+            onSave={onSave}
+            onRefresh={onRefresh}
+          />
         </>
       )}
     </section>
@@ -1328,6 +1355,364 @@ function buildSlotLabel(slot, fallback) {
     seed: slot?.seed || '',
     text: fallback || '—'
   };
+}
+
+const REAL_BRACKET_PREDICTION_ROUNDS = [
+  {
+    key: 'r32',
+    title: 'Dieciseisavos de final',
+    ids: ['M74', 'M77', 'M73', 'M75', 'M83', 'M84', 'M81', 'M82', 'M76', 'M78', 'M79', 'M80', 'M86', 'M88', 'M85', 'M87']
+  },
+  {
+    key: 'r16',
+    title: 'Octavos de final',
+    ids: ['M89', 'M90', 'M93', 'M94', 'M91', 'M92', 'M95', 'M96']
+  },
+  {
+    key: 'qf',
+    title: 'Cuartos de final',
+    ids: ['M97', 'M98', 'M99', 'M100']
+  },
+  {
+    key: 'sf',
+    title: 'Semifinales',
+    ids: ['M101', 'M102']
+  },
+  {
+    key: 'finals',
+    title: 'Final y tercer puesto',
+    ids: ['M104', 'M103']
+  }
+];
+
+const REAL_BRACKET_MATCH_SOURCES = {
+  M74: { round: 'r32', real: true },
+  M77: { round: 'r32', real: true },
+  M73: { round: 'r32', real: true },
+  M75: { round: 'r32', real: true },
+  M83: { round: 'r32', real: true },
+  M84: { round: 'r32', real: true },
+  M81: { round: 'r32', real: true },
+  M82: { round: 'r32', real: true },
+  M76: { round: 'r32', real: true },
+  M78: { round: 'r32', real: true },
+  M79: { round: 'r32', real: true },
+  M80: { round: 'r32', real: true },
+  M86: { round: 'r32', real: true },
+  M88: { round: 'r32', real: true },
+  M85: { round: 'r32', real: true },
+  M87: { round: 'r32', real: true },
+
+  M89: { round: 'r16', home: { winnerOf: 'M74' }, away: { winnerOf: 'M77' } },
+  M90: { round: 'r16', home: { winnerOf: 'M73' }, away: { winnerOf: 'M75' } },
+  M93: { round: 'r16', home: { winnerOf: 'M83' }, away: { winnerOf: 'M84' } },
+  M94: { round: 'r16', home: { winnerOf: 'M81' }, away: { winnerOf: 'M82' } },
+  M91: { round: 'r16', home: { winnerOf: 'M76' }, away: { winnerOf: 'M78' } },
+  M92: { round: 'r16', home: { winnerOf: 'M79' }, away: { winnerOf: 'M80' } },
+  M95: { round: 'r16', home: { winnerOf: 'M86' }, away: { winnerOf: 'M88' } },
+  M96: { round: 'r16', home: { winnerOf: 'M85' }, away: { winnerOf: 'M87' } },
+
+  M97: { round: 'qf', home: { winnerOf: 'M89' }, away: { winnerOf: 'M90' } },
+  M98: { round: 'qf', home: { winnerOf: 'M93' }, away: { winnerOf: 'M94' } },
+  M99: { round: 'qf', home: { winnerOf: 'M91' }, away: { winnerOf: 'M92' } },
+  M100: { round: 'qf', home: { winnerOf: 'M95' }, away: { winnerOf: 'M96' } },
+
+  M101: { round: 'sf', home: { winnerOf: 'M97' }, away: { winnerOf: 'M98' } },
+  M102: { round: 'sf', home: { winnerOf: 'M99' }, away: { winnerOf: 'M100' } },
+
+  M104: { round: 'finals', home: { winnerOf: 'M101' }, away: { winnerOf: 'M102' } },
+  M103: { round: 'finals', home: { loserOf: 'M101' }, away: { loserOf: 'M102' } }
+};
+
+function realSlotTeam(slot) {
+  return slot?.team || '';
+}
+
+function predictedOutcomeForMatch(match, pick) {
+  if (!match?.homeTeam || !match?.awayTeam || !pick) return null;
+
+  if (pick.advance === 'home') {
+    return {
+      winnerTeam: match.homeTeam,
+      loserTeam: match.awayTeam
+    };
+  }
+
+  if (pick.advance === 'away') {
+    return {
+      winnerTeam: match.awayTeam,
+      loserTeam: match.homeTeam
+    };
+  }
+
+  if (!isCompleteScore(pick)) return null;
+
+  const homeGoals = Number(pick.homeGoals);
+  const awayGoals = Number(pick.awayGoals);
+
+  if (homeGoals > awayGoals) {
+    return {
+      winnerTeam: match.homeTeam,
+      loserTeam: match.awayTeam
+    };
+  }
+
+  if (awayGoals > homeGoals) {
+    return {
+      winnerTeam: match.awayTeam,
+      loserTeam: match.homeTeam
+    };
+  }
+
+  return null;
+}
+
+function resolvePredictedSource(source, outcomes) {
+  if (!source) return '';
+
+  const previous = outcomes[source.winnerOf || source.loserOf];
+
+  if (!previous) return '';
+
+  if (source.winnerOf) return previous.winnerTeam || '';
+  if (source.loserOf) return previous.loserTeam || '';
+
+  return '';
+}
+
+function buildRealPredictionMatches(knockoutData, knockoutPredictions, officialMatches) {
+  const bracketMatches = knockoutData?.bracketMatches || {};
+  const matchesById = {};
+  const outcomes = {};
+  const output = [];
+
+  const orderedIds = REAL_BRACKET_PREDICTION_ROUNDS.flatMap((round) => round.ids);
+
+  for (const matchId of orderedIds) {
+    const source = REAL_BRACKET_MATCH_SOURCES[matchId];
+    const official = officialMatches[matchId] || {};
+    const realMatch = bracketMatches[matchId];
+
+    let homeTeam = '';
+    let awayTeam = '';
+
+    if (source?.real) {
+      homeTeam = realSlotTeam(realMatch?.home);
+      awayTeam = realSlotTeam(realMatch?.away);
+    } else {
+      homeTeam = resolvePredictedSource(source?.home, outcomes);
+      awayTeam = resolvePredictedSource(source?.away, outcomes);
+    }
+
+    const match = {
+      id: matchId,
+      round: source?.round || 'pending',
+      date: official.date || realMatch?.date || '',
+      time: official.time || realMatch?.time || '',
+      homeTeam,
+      awayTeam,
+      available: Boolean(homeTeam && awayTeam)
+    };
+
+    matchesById[matchId] = match;
+    outcomes[matchId] = predictedOutcomeForMatch(match, knockoutPredictions?.[matchId]);
+    output.push(match);
+  }
+
+  return output;
+}
+
+function RealBracketPredictionList({
+  knockoutData,
+  knockoutPredictions,
+  locked,
+  busy,
+  onScore,
+  onAdvance,
+  onSave,
+  onRefresh
+}) {
+  const officialMatches = useMemo(() => flattenOfficialKnockoutMatches(), []);
+
+  const matches = useMemo(
+    () => buildRealPredictionMatches(knockoutData, knockoutPredictions, officialMatches),
+    [knockoutData, knockoutPredictions, officialMatches]
+  );
+
+  const matchesByRound = useMemo(() => {
+    const map = {};
+    for (const match of matches) {
+      (map[match.round] ||= []).push(match);
+    }
+    return map;
+  }, [matches]);
+
+  const availableCount = matches.filter((match) => match.available).length;
+  const completedCount = matches.filter((match) => {
+    const pick = knockoutPredictions?.[match.id];
+    return match.available && isCompleteScore(pick) && (pick?.advance === 'home' || pick?.advance === 'away');
+  }).length;
+
+  return (
+    <section className="realBracketPredictionsPanel">
+      <div className="realBracketDeadlineNotice">
+        <strong>Fecha límite para rellenar todos los pronósticos:</strong> 28 de junio a las 21:00 h España.
+      </div>
+
+      <div className="toolbar realBracketPredictionToolbar">
+        <div>
+          <p className="eyebrow">Pronósticos de eliminatorias</p>
+          <h2>Partidos para predecir</h2>
+          <p className="muted">
+            Primero elige quién pasa y después introduce el marcador antes de una posible tanda de penaltis.
+          </p>
+          <p className="muted small">
+            Puntuación: 5 puntos por acertar quién pasa y 2 puntos extra por marcador exacto.
+          </p>
+        </div>
+
+        <div className="overallProgressCard" aria-label="Progreso de pronósticos de eliminatorias">
+          <span className="progressNumber">{availableCount ? Math.round((completedCount / availableCount) * 100) : 0}%</span>
+          <span className="progressText">{completedCount}/{availableCount} disponibles</span>
+          <div className="progressTrack" aria-hidden="true">
+            <div className="progressFill" style={{ width: `${availableCount ? Math.round((completedCount / availableCount) * 100) : 0}%` }} />
+          </div>
+        </div>
+      </div>
+
+      {locked && (
+        <div className="notice softNotice">
+          La porra de eliminatorias está cerrada. El admin debe abrirla para permitir guardar pronósticos.
+        </div>
+      )}
+
+      {REAL_BRACKET_PREDICTION_ROUNDS.map((round) => (
+        <section className="realPredictionRound" key={round.key}>
+          <h3>{round.title}</h3>
+
+          <div className="realPredictionGrid">
+            {(matchesByRound[round.key] || []).map((match) => (
+              <RealPredictionMatchCard
+                key={match.id}
+                match={match}
+                pick={knockoutPredictions?.[match.id]}
+                locked={locked}
+                onScore={onScore}
+                onAdvance={onAdvance}
+              />
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <div className="stickyActions predictionActions realBracketPredictionActions">
+        <button onClick={onSave} disabled={busy || locked}>
+          {busy ? 'Guardando...' : 'Guardar mis pronósticos de eliminatorias'}
+        </button>
+        <button className="secondary" type="button" onClick={onRefresh}>
+          Recargar
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function RealPredictionMatchCard({ match, pick, locked, onScore, onAdvance }) {
+  const canPredict = Boolean(match.available);
+  const selectedAdvance = pick?.advance || '';
+  const scoreDisabled = locked || !canPredict || !selectedAdvance;
+
+  const homeGoals = pick?.homeGoals ?? '';
+  const awayGoals = pick?.awayGoals ?? '';
+
+  const meta = [match.date, match.time].filter(Boolean).join(' · ');
+
+  return (
+    <article className={`realPredictionMatchCard ${canPredict ? 'realPredictionAvailable' : 'realPredictionUnavailable'}`}>
+      <div className="realPredictionMatchMeta">
+        <span>{meta || 'Fecha pendiente'}</span>
+        <strong>{match.id}</strong>
+      </div>
+
+      <div className="realPredictionTeams">
+        <RealPredictionTeamLine
+          team={match.homeTeam}
+          side="home"
+          selected={selectedAdvance === 'home'}
+          disabled={locked || !canPredict}
+          onClick={() => onAdvance(match.id, 'home')}
+        />
+
+        <RealPredictionTeamLine
+          team={match.awayTeam}
+          side="away"
+          selected={selectedAdvance === 'away'}
+          disabled={locked || !canPredict}
+          onClick={() => onAdvance(match.id, 'away')}
+        />
+      </div>
+
+      <div className="realPredictionScore">
+        <input
+          type="number"
+          min="0"
+          max="99"
+          inputMode="numeric"
+          value={scoreValue(homeGoals)}
+          disabled={scoreDisabled}
+          onChange={(event) => onScore(match.id, 'homeGoals', event.target.value)}
+          aria-label={`Goles de ${match.homeTeam || 'local'}`}
+        />
+
+        <span className="dash">-</span>
+
+        <input
+          type="number"
+          min="0"
+          max="99"
+          inputMode="numeric"
+          value={scoreValue(awayGoals)}
+          disabled={scoreDisabled}
+          onChange={(event) => onScore(match.id, 'awayGoals', event.target.value)}
+          aria-label={`Goles de ${match.awayTeam || 'visitante'}`}
+        />
+      </div>
+
+      {!canPredict && (
+        <p className="realPredictionHint">Pendiente de cruces anteriores</p>
+      )}
+
+      {canPredict && !selectedAdvance && (
+        <p className="realPredictionHint">Primero elige quién pasa</p>
+      )}
+
+      {canPredict && selectedAdvance && (
+        <p className="realPredictionPass">
+          Pasa: <strong>{selectedAdvance === 'home' ? teamShortCode(match.homeTeam) : teamShortCode(match.awayTeam)}</strong>
+        </p>
+      )}
+    </article>
+  );
+}
+
+function RealPredictionTeamLine({ team, selected, disabled, onClick }) {
+  return (
+    <button
+      type="button"
+      className={`realPredictionTeamLine ${selected ? 'selected' : ''}`}
+      disabled={disabled || !team}
+      onClick={onClick}
+    >
+      {team ? (
+        <>
+          <TeamFlag team={team} />
+          <span>{teamShortCode(team)}</span>
+        </>
+      ) : (
+        <span className="realPredictionBlankTeam">&nbsp;</span>
+      )}
+    </button>
+  );
 }
 
 function OfficialKnockoutStagePanel() {

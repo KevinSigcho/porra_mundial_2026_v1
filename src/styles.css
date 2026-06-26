@@ -5007,3 +5007,152 @@ th {
   position: relative;
   top: 10px;
 }
+
+/* Pronósticos debajo del cuadro real */
+.realBracketPredictionsPanel {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #dbe7f6;
+}
+
+.realBracketDeadlineNotice {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: #fff4d8;
+  border: 1px solid #f2d27a;
+  color: #6b4b00;
+  font-weight: 850;
+}
+
+.realBracketPredictionToolbar {
+  align-items: stretch;
+}
+
+.realPredictionRound {
+  margin-top: 1.25rem;
+}
+
+.realPredictionRound h3 {
+  margin: 0 0 0.75rem;
+  color: #0b2f5f;
+  font-size: 1.05rem;
+  font-weight: 950;
+}
+
+.realPredictionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.85rem;
+}
+
+.realPredictionMatchCard {
+  border: 1px solid #d6e2f2;
+  border-radius: 18px;
+  padding: 0.85rem;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(18, 45, 86, 0.05);
+}
+
+.realPredictionUnavailable {
+  background: #f4f6f9;
+  border-style: dashed;
+  color: #7a8594;
+}
+
+.realPredictionMatchMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+  color: #38506f;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.realPredictionMatchMeta strong {
+  color: #0b2f5f;
+}
+
+.realPredictionTeams {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.realPredictionTeamLine {
+  width: 100%;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid #cfdced;
+  background: #f8fbff;
+  color: #0b2f5f;
+  box-shadow: none;
+  font-weight: 950;
+}
+
+.realPredictionTeamLine.selected {
+  background: #e8f7ee;
+  border-color: #16a34a;
+  color: #126b35;
+}
+
+.realPredictionTeamLine:disabled {
+  cursor: not-allowed;
+}
+
+.realPredictionBlankTeam {
+  display: block;
+  width: 100%;
+  min-height: 1rem;
+}
+
+.realPredictionScore {
+  display: grid;
+  grid-template-columns: 54px auto 54px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.realPredictionScore input {
+  text-align: center;
+  font-weight: 950;
+  font-size: 1.1rem;
+  padding: 0.55rem 0.2rem;
+}
+
+.realPredictionHint {
+  margin: 0.55rem 0 0;
+  color: #7a8594;
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-align: center;
+}
+
+.realPredictionPass {
+  margin: 0.55rem 0 0;
+  color: #126b35;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.realBracketPredictionActions {
+  grid-template-columns: 1fr auto;
+}
+
+@media (max-width: 760px) {
+  .realPredictionGrid {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+
+  .realBracketPredictionActions {
+    grid-template-columns: 1fr auto !important;
+  }
+}
