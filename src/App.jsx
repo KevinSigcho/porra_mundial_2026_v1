@@ -1242,7 +1242,8 @@ function RealBracketMatch({ matchId, index = 0, side, round, officialMatch, brac
 
   const meta = [
     officialMatch?.date,
-    officialMatch?.time
+    officialMatch?.time,
+    matchId
   ].filter(Boolean).join(' · ');
 
   return (
@@ -1257,7 +1258,6 @@ function RealBracketMatch({ matchId, index = 0, side, round, officialMatch, brac
     >
       <div className="realBracketMatchMeta">
         <span>{meta}</span>
-        <strong>{matchId}</strong>
       </div>
 
       <RealBracketSlot slot={homeSlot} fallback={fallbackHome} />
@@ -1296,8 +1296,6 @@ function RealBracketSlot({ slot, fallback }) {
 
   return (
     <div className={className}>
-      <span className="realBracketSeed">{label.seed}</span>
-
       {hasTeam ? (
         <span className="realBracketTeam" title={slot.team}>
           <TeamFlag team={slot.team} />
