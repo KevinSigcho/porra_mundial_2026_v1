@@ -1242,8 +1242,7 @@ function RealBracketMatch({ matchId, index = 0, side, round, officialMatch, brac
 
   const meta = [
     officialMatch?.date,
-    officialMatch?.time,
-    matchId
+    officialMatch?.time
   ].filter(Boolean).join(' · ');
 
   return (
