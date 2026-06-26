@@ -4644,6 +4644,7 @@ th {
 }
 
 /* Cuadro real de eliminatorias */
+/* Cuadro real de eliminatorias */
 .realBracketPanel {
   overflow: hidden;
 }
@@ -4651,11 +4652,11 @@ th {
 .realBracketLegend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.85rem;
   margin: 1rem 0;
   color: #40546f;
-  font-size: 0.85rem;
-  font-weight: 800;
+  font-size: 0.86rem;
+  font-weight: 900;
 }
 
 .realBracketLegend span {
@@ -4665,8 +4666,8 @@ th {
 }
 
 .legendDot {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.72rem;
+  height: 0.72rem;
   border-radius: 999px;
   display: inline-block;
 }
@@ -4685,70 +4686,84 @@ th {
 
 .realBracketScroll {
   overflow-x: auto;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem 0 1rem;
 }
 
-.realBracketBoard {
-  min-width: 1180px;
+.realBracketCanvas {
+  position: relative;
+  min-width: 1320px;
+  min-height: 960px;
   display: grid;
-  grid-template-columns: 1fr 210px 1fr;
-  gap: 1.25rem;
-  align-items: stretch;
+  grid-template-columns: 142px 142px 142px 142px 230px 142px 142px 142px 142px;
+  column-gap: 18px;
+  align-items: start;
   padding: 1rem;
-  background: linear-gradient(180deg, #f8fbff, #ffffff);
-  border: 1px solid #dbe7f6;
+  border: 1px solid #d4e2f3;
   border-radius: 22px;
+  background: linear-gradient(180deg, #f8fbff, #ffffff);
 }
 
-.realBracketSide {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(130px, 1fr));
-  gap: 1rem;
+/* Columnas */
+.realBracketColumn {
+  position: relative;
 }
 
-.realBracketSideRight {
-  direction: ltr;
-}
-
-.realBracketRound {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.realBracketRound h3 {
-  margin: 0 0 0.25rem;
+.realBracketColumn h3 {
+  min-height: 34px;
+  margin: 0 0 0.75rem;
   text-align: center;
-  color: #304564;
-  font-size: 0.78rem;
-  font-weight: 900;
+  color: #0b2f5f;
+  font-size: 0.74rem;
+  font-weight: 950;
+  line-height: 1.15;
 }
 
-.realBracketRoundMatches {
+.realBracketColumnMatches {
+  position: relative;
   display: grid;
-  gap: 1rem;
 }
 
+.realBracketColumn-r32 .realBracketColumnMatches {
+  gap: 17px;
+}
+
+.realBracketColumn-r16 .realBracketColumnMatches {
+  gap: 74px;
+  padding-top: 41px;
+}
+
+.realBracketColumn-qf .realBracketColumnMatches {
+  gap: 194px;
+  padding-top: 101px;
+}
+
+.realBracketColumn-sf .realBracketColumnMatches {
+  gap: 0;
+  padding-top: 221px;
+}
+
+/* Tarjetas */
 .realBracketMatch {
-  border: 1px solid #b8c7dc;
-  border-radius: 10px;
+  position: relative;
+  z-index: 2;
+  width: 142px;
+  min-height: 72px;
+  padding: 0.38rem;
+  border: 1px solid #a8bfdc;
+  border-radius: 9px;
   background: #ffffff;
-  padding: 0.45rem;
   box-shadow: 0 8px 18px rgba(18, 45, 86, 0.06);
-}
-
-.realBracketMatchCenter {
-  margin-bottom: 1.1rem;
 }
 
 .realBracketMatchMeta {
   display: flex;
   justify-content: space-between;
-  gap: 0.4rem;
-  margin-bottom: 0.35rem;
-  color: #38506f;
-  font-size: 0.68rem;
-  font-weight: 800;
+  gap: 0.25rem;
+  margin-bottom: 0.26rem;
+  color: #082f6f;
+  font-size: 0.62rem;
+  font-weight: 950;
+  line-height: 1.05;
 }
 
 .realBracketMatchMeta strong {
@@ -4757,16 +4772,16 @@ th {
 }
 
 .realBracketSlot {
-  min-height: 31px;
+  min-height: 25px;
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 30px 1fr;
   align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.25rem;
-  padding: 0.3rem 0.4rem;
+  gap: 0.22rem;
+  margin-top: 0.22rem;
+  padding: 0.22rem 0.28rem;
   border: 1px solid #c8d5e8;
-  border-radius: 8px;
-  background: #ffffff;
+  border-radius: 7px;
+  overflow: hidden;
 }
 
 .realBracketSlotConfirmed {
@@ -4774,37 +4789,40 @@ th {
 }
 
 .realBracketSlotPartial {
-  background: #f3f4f6;
-  border-color: #cbd5e1;
+  background: #eef1f6;
+  border-color: #c0cad8;
   color: #334155;
 }
 
 .realBracketSlotPending {
   background: repeating-linear-gradient(
     -45deg,
-    #f1f3f6,
-    #f1f3f6 8px,
-    #e7ebf0 8px,
-    #e7ebf0 16px
+    #f2f4f7,
+    #f2f4f7 7px,
+    #e5e9ef 7px,
+    #e5e9ef 14px
   );
   border-style: dashed;
   border-color: #aeb8c6;
-  color: #6b7280;
+  color: #64748b;
 }
 
 .realBracketSeed {
-  font-size: 0.68rem;
+  color: #0b2f5f;
+  font-size: 0.62rem;
   font-weight: 950;
-  color: #4b607c;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .realBracketTeam {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.32rem;
   min-width: 0;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
+  font-weight: 950;
 }
 
 .realBracketTeam strong {
@@ -4813,41 +4831,156 @@ th {
   white-space: nowrap;
 }
 
-.realBracketPendingText {
-  color: #737f90;
-  font-size: 0.75rem;
-  font-weight: 900;
+.realBracketEmpty {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 950;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Centro */
 .realBracketCenter {
+  min-height: 860px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  align-self: stretch;
 }
 
 .realBracketTrophy {
   text-align: center;
   font-size: 2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.45rem;
 }
 
 .realBracketCenterTitle {
   margin: 0.35rem 0;
   text-align: center;
   color: #174ea6;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 950;
 }
 
 .realBracketThirdTitle {
-  margin-top: 1.35rem;
+  margin-top: 2rem;
   color: #44546a;
 }
 
+.realBracketMatchCenter {
+  width: 188px;
+}
+
+/* Líneas/conectores: izquierda */
+.realBracketMatch-left:not(.realBracketMatch-sf)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -19px;
+  width: 19px;
+  height: 1px;
+  background: #9fb1c9;
+}
+
+.realBracketMatch-left.realBracketMatch-r32:nth-child(odd)::before,
+.realBracketMatch-left.realBracketMatch-r16:nth-child(odd)::before,
+.realBracketMatch-left.realBracketMatch-qf:nth-child(odd)::before {
+  content: "";
+  position: absolute;
+  right: -19px;
+  top: 50%;
+  width: 1px;
+  height: 90px;
+  background: #9fb1c9;
+}
+
+.realBracketMatch-left.realBracketMatch-r32:nth-child(even)::before,
+.realBracketMatch-left.realBracketMatch-r16:nth-child(even)::before,
+.realBracketMatch-left.realBracketMatch-qf:nth-child(even)::before {
+  content: "";
+  position: absolute;
+  right: -19px;
+  bottom: 50%;
+  width: 1px;
+  height: 90px;
+  background: #9fb1c9;
+}
+
+/* Líneas/conectores: derecha */
+.realBracketMatch-right:not(.realBracketMatch-sf)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -19px;
+  width: 19px;
+  height: 1px;
+  background: #9fb1c9;
+}
+
+.realBracketMatch-right.realBracketMatch-r32:nth-child(odd)::before,
+.realBracketMatch-right.realBracketMatch-r16:nth-child(odd)::before,
+.realBracketMatch-right.realBracketMatch-qf:nth-child(odd)::before {
+  content: "";
+  position: absolute;
+  left: -19px;
+  top: 50%;
+  width: 1px;
+  height: 90px;
+  background: #9fb1c9;
+}
+
+.realBracketMatch-right.realBracketMatch-r32:nth-child(even)::before,
+.realBracketMatch-right.realBracketMatch-r16:nth-child(even)::before,
+.realBracketMatch-right.realBracketMatch-qf:nth-child(even)::before {
+  content: "";
+  position: absolute;
+  left: -19px;
+  bottom: 50%;
+  width: 1px;
+  height: 90px;
+  background: #9fb1c9;
+}
+
+/* Ajustes por ronda para que las líneas acompañen la altura real */
+.realBracketMatch-r32:nth-child(odd)::before,
+.realBracketMatch-r32:nth-child(even)::before {
+  height: 45px;
+}
+
+.realBracketMatch-r16:nth-child(odd)::before,
+.realBracketMatch-r16:nth-child(even)::before {
+  height: 104px;
+}
+
+.realBracketMatch-qf:nth-child(odd)::before,
+.realBracketMatch-qf:nth-child(even)::before {
+  height: 223px;
+}
+
+.realBracketMatch-sf.realBracketMatch-left::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -19px;
+  width: 19px;
+  height: 1px;
+  background: #9fb1c9;
+}
+
+.realBracketMatch-sf.realBracketMatch-right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -19px;
+  width: 19px;
+  height: 1px;
+  background: #9fb1c9;
+}
+
 @media (max-width: 760px) {
-  .realBracketBoard {
-    min-width: 1100px;
+  .realBracketCanvas {
+    min-width: 1320px;
   }
 
   .realBracketLegend {

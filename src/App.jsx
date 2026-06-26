@@ -962,46 +962,8 @@ function flattenOfficialKnockoutMatches() {
 
 function RealKnockoutBracketPanel({ knockoutData, knockoutUpdatedAt, onRefresh }) {
   const officialMatches = useMemo(() => flattenOfficialKnockoutMatches(), []);
-
-  const leftRounds = [
-    {
-      title: 'Dieciseisavos de final',
-      ids: ['M74', 'M77', 'M73', 'M75', 'M83', 'M84', 'M81', 'M82']
-    },
-    {
-      title: 'Octavos de final',
-      ids: ['M89', 'M90', 'M93', 'M94']
-    },
-    {
-      title: 'Cuartos de final',
-      ids: ['M97', 'M98']
-    },
-    {
-      title: 'Semifinal',
-      ids: ['M101']
-    }
-  ];
-
-  const rightRounds = [
-    {
-      title: 'Semifinal',
-      ids: ['M102']
-    },
-    {
-      title: 'Cuartos de final',
-      ids: ['M99', 'M100']
-    },
-    {
-      title: 'Octavos de final',
-      ids: ['M91', 'M92', 'M95', 'M96']
-    },
-    {
-      title: 'Dieciseisavos de final',
-      ids: ['M76', 'M78', 'M79', 'M80', 'M86', 'M88', 'M85', 'M87']
-    }
-  ];
-
   const bracketMatches = knockoutData?.bracketMatches || {};
+
   const updatedLabel = knockoutUpdatedAt
     ? formatDateTimeSpain(knockoutUpdatedAt)
     : 'pendiente';
@@ -1013,7 +975,7 @@ function RealKnockoutBracketPanel({ knockoutData, knockoutUpdatedAt, onRefresh }
           <p className="eyebrow">Cuadro oficial</p>
           <h2>Cuadro real de eliminatorias</h2>
           <p className="muted">
-            Cruces calculados con los resultados reales cargados. Los huecos pendientes aparecen sombreados en gris.
+            Cruces calculados con los resultados reales cargados. Los huecos sin confirmar aparecen sombreados en gris.
           </p>
           <p className="muted small">
             Última actualización: {updatedLabel}
@@ -1040,50 +1002,83 @@ function RealKnockoutBracketPanel({ knockoutData, knockoutUpdatedAt, onRefresh }
           </div>
 
           <div className="realBracketScroll">
-            <div className="realBracketBoard">
-              <div className="realBracketSide realBracketSideLeft">
-                {leftRounds.map((round) => (
-                  <RealBracketRound
-                    key={round.title}
-                    title={round.title}
-                    ids={round.ids}
-                    officialMatches={officialMatches}
-                    bracketMatches={bracketMatches}
-                  />
-                ))}
-              </div>
+            <div className="realBracketCanvas">
+              <RealBracketColumn
+                side="left"
+                round="r32"
+                title="Dieciseisavos de final"
+                matchIds={['M74', 'M77', 'M73', 'M75', 'M83', 'M84', 'M81', 'M82']}
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
 
-              <div className="realBracketCenter">
-                <div className="realBracketTrophy">🏆</div>
+              <RealBracketColumn
+                side="left"
+                round="r16"
+                title="Octavos de final"
+                matchIds={['M89', 'M90', 'M93', 'M94']}
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
 
-                <p className="realBracketCenterTitle">Final</p>
-                <RealBracketMatch
-                  matchId="M104"
-                  officialMatch={officialMatches.M104}
-                  bracketMatch={bracketMatches.M104}
-                  center
-                />
+              <RealBracketColumn
+                side="left"
+                round="qf"
+                title="Cuartos de final"
+                matchIds={['M97', 'M98']}
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
 
-                <p className="realBracketCenterTitle realBracketThirdTitle">Partido por el tercer puesto</p>
-                <RealBracketMatch
-                  matchId="M103"
-                  officialMatch={officialMatches.M103}
-                  bracketMatch={bracketMatches.M103}
-                  center
-                />
-              </div>
+              <RealBracketColumn
+                side="left"
+                round="sf"
+                title="Semifinal"
+                matchIds={['M101']}
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
 
-              <div className="realBracketSide realBracketSideRight">
-                {rightRounds.map((round) => (
-                  <RealBracketRound
-                    key={round.title}
-                    title={round.title}
-                    ids={round.ids}
-                    officialMatches={officialMatches}
-                    bracketMatches={bracketMatches}
-                  />
-                ))}
-              </div>
+              <RealBracketCenter
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
+
+              <RealBracketColumn
+                side="right"
+                round="sf"
+                title="Semifinal"
+                matchIds={['M102']}
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
+
+              <RealBracketColumn
+                side="right"
+                round="qf"
+                title="Cuartos de final"
+                matchIds={['M99', 'M100']}
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
+
+              <RealBracketColumn
+                side="right"
+                round="r16"
+                title="Octavos de final"
+                matchIds={['M91', 'M92', 'M95', 'M96']}
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
+
+              <RealBracketColumn
+                side="right"
+                round="r32"
+                title="Dieciseisavos de final"
+                matchIds={['M76', 'M78', 'M79', 'M80', 'M86', 'M88', 'M85', 'M87']}
+                officialMatches={officialMatches}
+                bracketMatches={bracketMatches}
+              />
             </div>
           </div>
         </>
@@ -1092,16 +1087,19 @@ function RealKnockoutBracketPanel({ knockoutData, knockoutUpdatedAt, onRefresh }
   );
 }
 
-function RealBracketRound({ title, ids, officialMatches, bracketMatches }) {
+function RealBracketColumn({ side, round, title, matchIds, officialMatches, bracketMatches }) {
   return (
-    <div className="realBracketRound">
+    <div className={`realBracketColumn realBracketColumn-${side} realBracketColumn-${round}`}>
       <h3>{title}</h3>
 
-      <div className="realBracketRoundMatches">
-        {ids.map((matchId) => (
+      <div className="realBracketColumnMatches">
+        {matchIds.map((matchId, index) => (
           <RealBracketMatch
             key={matchId}
             matchId={matchId}
+            index={index}
+            side={side}
+            round={round}
             officialMatch={officialMatches[matchId]}
             bracketMatch={bracketMatches[matchId]}
           />
@@ -1111,12 +1109,40 @@ function RealBracketRound({ title, ids, officialMatches, bracketMatches }) {
   );
 }
 
-function RealBracketMatch({ matchId, officialMatch, bracketMatch, center = false }) {
+function RealBracketCenter({ officialMatches, bracketMatches }) {
+  return (
+    <div className="realBracketCenter">
+      <div className="realBracketTrophy">🏆</div>
+
+      <p className="realBracketCenterTitle">Final</p>
+      <RealBracketMatch
+        matchId="M104"
+        side="center"
+        round="final"
+        officialMatch={officialMatches.M104}
+        bracketMatch={bracketMatches.M104}
+        center
+      />
+
+      <p className="realBracketCenterTitle realBracketThirdTitle">Partido por el tercer puesto</p>
+      <RealBracketMatch
+        matchId="M103"
+        side="center"
+        round="third"
+        officialMatch={officialMatches.M103}
+        bracketMatch={bracketMatches.M103}
+        center
+      />
+    </div>
+  );
+}
+
+function RealBracketMatch({ matchId, index = 0, side, round, officialMatch, bracketMatch, center = false }) {
   const homeSlot = bracketMatch?.home || null;
   const awaySlot = bracketMatch?.away || null;
 
-  const fallbackHome = officialMatch?.label || `Ganador ${matchId}`;
-  const fallbackAway = officialMatch?.other || '';
+  const fallbackHome = officialMatch?.label || slotFallbackFromRound(round, matchId, 'home');
+  const fallbackAway = officialMatch?.other || slotFallbackFromRound(round, matchId, 'away');
 
   const meta = [
     officialMatch?.date,
@@ -1124,7 +1150,15 @@ function RealBracketMatch({ matchId, officialMatch, bracketMatch, center = false
   ].filter(Boolean).join(' · ');
 
   return (
-    <article className={`realBracketMatch ${center ? 'realBracketMatchCenter' : ''}`}>
+    <article
+      className={[
+        'realBracketMatch',
+        `realBracketMatch-${side}`,
+        `realBracketMatch-${round}`,
+        center ? 'realBracketMatchCenter' : '',
+        index % 2 === 0 ? 'realBracketMatchEven' : 'realBracketMatchOdd'
+      ].filter(Boolean).join(' ')}
+    >
       <div className="realBracketMatchMeta">
         <span>{meta}</span>
         <strong>{matchId}</strong>
@@ -1134,6 +1168,18 @@ function RealBracketMatch({ matchId, officialMatch, bracketMatch, center = false
       <RealBracketSlot slot={awaySlot} fallback={fallbackAway} />
     </article>
   );
+}
+
+function slotFallbackFromRound(round, matchId, position) {
+  if (round === 'final') {
+    return position === 'home' ? 'Ganador M101' : 'Ganador M102';
+  }
+
+  if (round === 'third') {
+    return position === 'home' ? 'Perdedor M101' : 'Perdedor M102';
+  }
+
+  return position === 'home' ? `Ganador ${matchId}` : '';
 }
 
 function RealBracketSlot({ slot, fallback }) {
@@ -1150,14 +1196,11 @@ function RealBracketSlot({ slot, fallback }) {
     hasTeam && !isPartial ? 'realBracketSlotConfirmed' : ''
   ].filter(Boolean).join(' ');
 
-  const seedLabel = slot?.resolvedSeed || slot?.seed || fallback;
-  const candidateLabel = slot?.candidates?.length
-    ? slot.candidates.join('/')
-    : seedLabel;
+  const label = buildSlotLabel(slot, fallback);
 
   return (
     <div className={className}>
-      <span className="realBracketSeed">{candidateLabel}</span>
+      <span className="realBracketSeed">{label.seed}</span>
 
       {hasTeam ? (
         <span className="realBracketTeam">
@@ -1165,12 +1208,33 @@ function RealBracketSlot({ slot, fallback }) {
           <strong>{slot.team}</strong>
         </span>
       ) : (
-        <span className="realBracketPendingText">
-          Pendiente
+        <span className="realBracketEmpty">
+          {label.text}
         </span>
       )}
     </div>
   );
+}
+
+function buildSlotLabel(slot, fallback) {
+  if (slot?.team) {
+    return {
+      seed: slot.resolvedSeed || slot.seed || '',
+      text: slot.team
+    };
+  }
+
+  if (slot?.candidates?.length) {
+    return {
+      seed: slot.seed || '',
+      text: slot.candidates.join('/')
+    };
+  }
+
+  return {
+    seed: slot?.seed || '',
+    text: fallback || '—'
+  };
 }
 
 function OfficialKnockoutStagePanel() {
