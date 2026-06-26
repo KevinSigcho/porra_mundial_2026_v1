@@ -168,7 +168,71 @@ app.http('settings', {
       if (action === 'updatePayment') {
         return await updatePaymentResponse(body);
       }
+      
+      if (action === 'saveKnockoutData') {
+        const knockoutData = body.knockoutData || null;
 
+        if (!knockoutData || typeof knockoutData !== 'object') {
+          return {
+            status: 400,
+            jsonBody: {
+              error: 'Falta knockoutData válido.'
+            }
+          };
+        }
+
+        const knockoutUpdatedAt = new Date().toISOString();
+
+        await upsertEntity({
+          partitionKey: 'settings',
+          rowKey: 'global',
+          knockoutData: JSON.stringify(knockoutData),
+          knockoutUpdatedAt,
+          updatedAt: knockoutUpdatedAt
+        }, 'Merge');
+
+        return ok({
+          ok: true,
+          knockoutData,
+          knockoutUpdatedAt
+        });
+      }
+
+      if (action === 'clearKnockoutData') {
+        const knockoutUpdatedAt = new Date().toISOString();
+
+        await upsertEntity({
+          partitionKey: 'settings',
+          rowKey: 'global',
+          knockoutData: '',
+          knockoutUpdatedAt,
+          updatedAt: knockoutUpdatedAt
+        }, 'Merge');
+
+        return ok({
+          ok: true,
+          knockoutData: null,
+          knockoutUpdatedAt
+        });
+      }
+
+      if (action === 'clearKnockoutData') {
+        const knockoutUpdatedAt = new Date().toISOString();
+
+        await upsertEntity({
+          partitionKey: 'settings',
+          rowKey: 'global',
+          knockoutData: '',
+          knockoutUpdatedAt,
+          updatedAt: knockoutUpdatedAt
+        }, 'Merge');
+
+        return ok({
+          ok: true,
+          knockoutData: null,
+          knockoutUpdatedAt
+        });
+      }
       // Merge: solo se tocan los flags presentes en el body, sin pisar el otro.
       const update = {
         partitionKey: 'settings',
@@ -186,3 +250,4 @@ app.http('settings', {
     }
   }
 });
+

@@ -1,0 +1,45 @@
+name: Sync qualified teams
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Probar sin guardar clasificados"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+  schedule:
+    # Junio y julio.
+    # Horarios UTC. España peninsular en junio/julio = UTC+2.
+    #
+    # Este workflow va unos minutos después del sync-results.
+    - cron: "25 20 * 6,7 *"
+    - cron: "25 22 * 6,7 *"
+    - cron: "25 1 * 6,7 *"
+    - cron: "40 6 * 6,7 *"
+
+jobs:
+  sync-qualified:
+    name: Sync qualified teams
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run sync qualified script
+        env:
+          PORRA_APP_URL: ${{ secrets.PORRA_APP_URL }}
+          PORRA_ADMIN_CODE: ${{ secrets.PORRA_ADMIN_CODE }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: node scripts/sync-qualified-teams.js
