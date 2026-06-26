@@ -4962,3 +4962,28 @@ th {
     font-size: 0.78rem;
   }
 }
+
+/* Ajuste fino: alinear octavos concretos con su corchete */
+.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(2) {
+  transform: translateY(-34px);
+}
+
+.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(3) {
+  transform: translateY(-18px);
+}
+
+.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(4) {
+  transform: translateY(-2px);
+}
+
+.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(2) {
+  transform: translateY(-34px);
+}
+
+.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(3) {
+  transform: translateY(-18px);
+}
+
+.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(4) {
+  transform: translateY(-2px);
+}
