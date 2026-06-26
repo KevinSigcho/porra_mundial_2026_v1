@@ -4981,7 +4981,7 @@ th {
 
 .realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(1) .realBracketMatch:nth-child(2) {
   position: relative;
-  top: -20px;
+  top: 20px;
 }
 
 .realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(1) {
@@ -4991,5 +4991,5 @@ th {
 
 .realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(2) {
   position: relative;
-  top: 50;
+  top: 50px;
 }
