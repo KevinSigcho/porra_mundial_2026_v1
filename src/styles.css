@@ -4981,15 +4981,15 @@ th {
 
 .realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(1) .realBracketMatch:nth-child(2) {
   position: relative;
-  top: -28px;
+  top: -20px;
 }
 
 .realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(1) {
   position: relative;
-  top: -15px;
+  top: 35px;
 }
 
 .realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(2) {
   position: relative;
-  top: 0;
+  top: 50;
 }
