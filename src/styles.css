@@ -4966,17 +4966,17 @@ th {
 /* Ajuste fino individual de octavos: mover cajas concretas */
 .realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(1) .realBracketMatch:nth-child(2) {
   position: relative;
-  top: -25px;
+  top: 5px;
 }
 
 .realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(1) {
   position: relative;
-  top: -10px;
+  top: 10px;
 }
 
 .realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(2) {
   position: relative;
-  top: -2px;
+  top: 15px;
 }
 
 .realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(1) .realBracketMatch:nth-child(2) {
