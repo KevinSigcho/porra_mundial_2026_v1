@@ -4993,3 +4993,14 @@ th {
   position: relative;
   top: 50px;
 }
+
+/* Ajuste fino individual de cuartos */
+.realBracketColumn-left.realBracketColumn-qf .realBracketPair:nth-child(1) .realBracketMatch:nth-child(2) {
+  position: relative;
+  top: -20px;
+}
+
+.realBracketColumn-right.realBracketColumn-qf .realBracketPair:nth-child(1) .realBracketMatch:nth-child(2) {
+  position: relative;
+  top: -20px;
+}
