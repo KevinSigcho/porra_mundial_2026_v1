@@ -208,6 +208,68 @@ const TEAM_FLAG_CODES = {
   'Panamá': 'pa'
 };
 
+const TEAM_SHORT_CODES = {
+  'México': 'MEX',
+  'Corea del Sur': 'KOR',
+  'Chequia': 'CZE',
+  'Sudáfrica': 'RSA',
+  'Canadá': 'CAN',
+  'Bosnia y Herzegovina': 'BIH',
+  'Qatar': 'QAT',
+  'Suiza': 'SUI',
+  'Brasil': 'BRA',
+  'Marruecos': 'MAR',
+  'Haití': 'HAI',
+  'Escocia': 'SCO',
+  'Estados Unidos': 'USA',
+  'Turquía': 'TUR',
+  'Australia': 'AUS',
+  'Paraguay': 'PAR',
+  'Alemania': 'GER',
+  'Ecuador': 'ECU',
+  'Costa de Marfil': 'CIV',
+  'Curazao': 'CUW',
+  'Países Bajos': 'NED',
+  'Japón': 'JPN',
+  'Suecia': 'SWE',
+  'Túnez': 'TUN',
+  'Bélgica': 'BEL',
+  'Egipto': 'EGY',
+  'Irán': 'IRN',
+  'Nueva Zelanda': 'NZL',
+  'España': 'ESP',
+  'Cabo Verde': 'CPV',
+  'Arabia Saudí': 'KSA',
+  'Uruguay': 'URU',
+  'Francia': 'FRA',
+  'Senegal': 'SEN',
+  'Irak': 'IRQ',
+  'Noruega': 'NOR',
+  'Argentina': 'ARG',
+  'Argelia': 'ALG',
+  'Austria': 'AUT',
+  'Jordania': 'JOR',
+  'Portugal': 'POR',
+  'RD Congo': 'COD',
+  'Uzbekistán': 'UZB',
+  'Colombia': 'COL',
+  'Inglaterra': 'ENG',
+  'Croacia': 'CRO',
+  'Ghana': 'GHA',
+  'Panamá': 'PAN'
+};
+
+function teamShortCode(team) {
+  if (TEAM_SHORT_CODES[team]) return TEAM_SHORT_CODES[team];
+
+  return String(team || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Za-z]/g, '')
+    .slice(0, 3)
+    .toUpperCase();
+}
+
 function flagSrc(team) {
   const code = TEAM_FLAG_CODES[team];
   return code ? `https://flagcdn.com/${code}.svg` : '';
@@ -1087,23 +1149,57 @@ function RealKnockoutBracketPanel({ knockoutData, knockoutUpdatedAt, onRefresh }
   );
 }
 
+function chunkPairs(items) {
+  const pairs = [];
+
+  for (let index = 0; index < items.length; index += 2) {
+    pairs.push(items.slice(index, index + 2));
+  }
+
+  return pairs;
+}
+
 function RealBracketColumn({ side, round, title, matchIds, officialMatches, bracketMatches }) {
+  const usePairs = round !== 'sf';
+  const pairs = chunkPairs(matchIds);
+
   return (
     <div className={`realBracketColumn realBracketColumn-${side} realBracketColumn-${round}`}>
       <h3>{title}</h3>
 
       <div className="realBracketColumnMatches">
-        {matchIds.map((matchId, index) => (
-          <RealBracketMatch
-            key={matchId}
-            matchId={matchId}
-            index={index}
-            side={side}
-            round={round}
-            officialMatch={officialMatches[matchId]}
-            bracketMatch={bracketMatches[matchId]}
-          />
-        ))}
+        {usePairs ? (
+          pairs.map((pair, pairIndex) => (
+            <div
+              className={`realBracketPair realBracketPair-${side} realBracketPair-${round}`}
+              key={`${side}-${round}-${pair.join('-')}`}
+            >
+              {pair.map((matchId, index) => (
+                <RealBracketMatch
+                  key={matchId}
+                  matchId={matchId}
+                  index={(pairIndex * 2) + index}
+                  side={side}
+                  round={round}
+                  officialMatch={officialMatches[matchId]}
+                  bracketMatch={bracketMatches[matchId]}
+                />
+              ))}
+            </div>
+          ))
+        ) : (
+          matchIds.map((matchId, index) => (
+            <RealBracketMatch
+              key={matchId}
+              matchId={matchId}
+              index={index}
+              side={side}
+              round={round}
+              officialMatch={officialMatches[matchId]}
+              bracketMatch={bracketMatches[matchId]}
+            />
+          ))
+        )}
       </div>
     </div>
   );
@@ -1203,12 +1299,12 @@ function RealBracketSlot({ slot, fallback }) {
       <span className="realBracketSeed">{label.seed}</span>
 
       {hasTeam ? (
-        <span className="realBracketTeam">
+        <span className="realBracketTeam" title={slot.team}>
           <TeamFlag team={slot.team} />
-          <strong>{slot.team}</strong>
+          <strong>{teamShortCode(slot.team)}</strong>
         </span>
       ) : (
-        <span className="realBracketEmpty">
+        <span className="realBracketEmpty" title={label.text}>
           {label.text}
         </span>
       )}
@@ -1220,7 +1316,7 @@ function buildSlotLabel(slot, fallback) {
   if (slot?.team) {
     return {
       seed: slot.resolvedSeed || slot.seed || '',
-      text: slot.team
+      text: teamShortCode(slot.team)
     };
   }
 
