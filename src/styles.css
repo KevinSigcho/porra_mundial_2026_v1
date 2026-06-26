@@ -4691,7 +4691,7 @@ th {
 .realBracketCanvas {
   position: relative;
   min-width: 1500px;
-  min-height: 980px;
+  min-height: 1040px;
   display: grid;
   grid-template-columns: 150px 150px 150px 150px 230px 150px 150px 150px 150px;
   column-gap: 18px;
@@ -4727,17 +4727,17 @@ th {
 }
 
 .realBracketColumn-r16 .realBracketColumnMatches {
-  gap: 74px;
-  padding-top: 39px;
+  gap: 104px;
+  padding-top: 44px;
 }
 
 .realBracketColumn-qf .realBracketColumnMatches {
-  gap: 196px;
-  padding-top: 99px;
+  gap: 0;
+  padding-top: 134px;
 }
 
 .realBracketColumn-sf .realBracketColumnMatches {
-  padding-top: 220px;
+  padding-top: 312px;
 }
 
 /* Parejas de partidos y corchetes */
@@ -4748,11 +4748,11 @@ th {
 }
 
 .realBracketPair-r16 {
-  gap: 15px;
+  gap: 104px;
 }
 
 .realBracketPair-qf {
-  gap: 15px;
+  gap: 282px;
 }
 
 .realBracketPair-left::before,
