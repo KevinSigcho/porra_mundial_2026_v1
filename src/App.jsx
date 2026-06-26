@@ -749,6 +749,7 @@ export default function App() {
       <nav className="tabs" aria-label="Secciones principales">
         <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'calendar' ? 'active' : ''} onClick={() => { setTab('calendar'); refreshPrivateData(); }}>Calendario partidos</button>
+        <button className={tab === 'realBracket' ? 'active' : ''} onClick={() => {setTab('realBracket'); refreshPrivateData();}}>Cuadro real eliminatorias</button>
         <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
         <button className={tab === 'myBracket' ? 'active' : ''} onClick={() => { setTab('myBracket'); refreshPrivateData(); }}>Mi eliminatoria</button>
         <button className={tab === 'knockouts' ? 'active' : ''} onClick={() => setTab('knockouts')}>Pronósticos fase eliminatorias</button>
@@ -842,6 +843,14 @@ export default function App() {
         />
       )}
 
+      {tab === 'realBracket' && (
+        <RealKnockoutBracketPanel
+          knockoutData={settings.knockoutData}
+          knockoutUpdatedAt={settings.knockoutUpdatedAt}
+          onRefresh={refreshPrivateData}
+        />
+      )}
+
       {tab === 'knockouts' && (
         <KnockoutPredictionsPanel
           knockoutFixtures={fixtureData.knockout || []}
@@ -926,6 +935,240 @@ function RulesPanel() {
           </ul>
         </article>
       ))}
+    </div>
+  );
+}
+
+function flattenOfficialKnockoutMatches() {
+  const map = {};
+
+  for (const column of OFFICIAL_KNOCKOUT_BRACKET.left || []) {
+    for (const match of column.matches || []) {
+      map[match.id] = match;
+    }
+  }
+
+  for (const column of OFFICIAL_KNOCKOUT_BRACKET.right || []) {
+    for (const match of column.matches || []) {
+      map[match.id] = match;
+    }
+  }
+
+  map[OFFICIAL_KNOCKOUT_BRACKET.final.id] = OFFICIAL_KNOCKOUT_BRACKET.final;
+  map[OFFICIAL_KNOCKOUT_BRACKET.thirdPlace.id] = OFFICIAL_KNOCKOUT_BRACKET.thirdPlace;
+
+  return map;
+}
+
+function RealKnockoutBracketPanel({ knockoutData, knockoutUpdatedAt, onRefresh }) {
+  const officialMatches = useMemo(() => flattenOfficialKnockoutMatches(), []);
+
+  const leftRounds = [
+    {
+      title: 'Dieciseisavos de final',
+      ids: ['M74', 'M77', 'M73', 'M75', 'M83', 'M84', 'M81', 'M82']
+    },
+    {
+      title: 'Octavos de final',
+      ids: ['M89', 'M90', 'M93', 'M94']
+    },
+    {
+      title: 'Cuartos de final',
+      ids: ['M97', 'M98']
+    },
+    {
+      title: 'Semifinal',
+      ids: ['M101']
+    }
+  ];
+
+  const rightRounds = [
+    {
+      title: 'Semifinal',
+      ids: ['M102']
+    },
+    {
+      title: 'Cuartos de final',
+      ids: ['M99', 'M100']
+    },
+    {
+      title: 'Octavos de final',
+      ids: ['M91', 'M92', 'M95', 'M96']
+    },
+    {
+      title: 'Dieciseisavos de final',
+      ids: ['M76', 'M78', 'M79', 'M80', 'M86', 'M88', 'M85', 'M87']
+    }
+  ];
+
+  const bracketMatches = knockoutData?.bracketMatches || {};
+  const updatedLabel = knockoutUpdatedAt
+    ? formatDateTimeSpain(knockoutUpdatedAt)
+    : 'pendiente';
+
+  return (
+    <section className="panel realBracketPanel">
+      <div className="toolbar">
+        <div>
+          <p className="eyebrow">Cuadro oficial</p>
+          <h2>Cuadro real de eliminatorias</h2>
+          <p className="muted">
+            Cruces calculados con los resultados reales cargados. Los huecos pendientes aparecen sombreados en gris.
+          </p>
+          <p className="muted small">
+            Última actualización: {updatedLabel}
+          </p>
+        </div>
+
+        <button className="secondary" type="button" onClick={onRefresh}>
+          Actualizar
+        </button>
+      </div>
+
+      {!knockoutData && (
+        <div className="notice softNotice">
+          Todavía no hay datos de clasificados guardados. Ejecuta el workflow <strong>Sync qualified teams</strong> para generar el cuadro real.
+        </div>
+      )}
+
+      {knockoutData && (
+        <>
+          <div className="realBracketLegend">
+            <span><i className="legendDot legendConfirmed" /> Confirmado</span>
+            <span><i className="legendDot legendPending" /> Pendiente</span>
+            <span><i className="legendDot legendPartial" /> Clasificado, cruce pendiente</span>
+          </div>
+
+          <div className="realBracketScroll">
+            <div className="realBracketBoard">
+              <div className="realBracketSide realBracketSideLeft">
+                {leftRounds.map((round) => (
+                  <RealBracketRound
+                    key={round.title}
+                    title={round.title}
+                    ids={round.ids}
+                    officialMatches={officialMatches}
+                    bracketMatches={bracketMatches}
+                  />
+                ))}
+              </div>
+
+              <div className="realBracketCenter">
+                <div className="realBracketTrophy">🏆</div>
+
+                <p className="realBracketCenterTitle">Final</p>
+                <RealBracketMatch
+                  matchId="M104"
+                  officialMatch={officialMatches.M104}
+                  bracketMatch={bracketMatches.M104}
+                  center
+                />
+
+                <p className="realBracketCenterTitle realBracketThirdTitle">Partido por el tercer puesto</p>
+                <RealBracketMatch
+                  matchId="M103"
+                  officialMatch={officialMatches.M103}
+                  bracketMatch={bracketMatches.M103}
+                  center
+                />
+              </div>
+
+              <div className="realBracketSide realBracketSideRight">
+                {rightRounds.map((round) => (
+                  <RealBracketRound
+                    key={round.title}
+                    title={round.title}
+                    ids={round.ids}
+                    officialMatches={officialMatches}
+                    bracketMatches={bracketMatches}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
+function RealBracketRound({ title, ids, officialMatches, bracketMatches }) {
+  return (
+    <div className="realBracketRound">
+      <h3>{title}</h3>
+
+      <div className="realBracketRoundMatches">
+        {ids.map((matchId) => (
+          <RealBracketMatch
+            key={matchId}
+            matchId={matchId}
+            officialMatch={officialMatches[matchId]}
+            bracketMatch={bracketMatches[matchId]}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RealBracketMatch({ matchId, officialMatch, bracketMatch, center = false }) {
+  const homeSlot = bracketMatch?.home || null;
+  const awaySlot = bracketMatch?.away || null;
+
+  const fallbackHome = officialMatch?.label || `Ganador ${matchId}`;
+  const fallbackAway = officialMatch?.other || '';
+
+  const meta = [
+    officialMatch?.date,
+    officialMatch?.time
+  ].filter(Boolean).join(' · ');
+
+  return (
+    <article className={`realBracketMatch ${center ? 'realBracketMatchCenter' : ''}`}>
+      <div className="realBracketMatchMeta">
+        <span>{meta}</span>
+        <strong>{matchId}</strong>
+      </div>
+
+      <RealBracketSlot slot={homeSlot} fallback={fallbackHome} />
+      <RealBracketSlot slot={awaySlot} fallback={fallbackAway} />
+    </article>
+  );
+}
+
+function RealBracketSlot({ slot, fallback }) {
+  const hasTeam = Boolean(slot?.team);
+  const status = slot?.status || 'pending';
+
+  const isPending = !hasTeam || status === 'pending';
+  const isPartial = hasTeam && status !== 'confirmed';
+
+  const className = [
+    'realBracketSlot',
+    isPending ? 'realBracketSlotPending' : '',
+    isPartial ? 'realBracketSlotPartial' : '',
+    hasTeam && !isPartial ? 'realBracketSlotConfirmed' : ''
+  ].filter(Boolean).join(' ');
+
+  const seedLabel = slot?.resolvedSeed || slot?.seed || fallback;
+  const candidateLabel = slot?.candidates?.length
+    ? slot.candidates.join('/')
+    : seedLabel;
+
+  return (
+    <div className={className}>
+      <span className="realBracketSeed">{candidateLabel}</span>
+
+      {hasTeam ? (
+        <span className="realBracketTeam">
+          <TeamFlag team={slot.team} />
+          <strong>{slot.team}</strong>
+        </span>
+      ) : (
+        <span className="realBracketPendingText">
+          Pendiente
+        </span>
+      )}
     </div>
   );
 }

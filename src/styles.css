@@ -4642,3 +4642,215 @@ th {
 .leaderboardBreakdownTable tbody tr:hover .pointsBreakdownCell {
   background: linear-gradient(180deg, #eef6ff, #e2f0ff);
 }
+
+/* Cuadro real de eliminatorias */
+.realBracketPanel {
+  overflow: hidden;
+}
+
+.realBracketLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  color: #40546f;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.realBracketLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.legendDot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.legendConfirmed {
+  background: #16a34a;
+}
+
+.legendPending {
+  background: #9ca3af;
+}
+
+.legendPartial {
+  background: #64748b;
+}
+
+.realBracketScroll {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.realBracketBoard {
+  min-width: 1180px;
+  display: grid;
+  grid-template-columns: 1fr 210px 1fr;
+  gap: 1.25rem;
+  align-items: stretch;
+  padding: 1rem;
+  background: linear-gradient(180deg, #f8fbff, #ffffff);
+  border: 1px solid #dbe7f6;
+  border-radius: 22px;
+}
+
+.realBracketSide {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: 1rem;
+}
+
+.realBracketSideRight {
+  direction: ltr;
+}
+
+.realBracketRound {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.realBracketRound h3 {
+  margin: 0 0 0.25rem;
+  text-align: center;
+  color: #304564;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.realBracketRoundMatches {
+  display: grid;
+  gap: 1rem;
+}
+
+.realBracketMatch {
+  border: 1px solid #b8c7dc;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 0.45rem;
+  box-shadow: 0 8px 18px rgba(18, 45, 86, 0.06);
+}
+
+.realBracketMatchCenter {
+  margin-bottom: 1.1rem;
+}
+
+.realBracketMatchMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+  color: #38506f;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.realBracketMatchMeta strong {
+  color: #001f45;
+  text-decoration: underline;
+}
+
+.realBracketSlot {
+  min-height: 31px;
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #c8d5e8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.realBracketSlotConfirmed {
+  background: #ffffff;
+}
+
+.realBracketSlotPartial {
+  background: #f3f4f6;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.realBracketSlotPending {
+  background: repeating-linear-gradient(
+    -45deg,
+    #f1f3f6,
+    #f1f3f6 8px,
+    #e7ebf0 8px,
+    #e7ebf0 16px
+  );
+  border-style: dashed;
+  border-color: #aeb8c6;
+  color: #6b7280;
+}
+
+.realBracketSeed {
+  font-size: 0.68rem;
+  font-weight: 950;
+  color: #4b607c;
+  white-space: nowrap;
+}
+
+.realBracketTeam {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  font-size: 0.78rem;
+}
+
+.realBracketTeam strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.realBracketPendingText {
+  color: #737f90;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.realBracketCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: stretch;
+}
+
+.realBracketTrophy {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.realBracketCenterTitle {
+  margin: 0.35rem 0;
+  text-align: center;
+  color: #174ea6;
+  font-size: 0.85rem;
+  font-weight: 950;
+}
+
+.realBracketThirdTitle {
+  margin-top: 1.35rem;
+  color: #44546a;
+}
+
+@media (max-width: 760px) {
+  .realBracketBoard {
+    min-width: 1100px;
+  }
+
+  .realBracketLegend {
+    font-size: 0.78rem;
+  }
+}
