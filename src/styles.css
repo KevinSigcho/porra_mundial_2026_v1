@@ -4963,27 +4963,33 @@ th {
   }
 }
 
-/* Ajuste fino: alinear octavos concretos con su corchete */
-.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(2) {
-  transform: translateY(-25px);
+/* Ajuste fino individual de octavos: mover cajas concretas */
+.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(1) .realBracketMatch:nth-child(2) {
+  position: relative;
+  top: -25px;
 }
 
-.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(3) {
-  transform: translateY(-10px);
+.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(1) {
+  position: relative;
+  top: -10px;
 }
 
-.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(4) {
-  transform: translateY(-2px);
+.realBracketColumn-left.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(2) {
+  position: relative;
+  top: -2px;
 }
 
-.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(2) {
-  transform: translateY(-28px);
+.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(1) .realBracketMatch:nth-child(2) {
+  position: relative;
+  top: -28px;
 }
 
-.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(3) {
-  transform: translateY(-15px);
+.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(1) {
+  position: relative;
+  top: -15px;
 }
 
-.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(4) {
-  transform: translateY(0px);
+.realBracketColumn-right.realBracketColumn-r16 .realBracketPair:nth-child(2) .realBracketMatch:nth-child(2) {
+  position: relative;
+  top: 0;
 }
