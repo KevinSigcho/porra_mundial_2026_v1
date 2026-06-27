@@ -1045,6 +1045,9 @@ function RealKnockoutBracketPanel({
 
   return (
     <section className="panel realBracketPanel">
+      <div className="realBracketDeadlineNotice">
+        <strong>Fecha límite para rellenar todos los pronósticos:</strong> 28 de junio a las 20:00 h España.
+      </div>
       <div className="toolbar">
         <div>
           <p className="eyebrow">Cuadro oficial</p>
@@ -1552,9 +1555,6 @@ function RealBracketPredictionList({
 
   return (
     <section className="realBracketPredictionsPanel">
-      <div className="realBracketDeadlineNotice">
-        <strong>Fecha límite para rellenar todos los pronósticos:</strong> 28 de junio a las 21:00 h España.
-      </div>
 
       <div className="toolbar realBracketPredictionToolbar">
         <div>
