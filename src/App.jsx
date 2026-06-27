@@ -625,7 +625,7 @@ export default function App() {
   const [fixtureData, setFixtureData] = useState(null);
   const [token, setToken] = useState(localStorage.getItem(STORAGE_TOKEN) || '');
   const [player, setPlayer] = useState(readStoredPlayer());
-  const [tab, setTab] = useState('leaderboard');
+  const [tab, setTab] = useState('realBracket');
   const [predictions, setPredictions] = useState({});
   const [results, setResults] = useState({});
   const [knockoutPredictions, setKnockoutPredictions] = useState({});
@@ -811,11 +811,8 @@ export default function App() {
       <nav className="tabs" aria-label="Secciones principales">
         <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'calendar' ? 'active' : ''} onClick={() => { setTab('calendar'); refreshPrivateData(); }}>Calendario partidos</button>
-        <button className={tab === 'realBracket' ? 'active' : ''} onClick={() => {setTab('realBracket'); refreshPrivateData();}}>Cuadro real eliminatorias</button>
-        <button className={tab === 'knockoutPredictions' ? 'active' : ''} onClick={() => {setTab('knockoutPredictions'); refreshPrivateData();}}>Pronósticos cuadro eliminatorias</button>
+        <button className={tab === 'realBracket' ? 'active' : ''} onClick={() => {setTab('realBracket'); refreshPrivateData();}}>Pronósticos fase eliminatoria</button>
         <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
-        <button className={tab === 'myBracket' ? 'active' : ''} onClick={() => { setTab('myBracket'); refreshPrivateData(); }}>Mi eliminatoria</button>
-        <button className={tab === 'knockouts' ? 'active' : ''} onClick={() => setTab('knockouts')}>Pronósticos fase eliminatorias</button>
       </nav>
 
       {tab === 'predictions' && (
