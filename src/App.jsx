@@ -157,6 +157,76 @@ const OFFICIAL_KNOCKOUT_BRACKET = {
   thirdPlace: { id: 'M103', date: '18/07/2026', time: '23:00', label: 'Perdedor M101', other: 'Perdedor M102' }
 };
 
+const MANUAL_KNOCKOUT_DATA = {
+  bracketMatches: {
+    M74: {
+      home: { team: 'Alemania', status: 'confirmed' },
+      away: { team: '', status: 'pending', seed: '3ABCDF', candidates: ['3A', '3B', '3C', '3D', '3F'] }
+    },
+    M77: {
+      home: { team: '', status: 'pending', seed: '1I' },
+      away: { team: '', status: 'pending', seed: '3CDFGH', candidates: ['3C', '3D', '3F', '3G', '3H'] }
+    },
+    M73: {
+      home: { team: 'Sudáfrica', status: 'confirmed' },
+      away: { team: 'Canadá', status: 'confirmed' }
+    },
+    M75: {
+      home: { team: 'Países Bajos', status: 'confirmed' },
+      away: { team: 'Marruecos', status: 'confirmed' }
+    },
+    M83: {
+      home: { team: '', status: 'pending', seed: '2K' },
+      away: { team: '', status: 'pending', seed: '2L' }
+    },
+    M84: {
+      home: { team: '', status: 'pending', seed: '1H' },
+      away: { team: '', status: 'pending', seed: '2J' }
+    },
+    M81: {
+      home: { team: 'Estados Unidos', status: 'confirmed' },
+      away: { team: 'Bosnia y Herzegovina', status: 'confirmed' }
+    },
+    M82: {
+      home: { team: '', status: 'pending', seed: '1G' },
+      away: { team: '', status: 'pending', seed: '3AEHIJ', candidates: ['3A', '3E', '3H', '3I', '3J'] }
+    },
+
+    M76: {
+      home: { team: '', status: 'pending', seed: '1C' },
+      away: { team: '', status: 'pending', seed: '2F' }
+    },
+    M78: {
+      home: { team: '', status: 'pending', seed: '2E' },
+      away: { team: '', status: 'pending', seed: '2I' }
+    },
+    M79: {
+      home: { team: '', status: 'pending', seed: '1A' },
+      away: { team: '', status: 'pending', seed: '3CEFIH', candidates: ['3C', '3E', '3F', '3H', '3I'] }
+    },
+    M80: {
+      home: { team: '', status: 'pending', seed: '1L' },
+      away: { team: '', status: 'pending', seed: '3EHJK', candidates: ['3E', '3H', '3J', '3K'] }
+    },
+    M86: {
+      home: { team: '', status: 'pending', seed: '1J' },
+      away: { team: '', status: 'pending', seed: '2H' }
+    },
+    M88: {
+      home: { team: '', status: 'pending', seed: '2D' },
+      away: { team: '', status: 'pending', seed: '2G' }
+    },
+    M85: {
+      home: { team: '', status: 'pending', seed: '1B' },
+      away: { team: '', status: 'pending', seed: '3EFGIJ', candidates: ['3E', '3F', '3G', '3I', '3J'] }
+    },
+    M87: {
+      home: { team: '', status: 'pending', seed: '1K' },
+      away: { team: '', status: 'pending', seed: '3DEIJL', candidates: ['3D', '3E', '3I', '3J', '3L'] }
+    }
+  }
+};
+
 const TEAM_FLAG_CODES = {
   'México': 'mx',
   'Corea del Sur': 'kr',
@@ -3207,6 +3277,33 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
     }
   }
 
+  async function saveManualKnockoutData() {
+    setBusy(true);
+    onStatus('');
+
+    try {
+      localStorage.setItem(STORAGE_ADMIN, adminCode);
+
+      const data = await apiFetch('/api/settings', {
+        method: 'POST',
+        adminCode,
+        body: {
+          action: 'saveKnockoutData',
+          knockoutData: MANUAL_KNOCKOUT_DATA
+        }
+      });
+
+      onStatus('Cuadro real de eliminatorias guardado manualmente.');
+      await onSaved();
+
+      return data;
+    } catch (error) {
+      onStatus(error.message || 'No se pudo guardar el cuadro manual.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function loadPayments() {
     setPaymentsBusy(true);
     onStatus('');
@@ -3315,6 +3412,21 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
         <button className="secondary" onClick={() => setLocked(true)} disabled={busy || locked}>Cerrar porra grupos</button>
         <button className="secondary" onClick={() => setLocked(false)} disabled={busy || !locked}>Reabrir porra grupos</button>
         <span className={locked ? 'locked pill' : 'pill'}>Grupos: {locked ? 'Cerrada' : 'Abierta'}</span>
+      </div>
+
+      <div className="adminActions">
+        <button
+          className="secondary"
+          type="button"
+          onClick={saveManualKnockoutData}
+          disabled={busy}
+        >
+          Guardar cuadro real manual
+        </button>
+
+        <span className="pill">
+          Guarda los cruces manuales en settings.knockoutData
+        </span>
       </div>
 
       <div className="adminActions">
