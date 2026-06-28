@@ -24,6 +24,13 @@ const AVATAR_PRESETS = [
   { id: 'robot-1', label: 'Robot', emoji: '🤖', theme: 'cyan' }
 ];
 
+const ROUND_OF_32_MATCH_IDS = [
+  'M74', 'M77', 'M73', 'M75',
+  'M83', 'M84', 'M81', 'M82',
+  'M76', 'M78', 'M79', 'M80',
+  'M86', 'M88', 'M85', 'M87'
+];
+
 function getAvatarPreset(id) {
   return AVATAR_PRESETS.find((avatar) => avatar.id === id) || AVATAR_PRESETS[0];
 }
@@ -701,7 +708,14 @@ export default function App() {
   const [knockoutPredictions, setKnockoutPredictions] = useState({});
   const [knockoutResults, setKnockoutResults] = useState({});
   const [leaderboard, setLeaderboard] = useState(null);
-  const [settings, setSettings] = useState({ locked: false, knockoutLocked: true, scoring: null });
+
+  const [settings, setSettings] = useState({
+    locked: false,
+    knockoutLocked: true,
+    lockedKnockoutMatches: [],
+    scoring: null
+  });
+
   const [groupFilter, setGroupFilter] = useState('A');
   const [status, setStatus] = useState('');
   const [showRules, setShowRules] = useState(false);
@@ -1016,6 +1030,7 @@ export default function App() {
           initialKnockoutResults={knockoutResults}
           locked={settings.locked}
           knockoutLocked={settings.knockoutLocked}
+          lockedKnockoutMatches={settings.lockedKnockoutMatches || []}
           onStatus={setStatus}
           onSaved={async () => {
             await refreshPrivateData();
@@ -3068,7 +3083,7 @@ function Leaderboard({ data, onRefresh }) {
   );
 }
 
-function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], initialKnockoutResults, locked, knockoutLocked, onStatus, onSaved }) {
+function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], initialKnockoutResults, locked, knockoutLocked, lockedKnockoutMatches = [], onStatus, onSaved }) {
   const [adminCode, setAdminCode] = useState(localStorage.getItem(STORAGE_ADMIN) || '');
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -3277,6 +3292,25 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
     }
   }
 
+  async function setRoundOf32Locked(nextLocked) {
+    setBusy(true);
+    onStatus('');
+    try {
+      localStorage.setItem(STORAGE_ADMIN, adminCode);
+      await apiFetch('/api/settings', {
+        method: 'POST',
+        adminCode,
+        body: { action: nextLocked ? 'lockRoundOf32' : 'unlockRoundOf32' }
+      });
+      onStatus(nextLocked ? 'Dieciseisavos cerrados.' : 'Dieciseisavos abiertos.');
+      await onSaved();
+    } catch (error) {
+      onStatus(error.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function saveManualKnockoutData() {
     setBusy(true);
     onStatus('');
@@ -3435,6 +3469,12 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
         <span className={knockoutLocked ? 'locked pill' : 'pill'}>Eliminatoria: {knockoutLocked ? 'Cerrada' : 'Abierta'}</span>
       </div>
 
+      <div className="adminActions">
+        <button className="secondary" onClick={() => setRoundOf32Locked(false)} disabled={busy || lockedKnockoutMatches.length === 0}>Abrir dieciseisavos</button>
+        <button className="secondary" onClick={() => setRoundOf32Locked(true)} disabled={busy || lockedKnockoutMatches.length > 0}>Cerrar dieciseisavos</button>
+        <span className={lockedKnockoutMatches.length > 0 ? 'locked pill' : 'pill'}>Dieciseisavos: {lockedKnockoutMatches.length > 0 ? 'Cerrados' : 'Abiertos'}</span>
+      </div>
+
       <section className="adminPaymentPanel">
         <div className="paymentPanelHeader">
           <div>
@@ -3527,3 +3567,4 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
     </section>
   );
 }
+

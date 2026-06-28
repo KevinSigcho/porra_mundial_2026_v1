@@ -24,7 +24,8 @@ async function getSettings() {
 
     // Nuevo: datos reales/provisionales del cuadro oficial.
     knockoutData: parseJson(entity?.knockoutData, null),
-    knockoutUpdatedAt: entity?.knockoutUpdatedAt || null
+    knockoutUpdatedAt: entity?.knockoutUpdatedAt || null,
+    lockedKnockoutMatches: parseJson(entity.lockedKnockoutMatches, [])
   };
 }
 

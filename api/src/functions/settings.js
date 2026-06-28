@@ -7,6 +7,13 @@ const { getSettings } = require('../lib/settings');
 
 const ENTRY_FEE = 5;
 
+const ROUND_OF_32_MATCH_IDS = [
+  'M74', 'M77', 'M73', 'M75',
+  'M83', 'M84', 'M81', 'M82',
+  'M76', 'M78', 'M79', 'M80',
+  'M86', 'M88', 'M85', 'M87'
+];
+
 function getConnectionString() {
   const value =
     process.env.STORAGE_CONNECTION_STRING ||
@@ -168,7 +175,7 @@ app.http('settings', {
       if (action === 'updatePayment') {
         return await updatePaymentResponse(body);
       }
-      
+
       if (action === 'saveKnockoutData') {
         const knockoutData = body.knockoutData || null;
 
@@ -216,21 +223,35 @@ app.http('settings', {
         });
       }
 
-      if (action === 'clearKnockoutData') {
-        const knockoutUpdatedAt = new Date().toISOString();
+      if (action === 'lockRoundOf32') {
+        const now = new Date().toISOString();
 
         await upsertEntity({
           partitionKey: 'settings',
           rowKey: 'global',
-          knockoutData: '',
-          knockoutUpdatedAt,
-          updatedAt: knockoutUpdatedAt
+          lockedKnockoutMatches: JSON.stringify(ROUND_OF_32_MATCH_IDS),
+          updatedAt: now
         }, 'Merge');
 
         return ok({
           ok: true,
-          knockoutData: null,
-          knockoutUpdatedAt
+          lockedKnockoutMatches: ROUND_OF_32_MATCH_IDS
+        });
+      }
+
+      if (action === 'unlockRoundOf32') {
+        const now = new Date().toISOString();
+
+        await upsertEntity({
+          partitionKey: 'settings',
+          rowKey: 'global',
+          lockedKnockoutMatches: JSON.stringify([]),
+          updatedAt: now
+        }, 'Merge');
+
+        return ok({
+          ok: true,
+          lockedKnockoutMatches: []
         });
       }
       // Merge: solo se tocan los flags presentes en el body, sin pisar el otro.

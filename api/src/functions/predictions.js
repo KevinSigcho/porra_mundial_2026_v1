@@ -6,6 +6,23 @@ const { normalizeScores, normalizeKnockout, countComplete } = require('../lib/va
 const { getSettings } = require('../lib/settings');
 const { parseJson } = require('../lib/scoring');
 
+const ROUND_OF_32_MATCH_IDS = [
+  'M74', 'M77', 'M73', 'M75',
+  'M83', 'M84', 'M81', 'M82',
+  'M76', 'M78', 'M79', 'M80',
+  'M86', 'M88', 'M85', 'M87'
+];
+
+function safeJsonParse(value, fallback) {
+  if (!value) return fallback;
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
 app.http('getPredictions', {
   methods: ['GET'],
   authLevel: 'anonymous',
