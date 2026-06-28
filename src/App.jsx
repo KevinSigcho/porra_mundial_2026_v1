@@ -2062,7 +2062,7 @@ function KnockoutPredictionsPanel({
   );
 }
 
-function KnockoutMatchCard({ fixture, teams, pick, result, disabled, onScore, onAdvance }) {
+function KnockoutMatchCard({ fixture, teams, pick, result, disabled, onScore, onAdvance, alwaysShowAdvance = false }) {
   const homeTeam = teams?.homeTeam || null;
   const awayTeam = teams?.awayTeam || null;
   const homeLabel = homeTeam || knockoutSourceLabel(fixture.home);
@@ -2072,6 +2072,7 @@ function KnockoutMatchCard({ fixture, teams, pick, result, disabled, onScore, on
   const awayGoals = pick?.awayGoals ?? '';
   const isDraw =
     homeGoals !== '' && awayGoals !== '' && Number(homeGoals) === Number(awayGoals);
+  const showAdvance = isDraw || alwaysShowAdvance;
 
   const meta = [fixture.id, formatKnockoutDate(fixture.date), fixture.time].filter(Boolean).join(' · ');
   const hasResult = isCompleteScore(result);
@@ -2107,9 +2108,9 @@ function KnockoutMatchCard({ fixture, teams, pick, result, disabled, onScore, on
         </span>
       </div>
 
-      {isDraw && (
+      {showAdvance && (
         <div className="knockoutAdvance">
-          <span>Pasa en penaltis:</span>
+          <span>{isDraw ? 'Pasa en penaltis:' : 'Pasa:'}</span>
           <label>
             <input
               type="radio"
@@ -3635,6 +3636,7 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
                       disabled={false}
                       onScore={updateKnockoutResult}
                       onAdvance={setKnockoutResultAdvance}
+                      alwaysShowAdvance={true}
                     />
                   );
                 })}
