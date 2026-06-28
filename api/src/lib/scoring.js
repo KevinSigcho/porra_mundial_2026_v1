@@ -1,5 +1,5 @@
 const fixtureData = require('../data/fixtures.json');
-const { resolveBracket, knockoutFixtures } = require('./knockout');
+const { knockoutFixtures } = require('./knockout');
 
 const GROUP_WINNER_POINTS = 5;
 const GROUP_RUNNER_POINTS = 3;
@@ -236,13 +236,27 @@ function sameScore(a, b) {
   );
 }
 
-// Puntúa la eliminatoria por cruce: 5 pts por acertar quién pasa,
-// +2 pts adicionales por marcador exacto (solo si además se acierta quién pasa).
-// El cuadro del jugador se propaga desde SUS predicciones de grupo; el real, desde los resultados.
-function computeKnockoutScore(knockoutPred, knockoutResults, predGroupTables, resultGroupTables) {
-  const predBracket = resolveBracket(knockoutPred || {}, predGroupTables);
-  const realBracket = resolveBracket(knockoutResults || {}, resultGroupTables);
+// Devuelve 'home' o 'away' según quién avanza, o null si no hay suficiente dato.
+// - Si homeGoals > awayGoals → 'home'; si awayGoals > homeGoals → 'away'.
+// - En empate se usa el campo `advance` (penaltis).
+function getAdvanceSide(entry) {
+  if (!entry) return null;
+  const h = Number(entry.homeGoals);
+  const a = Number(entry.awayGoals);
+  if (Number.isInteger(h) && Number.isInteger(a) && h >= 0 && a >= 0) {
+    if (h > a) return 'home';
+    if (a > h) return 'away';
+  }
+  if (entry.advance === 'home' || entry.advance === 'away') return entry.advance;
+  return null;
+}
 
+// Puntúa la eliminatoria por cruce:
+//   5 pts si el jugador acertó qué lado (local/visitante) pasa el cruce.
+//   +2 pts extra si además el marcador antes de penaltis coincide exactamente.
+// Comparamos el lado (home/away) en vez de nombre de equipo para que funcione
+// independientemente de si el jugador acertó o no la fase de grupos.
+function computeKnockoutScore(knockoutPred, knockoutResults) {
   let knockoutPoints = 0;
   let knockoutWinnersCorrect = 0;
   let knockoutExactCorrect = 0;
@@ -250,21 +264,21 @@ function computeKnockoutScore(knockoutPred, knockoutResults, predGroupTables, re
 
   for (const fixture of knockoutFixtures) {
     const id = fixture.id;
-    const real = realBracket[id] || {};
-    const predicted = predBracket[id] || {};
-    const resultScore = (knockoutResults || {})[id];
+    const realEntry = (knockoutResults || {})[id];
+    const predEntry = (knockoutPred || {})[id];
+
+    const realSide = getAdvanceSide(realEntry);
+    const predSide = getAdvanceSide(predEntry);
 
     let winnerPoints = 0;
     let exactPoints = 0;
-    const winnerCorrect = Boolean(
-      real.advancerTeam && predicted.advancerTeam && predicted.advancerTeam === real.advancerTeam
-    );
+    const winnerCorrect = Boolean(realSide && predSide && realSide === predSide);
 
     if (winnerCorrect) {
       winnerPoints = KNOCKOUT_WINNER_POINTS;
       knockoutWinnersCorrect += 1;
 
-      if (sameScore((knockoutPred || {})[id], resultScore)) {
+      if (sameScore(predEntry, realEntry)) {
         exactPoints = KNOCKOUT_EXACT_POINTS;
         knockoutExactCorrect += 1;
       }
@@ -277,8 +291,8 @@ function computeKnockoutScore(knockoutPred, knockoutResults, predGroupTables, re
       points: winnerPoints + exactPoints,
       winnerCorrect,
       exactCorrect: exactPoints > 0,
-      predictedAdvancer: predicted.advancerTeam || null,
-      actualAdvancer: real.advancerTeam || null
+      predictedSide: predSide || null,
+      actualSide: realSide || null
     };
   }
 
@@ -293,12 +307,7 @@ function computePlayerScore(predictions, results, knockoutPredictions, knockoutR
   const actualTables = buildGroupTables(normalizedResults);
   const tieBreakers = computeTieBreakers(normalizedPredictions, normalizedResults);
 
-  const knockout = computeKnockoutScore(
-    knockoutPredictions,
-    knockoutResults,
-    predictedTables,
-    actualTables
-  );
+  const knockout = computeKnockoutScore(knockoutPredictions, knockoutResults);
 
   let groupPositionPoints = 0;
   let matchOutcomePoints = tieBreakers.correctOutcomes * MATCH_OUTCOME_POINTS;
