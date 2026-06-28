@@ -160,69 +160,69 @@ const OFFICIAL_KNOCKOUT_BRACKET = {
 const MANUAL_KNOCKOUT_DATA = {
   bracketMatches: {
     M74: {
-      home: { team: 'Alemania', status: 'confirmed' },
-      away: { team: '', status: 'pending', seed: '3ABCDF', candidates: ['3A', '3B', '3C', '3D', '3F'] }
+      home: { team: 'Alemania', status: 'confirmed', seed: '1E' },
+      away: { team: 'Paraguay', status: 'confirmed', seed: '3ABCDF' }
     },
     M77: {
-      home: { team: '', status: 'pending', seed: '1I' },
-      away: { team: '', status: 'pending', seed: '3CDFGH', candidates: ['3C', '3D', '3F', '3G', '3H'] }
+      home: { team: 'Francia', status: 'confirmed', seed: '1I' },
+      away: { team: 'Suecia', status: 'confirmed', seed: '3CDFGH' }
     },
     M73: {
-      home: { team: 'Sudáfrica', status: 'confirmed' },
-      away: { team: 'Canadá', status: 'confirmed' }
+      home: { team: 'Sudáfrica', status: 'confirmed', seed: '2A' },
+      away: { team: 'Canadá', status: 'confirmed', seed: '2B' }
     },
     M75: {
-      home: { team: 'Países Bajos', status: 'confirmed' },
-      away: { team: 'Marruecos', status: 'confirmed' }
+      home: { team: 'Países Bajos', status: 'confirmed', seed: '1F' },
+      away: { team: 'Marruecos', status: 'confirmed', seed: '2C' }
     },
     M83: {
-      home: { team: '', status: 'pending', seed: '2K' },
-      away: { team: '', status: 'pending', seed: '2L' }
+      home: { team: 'Portugal', status: 'confirmed', seed: '2K' },
+      away: { team: 'Croacia', status: 'confirmed', seed: '2L' }
     },
     M84: {
-      home: { team: '', status: 'pending', seed: '1H' },
-      away: { team: '', status: 'pending', seed: '2J' }
+      home: { team: 'España', status: 'confirmed', seed: '1H' },
+      away: { team: 'Austria', status: 'confirmed', seed: '2J' }
     },
     M81: {
-      home: { team: 'Estados Unidos', status: 'confirmed' },
-      away: { team: 'Bosnia y Herzegovina', status: 'confirmed' }
+      home: { team: 'Estados Unidos', status: 'confirmed', seed: '1D' },
+      away: { team: 'Bosnia y Herzegovina', status: 'confirmed', seed: '3BEFIJ' }
     },
     M82: {
-      home: { team: '', status: 'pending', seed: '1G' },
-      away: { team: '', status: 'pending', seed: '3AEHIJ', candidates: ['3A', '3E', '3H', '3I', '3J'] }
+      home: { team: 'Bélgica', status: 'confirmed', seed: '1G' },
+      away: { team: 'Senegal', status: 'confirmed', seed: '3AEHIJ' }
     },
 
     M76: {
-      home: { team: '', status: 'pending', seed: '1C' },
-      away: { team: '', status: 'pending', seed: '2F' }
+      home: { team: 'Brasil', status: 'confirmed', seed: '1C' },
+      away: { team: 'Japón', status: 'confirmed', seed: '2F' }
     },
     M78: {
-      home: { team: '', status: 'pending', seed: '2E' },
-      away: { team: '', status: 'pending', seed: '2I' }
+      home: { team: 'Costa de Marfil', status: 'confirmed', seed: '2E' },
+      away: { team: 'Noruega', status: 'confirmed', seed: '2I' }
     },
     M79: {
-      home: { team: '', status: 'pending', seed: '1A' },
-      away: { team: '', status: 'pending', seed: '3CEFIH', candidates: ['3C', '3E', '3F', '3H', '3I'] }
+      home: { team: 'México', status: 'confirmed', seed: '1A' },
+      away: { team: 'Ecuador', status: 'confirmed', seed: '3CEFIH' }
     },
     M80: {
-      home: { team: '', status: 'pending', seed: '1L' },
-      away: { team: '', status: 'pending', seed: '3EHJK', candidates: ['3E', '3H', '3J', '3K'] }
+      home: { team: 'Inglaterra', status: 'confirmed', seed: '1L' },
+      away: { team: 'RD Congo', status: 'confirmed', seed: '3EHJK' }
     },
     M86: {
-      home: { team: '', status: 'pending', seed: '1J' },
-      away: { team: '', status: 'pending', seed: '2H' }
+      home: { team: 'Argentina', status: 'confirmed', seed: '1J' },
+      away: { team: 'Cabo Verde', status: 'confirmed', seed: '2H' }
     },
     M88: {
-      home: { team: '', status: 'pending', seed: '2D' },
-      away: { team: '', status: 'pending', seed: '2G' }
+      home: { team: 'Australia', status: 'confirmed', seed: '2D' },
+      away: { team: 'Egipto', status: 'confirmed', seed: '2G' }
     },
     M85: {
-      home: { team: '', status: 'pending', seed: '1B' },
-      away: { team: '', status: 'pending', seed: '3EFGIJ', candidates: ['3E', '3F', '3G', '3I', '3J'] }
+      home: { team: 'Suiza', status: 'confirmed', seed: '1B' },
+      away: { team: 'Argelia', status: 'confirmed', seed: '3EFGIJ' }
     },
     M87: {
-      home: { team: '', status: 'pending', seed: '1K' },
-      away: { team: '', status: 'pending', seed: '3DEIJL', candidates: ['3D', '3E', '3I', '3J', '3L'] }
+      home: { team: 'Colombia', status: 'confirmed', seed: '1K' },
+      away: { team: 'Ghana', status: 'confirmed', seed: '3DEIJL' }
     }
   }
 };
