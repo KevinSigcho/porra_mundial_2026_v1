@@ -991,6 +991,7 @@ export default function App() {
           knockoutData={settings.knockoutData}
           knockoutUpdatedAt={settings.knockoutUpdatedAt}
           knockoutPredictions={knockoutPredictions}
+          knockoutResults={knockoutResults}
           locked={settings.knockoutLocked}
           busy={busy}
           onScore={(matchId, field, value) => updateScore(setKnockoutPredictions, matchId, field, value)}
@@ -1114,6 +1115,7 @@ function RealKnockoutBracketPanel({
   knockoutData,
   knockoutUpdatedAt,
   knockoutPredictions,
+  knockoutResults,
   locked,
   busy,
   onScore,
@@ -1122,7 +1124,10 @@ function RealKnockoutBracketPanel({
   onRefresh
 }) {
   const officialMatches = useMemo(() => flattenOfficialKnockoutMatches(), []);
-  const bracketMatches = knockoutData?.bracketMatches || {};
+  const bracketMatches = useMemo(
+    () => buildBracketMatchesFromResults(knockoutData, knockoutResults),
+    [knockoutData, knockoutResults]
+  );
 
   const updatedLabel = knockoutUpdatedAt
     ? formatDateTimeSpain(knockoutUpdatedAt)
@@ -1248,6 +1253,7 @@ function RealKnockoutBracketPanel({
           <RealBracketPredictionList
             knockoutData={knockoutData}
             knockoutPredictions={knockoutPredictions}
+            knockoutResults={knockoutResults}
             locked={locked}
             busy={busy}
             onScore={onScore}
@@ -1565,8 +1571,71 @@ function resolvePredictedSource(source, outcomes) {
   return '';
 }
 
-function buildRealPredictionMatches(knockoutData, knockoutPredictions, officialMatches) {
-  const bracketMatches = knockoutData?.bracketMatches || {};
+function realOutcomeForMatch(bracketMatch, result) {
+  if (!result || !bracketMatch) return null;
+
+  const homeTeam = bracketMatch.home?.team;
+  const awayTeam = bracketMatch.away?.team;
+  if (!homeTeam || !awayTeam) return null;
+
+  if (result.advance === 'home') return { winnerTeam: homeTeam, loserTeam: awayTeam };
+  if (result.advance === 'away') return { winnerTeam: awayTeam, loserTeam: homeTeam };
+
+  const h = Number(result.homeGoals);
+  const a = Number(result.awayGoals);
+  if (!isNaN(h) && !isNaN(a) && h !== a) {
+    return h > a
+      ? { winnerTeam: homeTeam, loserTeam: awayTeam }
+      : { winnerTeam: awayTeam, loserTeam: homeTeam };
+  }
+
+  return null;
+}
+
+function buildBracketMatchesFromResults(knockoutData, knockoutResults) {
+  const bracketMatches = { ...(knockoutData?.bracketMatches || {}) };
+  const orderedIds = REAL_BRACKET_PREDICTION_ROUNDS.flatMap((round) => round.ids);
+
+  for (const matchId of orderedIds) {
+    const source = REAL_BRACKET_MATCH_SOURCES[matchId];
+    if (source?.real) continue;
+
+    const existing = bracketMatches[matchId] || {};
+    let home = existing.home || null;
+    let away = existing.away || null;
+
+    if (source?.home?.winnerOf) {
+      const feederId = source.home.winnerOf;
+      const outcome = realOutcomeForMatch(bracketMatches[feederId], knockoutResults?.[feederId]);
+      if (outcome?.winnerTeam) home = { team: outcome.winnerTeam, status: 'confirmed' };
+    }
+
+    if (source?.away?.winnerOf) {
+      const feederId = source.away.winnerOf;
+      const outcome = realOutcomeForMatch(bracketMatches[feederId], knockoutResults?.[feederId]);
+      if (outcome?.winnerTeam) away = { team: outcome.winnerTeam, status: 'confirmed' };
+    }
+
+    if (source?.home?.loserOf) {
+      const feederId = source.home.loserOf;
+      const outcome = realOutcomeForMatch(bracketMatches[feederId], knockoutResults?.[feederId]);
+      if (outcome?.loserTeam) home = { team: outcome.loserTeam, status: 'confirmed' };
+    }
+
+    if (source?.away?.loserOf) {
+      const feederId = source.away.loserOf;
+      const outcome = realOutcomeForMatch(bracketMatches[feederId], knockoutResults?.[feederId]);
+      if (outcome?.loserTeam) away = { team: outcome.loserTeam, status: 'confirmed' };
+    }
+
+    bracketMatches[matchId] = { ...existing, home, away };
+  }
+
+  return bracketMatches;
+}
+
+function buildRealPredictionMatches(knockoutData, knockoutPredictions, officialMatches, knockoutResults) {
+  const bracketMatches = buildBracketMatchesFromResults(knockoutData, knockoutResults);
   const matchesById = {};
   const outcomes = {};
   const output = [];
@@ -1600,7 +1669,8 @@ function buildRealPredictionMatches(knockoutData, knockoutPredictions, officialM
     };
 
     matchesById[matchId] = match;
-    outcomes[matchId] = predictedOutcomeForMatch(match, knockoutPredictions?.[matchId]);
+    const realOutcome = realOutcomeForMatch(realMatch, knockoutResults?.[matchId]);
+    outcomes[matchId] = realOutcome || predictedOutcomeForMatch(match, knockoutPredictions?.[matchId]);
     output.push(match);
   }
 
@@ -1610,6 +1680,7 @@ function buildRealPredictionMatches(knockoutData, knockoutPredictions, officialM
 function RealBracketPredictionList({
   knockoutData,
   knockoutPredictions,
+  knockoutResults,
   locked,
   busy,
   onScore,
@@ -1620,8 +1691,8 @@ function RealBracketPredictionList({
   const officialMatches = useMemo(() => flattenOfficialKnockoutMatches(), []);
 
   const matches = useMemo(
-    () => buildRealPredictionMatches(knockoutData, knockoutPredictions, officialMatches),
-    [knockoutData, knockoutPredictions, officialMatches]
+    () => buildRealPredictionMatches(knockoutData, knockoutPredictions, officialMatches, knockoutResults),
+    [knockoutData, knockoutPredictions, officialMatches, knockoutResults]
   );
 
   const matchesByRound = useMemo(() => {
