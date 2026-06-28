@@ -12,15 +12,15 @@ on:
           - "true"
           - "false"
 
-  schedule:
+ # schedule:
     # Junio y julio.
     # Horarios UTC. España peninsular en junio/julio = UTC+2.
     #
     # Este workflow va unos minutos después del sync-results.
-    - cron: "25 20 * 6,7 *"
-    - cron: "25 22 * 6,7 *"
-    - cron: "25 1 * 6,7 *"
-    - cron: "40 6 * 6,7 *"
+ #   - cron: "25 20 * 6,7 *"
+ #   - cron: "25 22 * 6,7 *"
+ #   - cron: "25 1 * 6,7 *"
+ #   - cron: "40 6 * 6,7 *"
 
 jobs:
   sync-qualified:
