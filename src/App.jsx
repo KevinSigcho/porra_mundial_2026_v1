@@ -1032,6 +1032,7 @@ export default function App() {
           locked={settings.locked}
           knockoutLocked={settings.knockoutLocked}
           lockedKnockoutMatches={settings.lockedKnockoutMatches || []}
+          knockoutData={settings.knockoutData}
           onStatus={setStatus}
           onSaved={async () => {
             await refreshPrivateData();
@@ -3154,7 +3155,7 @@ function Leaderboard({ data, onRefresh }) {
   );
 }
 
-function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], initialKnockoutResults, locked, knockoutLocked, lockedKnockoutMatches = [], onStatus, onSaved }) {
+function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], initialKnockoutResults, locked, knockoutLocked, lockedKnockoutMatches = [], knockoutData, onStatus, onSaved }) {
   const [adminCode, setAdminCode] = useState(localStorage.getItem(STORAGE_ADMIN) || '');
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -3184,6 +3185,11 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
     }
     return map;
   }, [knockoutFixtures]);
+
+  const realBracketMatches = useMemo(
+    () => buildBracketMatchesFromResults(knockoutData, knockoutResults),
+    [knockoutData, knockoutResults]
+  );
 
   async function unlockAdmin(event) {
     if (event) {
@@ -3615,17 +3621,23 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
             <div className="knockoutRoundBlock" key={round}>
               <h4>{ROUND_LABELS[round]}</h4>
               <div className="knockoutCaptureGrid">
-                {knockoutByRound[round].map((fixture) => (
-                  <KnockoutMatchCard
-                    key={fixture.id}
-                    fixture={fixture}
-                    teams={knockoutBracket[fixture.id]}
-                    pick={knockoutResults[fixture.id]}
-                    disabled={false}
-                    onScore={updateKnockoutResult}
-                    onAdvance={setKnockoutResultAdvance}
-                  />
-                ))}
+                {knockoutByRound[round].map((fixture) => {
+                  const bm = realBracketMatches[fixture.id];
+                  const teams = bm
+                    ? { homeTeam: bm.home?.team || '', awayTeam: bm.away?.team || '' }
+                    : knockoutBracket[fixture.id];
+                  return (
+                    <KnockoutMatchCard
+                      key={fixture.id}
+                      fixture={fixture}
+                      teams={teams}
+                      pick={knockoutResults[fixture.id]}
+                      disabled={false}
+                      onScore={updateKnockoutResult}
+                      onAdvance={setKnockoutResultAdvance}
+                    />
+                  );
+                })}
               </div>
             </div>
           ))}
