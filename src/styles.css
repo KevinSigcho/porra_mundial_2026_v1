@@ -4238,6 +4238,79 @@ th {
   box-shadow: 0 12px 30px rgba(15, 36, 68, 0.06);
 }
 
+.adminKnockoutPredictionsPanel {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1.1rem;
+  border: 1px solid rgba(25, 101, 192, 0.18);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(239, 248, 255, 0.94), rgba(255, 255, 255, 0.96));
+  box-shadow: 0 12px 30px rgba(15, 36, 68, 0.06);
+}
+
+.adminKnockoutPredTable {
+  overflow-x: auto;
+}
+
+.adminKnockoutPredTable table {
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  min-width: 100%;
+}
+
+.adminKnockoutPredTable th,
+.adminKnockoutPredTable td {
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 0.3rem 0.5rem;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.adminKnockoutPredTable th {
+  background: rgba(25, 101, 192, 0.08);
+  font-weight: 600;
+}
+
+.adminKnockoutPredTable td:nth-child(1),
+.adminKnockoutPredTable td:nth-child(2) {
+  text-align: left;
+}
+
+.knockoutPredMatchCell {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.knockoutPredMatchCell .vs {
+  color: #888;
+  font-size: 0.7rem;
+}
+
+.knockoutPredRealCell {
+  font-weight: 700;
+}
+
+.adminKnockoutPredTable td.predWinner {
+  background: rgba(34, 197, 94, 0.15);
+  color: #166534;
+}
+
+.adminKnockoutPredTable td.predExact {
+  background: rgba(234, 179, 8, 0.2);
+  color: #713f12;
+  font-weight: 700;
+}
+
+.adminKnockoutPredTable td.predWrong {
+  background: rgba(239, 68, 68, 0.1);
+  color: #991b1b;
+}
+
+.adminKnockoutPredTable td.predEmpty {
+  color: #bbb;
+}
+
 .paymentPanelHeader {
   display: flex;
   justify-content: space-between;

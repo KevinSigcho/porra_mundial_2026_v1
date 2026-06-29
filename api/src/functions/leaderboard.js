@@ -219,6 +219,7 @@ app.http('leaderboard', {
           semiPoints: score.semiPoints ?? 0,
           thirdPlacePoints: score.thirdPlacePoints ?? 0,
           finalPoints: score.finalPoints ?? 0,
+          knockoutPredictions,
           predictionsMade: countComplete(predictions),
           knockoutMade: countComplete(knockoutPredictions),
           updatedAt: entity?.updatedAt || player.updatedAt || null,

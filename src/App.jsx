@@ -3170,6 +3170,8 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
   const [paymentRows, setPaymentRows] = useState([]);
   const [paymentsLoaded, setPaymentsLoaded] = useState(false);
   const [paymentsBusy, setPaymentsBusy] = useState(false);
+  const [knockoutPredRows, setKnockoutPredRows] = useState(null);
+  const [knockoutPredBusy, setKnockoutPredBusy] = useState(false);
 
   useEffect(() => {
     setResults(initialResults || {});
@@ -3421,6 +3423,20 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
     }
   }
 
+  async function loadKnockoutPredictions() {
+    setKnockoutPredBusy(true);
+    onStatus('');
+    try {
+      const data = await apiFetch('/api/leaderboard');
+      setKnockoutPredRows(data.rows || []);
+      onStatus(`Pronósticos cargados: ${(data.rows || []).length} jugadores.`);
+    } catch (error) {
+      onStatus(error.message);
+    } finally {
+      setKnockoutPredBusy(false);
+    }
+  }
+
   async function loadPayments() {
     setPaymentsBusy(true);
     onStatus('');
@@ -3652,6 +3668,98 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
           <div className="stickyActions">
             <button onClick={saveKnockoutResults} disabled={busy}>{busy ? 'Guardando...' : 'Guardar resultados de eliminatoria'}</button>
           </div>
+        </section>
+      )}
+
+      {knockoutFixtures.length > 0 && (
+        <section className="adminKnockoutPredictionsPanel">
+          <div className="paymentPanelHeader">
+            <div>
+              <h3>Pronósticos eliminatoria por jugador</h3>
+              <p className="muted small">Tabla de partidos × jugadores. Verde = pase acertado · Dorado = marcador exacto · Rojo = fallo.</p>
+            </div>
+            <button className="secondary" type="button" onClick={loadKnockoutPredictions} disabled={knockoutPredBusy}>
+              {knockoutPredBusy ? 'Cargando...' : knockoutPredRows ? 'Actualizar' : 'Cargar pronósticos'}
+            </button>
+          </div>
+
+          {knockoutPredRows && (
+            <div className="tableWrap adminKnockoutPredTable">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Ronda</th>
+                    <th>Partido</th>
+                    <th>Real</th>
+                    {knockoutPredRows.map((row) => (
+                      <th key={row.playerId}>{row.name}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {ROUND_ORDER.filter((round) => knockoutFixtures.some((f) => f.round === round)).map((round) =>
+                    knockoutFixtures.filter((f) => f.round === round).map((fixture, i) => {
+                      const bm = realBracketMatches[fixture.id];
+                      const homeTeam = bm?.home?.team || '?';
+                      const awayTeam = bm?.away?.team || '?';
+                      const real = knockoutResults[fixture.id];
+                      const realHasScore = real?.homeGoals !== undefined && real?.awayGoals !== undefined && real.homeGoals !== '' && real.awayGoals !== '';
+                      const realSide = (() => {
+                        if (!real) return null;
+                        const h = Number(real.homeGoals); const a = Number(real.awayGoals);
+                        if (Number.isInteger(h) && Number.isInteger(a) && h >= 0 && a >= 0) {
+                          if (h > a) return 'home';
+                          if (a > h) return 'away';
+                        }
+                        if (real.advance === 'home' || real.advance === 'away') return real.advance;
+                        return null;
+                      })();
+                      const realStr = realHasScore
+                        ? `${real.homeGoals}-${real.awayGoals}${real.advance ? ` (${real.advance === 'home' ? homeTeam : awayTeam})` : ''}`
+                        : '—';
+
+                      return (
+                        <tr key={fixture.id}>
+                          <td>{i === 0 ? ROUND_LABELS[round] : ''}</td>
+                          <td className="knockoutPredMatchCell">
+                            <span>{homeTeam}</span>
+                            <span className="vs">vs</span>
+                            <span>{awayTeam}</span>
+                          </td>
+                          <td className="knockoutPredRealCell">{realStr}</td>
+                          {knockoutPredRows.map((row) => {
+                            const pred = (row.knockoutPredictions || {})[fixture.id];
+                            const hasPred = pred && pred.homeGoals !== undefined && pred.awayGoals !== undefined;
+                            if (!hasPred) return <td key={row.playerId} className="predEmpty">—</td>;
+
+                            const predSide = (() => {
+                              const h = Number(pred.homeGoals); const a = Number(pred.awayGoals);
+                              if (Number.isInteger(h) && Number.isInteger(a) && h >= 0 && a >= 0) {
+                                if (h > a) return 'home';
+                                if (a > h) return 'away';
+                              }
+                              if (pred.advance === 'home' || pred.advance === 'away') return pred.advance;
+                              return null;
+                            })();
+                            const winnerOk = realSide && predSide && realSide === predSide;
+                            const exactOk = winnerOk && realHasScore && Number(pred.homeGoals) === Number(real.homeGoals) && Number(pred.awayGoals) === Number(real.awayGoals);
+                            const advStr = pred.advance === 'home' ? homeTeam : pred.advance === 'away' ? awayTeam : '';
+                            const cellClass = exactOk ? 'predExact' : winnerOk ? 'predWinner' : realSide ? 'predWrong' : '';
+
+                            return (
+                              <td key={row.playerId} className={cellClass}>
+                                {pred.homeGoals}-{pred.awayGoals}{advStr ? ` (${advStr})` : ''}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       )}
     </section>
