@@ -261,6 +261,11 @@ function computeKnockoutScore(knockoutPred, knockoutResults) {
   let knockoutWinnersCorrect = 0;
   let knockoutExactCorrect = 0;
   let roundOf32Points = 0;
+  let roundOf16Points = 0;
+  let quarterPoints = 0;
+  let semiPoints = 0;
+  let thirdPlacePoints = 0;
+  let finalPoints = 0;
   const knockoutBreakdown = {};
 
   for (const fixture of knockoutFixtures) {
@@ -288,6 +293,11 @@ function computeKnockoutScore(knockoutPred, knockoutResults) {
     const matchPoints = winnerPoints + exactPoints;
     knockoutPoints += matchPoints;
     if (fixture.round === 'roundOf32') roundOf32Points += matchPoints;
+    if (fixture.round === 'roundOf16') roundOf16Points += matchPoints;
+    if (fixture.round === 'quarter') quarterPoints += matchPoints;
+    if (fixture.round === 'semi') semiPoints += matchPoints;
+    if (fixture.round === 'third') thirdPlacePoints += matchPoints;
+    if (fixture.round === 'final') finalPoints += matchPoints;
 
     knockoutBreakdown[id] = {
       round: fixture.round,
@@ -299,7 +309,7 @@ function computeKnockoutScore(knockoutPred, knockoutResults) {
     };
   }
 
-  return { knockoutPoints, knockoutWinnersCorrect, knockoutExactCorrect, knockoutBreakdown, roundOf32Points };
+  return { knockoutPoints, knockoutWinnersCorrect, knockoutExactCorrect, knockoutBreakdown, roundOf32Points, roundOf16Points, quarterPoints, semiPoints, thirdPlacePoints, finalPoints };
 }
 
 function computePlayerScore(predictions, results, knockoutPredictions, knockoutResults) {
@@ -383,6 +393,11 @@ function computePlayerScore(predictions, results, knockoutPredictions, knockoutR
     knockoutWinnersCorrect: knockout.knockoutWinnersCorrect,
     knockoutExactCorrect: knockout.knockoutExactCorrect,
     roundOf32Points: knockout.roundOf32Points,
+    roundOf16Points: knockout.roundOf16Points,
+    quarterPoints: knockout.quarterPoints,
+    semiPoints: knockout.semiPoints,
+    thirdPlacePoints: knockout.thirdPlacePoints,
+    finalPoints: knockout.finalPoints,
     groupWinnersCorrect,
     groupRunnersCorrect,
     thirdsCorrect,

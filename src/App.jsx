@@ -3075,7 +3075,12 @@ function Leaderboard({ data, onRefresh }) {
                   <th>Jugador</th>
                   <th>Puntos</th>
                   <th className="pointsBreakdownCell pointsGroupStart pointsGroupEnd" title="Suma de: posiciones de grupo (5+3+1 pts), signos acertados (2 pts) y marcadores exactos de grupos (1 pt extra)">Pts fase grupos</th>
-                  <th className="pointsBreakdownCell pointsGroupStart" title="5 pts por acertar quién pasa cada dieciseisavo + 2 pts extra por marcador exacto">Pts 16os</th>
+                  <th className="pointsBreakdownCell pointsGroupStart" title="5 pts por acertar quién pasa cada dieciseisavo (M73-M88) + 2 pts extra por marcador exacto">Pts 16os</th>
+                  <th className="pointsBreakdownCell" title="5 pts por acertar quién pasa cada octavo (M89-M96) + 2 pts extra por marcador exacto">Pts 8os</th>
+                  <th className="pointsBreakdownCell" title="5 pts por acertar quién pasa cada cuarto (M97-M100) + 2 pts extra por marcador exacto">Pts 4os</th>
+                  <th className="pointsBreakdownCell" title="5 pts por acertar quién pasa cada semifinal (M101-M102) + 2 pts extra por marcador exacto">Pts Semi</th>
+                  <th className="pointsBreakdownCell" title="5 pts por acertar quién gana el partido por el 3er puesto (M103) + 2 pts extra por marcador exacto">Pts 3º/4º</th>
+                  <th className="pointsBreakdownCell pointsGroupEnd" title="5 pts por acertar al campeón (M104) + 2 pts extra por marcador exacto">Pts Final</th>
                   <th title="Marcadores exactos acertados: grupos + eliminatorias">Exactos</th>
                   <th>DG</th>
                 </tr>
@@ -3115,7 +3120,26 @@ function Leaderboard({ data, onRefresh }) {
 
                       <td className="pointsBreakdownCell pointsGroupStart">
                         <strong>{row.roundOf32Points ?? 0}</strong>
-                        <small>{row.knockoutWinnersCorrect || 0} pases</small>
+                      </td>
+
+                      <td className="pointsBreakdownCell">
+                        <strong>{row.roundOf16Points ?? 0}</strong>
+                      </td>
+
+                      <td className="pointsBreakdownCell">
+                        <strong>{row.quarterPoints ?? 0}</strong>
+                      </td>
+
+                      <td className="pointsBreakdownCell">
+                        <strong>{row.semiPoints ?? 0}</strong>
+                      </td>
+
+                      <td className="pointsBreakdownCell">
+                        <strong>{row.thirdPlacePoints ?? 0}</strong>
+                      </td>
+
+                      <td className="pointsBreakdownCell pointsGroupEnd">
+                        <strong>{row.finalPoints ?? 0}</strong>
                       </td>
 
                       <td>{totalExact}</td>
