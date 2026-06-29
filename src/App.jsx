@@ -3080,6 +3080,7 @@ function Leaderboard({ data, onRefresh }) {
                   <th className="pointsBreakdownCell" title="1 punto por cada tercero de grupo acertado">3º grupo</th>
                   <th className="pointsBreakdownCell" title="2 puntos por cada signo acertado: local, empate o visitante">Pts 1/X/2</th>
                   <th className="pointsBreakdownCell pointsGroupEnd" title="1 punto extra por cada marcador exacto acertado">Pts exacto</th>
+                  <th className="pointsBreakdownCell pointsGroupStart" title="5 pts por acertar quién pasa cada dieciseisavo + 2 pts extra por marcador exacto">Pts 16os</th>
                   <th>DG</th>
                 </tr>
               </thead>
@@ -3137,6 +3138,11 @@ function Leaderboard({ data, onRefresh }) {
                       <td className="pointsBreakdownCell pointsGroupEnd">
                         <strong>{exactPoints}</strong>
                         <small>{row.exactScores || 0} exactos</small>
+                      </td>
+
+                      <td className="pointsBreakdownCell pointsGroupStart">
+                        <strong>{row.roundOf32Points ?? 0}</strong>
+                        <small>{row.knockoutWinnersCorrect || 0} pases</small>
                       </td>
 
                       <td>{row.exactGoalDifferences || 0}</td>

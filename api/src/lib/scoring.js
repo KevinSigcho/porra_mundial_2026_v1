@@ -260,6 +260,7 @@ function computeKnockoutScore(knockoutPred, knockoutResults) {
   let knockoutPoints = 0;
   let knockoutWinnersCorrect = 0;
   let knockoutExactCorrect = 0;
+  let roundOf32Points = 0;
   const knockoutBreakdown = {};
 
   for (const fixture of knockoutFixtures) {
@@ -284,11 +285,13 @@ function computeKnockoutScore(knockoutPred, knockoutResults) {
       }
     }
 
-    knockoutPoints += winnerPoints + exactPoints;
+    const matchPoints = winnerPoints + exactPoints;
+    knockoutPoints += matchPoints;
+    if (fixture.round === 'roundOf32') roundOf32Points += matchPoints;
 
     knockoutBreakdown[id] = {
       round: fixture.round,
-      points: winnerPoints + exactPoints,
+      points: matchPoints,
       winnerCorrect,
       exactCorrect: exactPoints > 0,
       predictedSide: predSide || null,
@@ -296,7 +299,7 @@ function computeKnockoutScore(knockoutPred, knockoutResults) {
     };
   }
 
-  return { knockoutPoints, knockoutWinnersCorrect, knockoutExactCorrect, knockoutBreakdown };
+  return { knockoutPoints, knockoutWinnersCorrect, knockoutExactCorrect, knockoutBreakdown, roundOf32Points };
 }
 
 function computePlayerScore(predictions, results, knockoutPredictions, knockoutResults) {
@@ -379,6 +382,7 @@ function computePlayerScore(predictions, results, knockoutPredictions, knockoutR
     knockoutPoints: knockout.knockoutPoints,
     knockoutWinnersCorrect: knockout.knockoutWinnersCorrect,
     knockoutExactCorrect: knockout.knockoutExactCorrect,
+    roundOf32Points: knockout.roundOf32Points,
     groupWinnersCorrect,
     groupRunnersCorrect,
     thirdsCorrect,
