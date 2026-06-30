@@ -187,6 +187,8 @@ app.http('leaderboard', {
       const results = parseJson(resultEntity?.results, {});
       const knockoutResultEntity = await getEntity('result', 'knockout');
       const knockoutResults = parseJson(knockoutResultEntity?.results, {});
+      const settingsEntity = await getEntity('settings', 'global');
+      const knockoutData = parseJson(settingsEntity?.knockoutData, null);
 
       const predictionsByPlayer = new Map(
         predictionEntities.map((entity) => [entity.rowKey, entity])
@@ -196,7 +198,7 @@ app.http('leaderboard', {
         const entity = predictionsByPlayer.get(player.rowKey);
         const predictions = parseJson(entity?.predictions, {});
         const knockoutPredictions = parseJson(entity?.knockout, {});
-        const score = computePlayerScore(predictions, results, knockoutPredictions, knockoutResults);
+        const score = computePlayerScore(predictions, results, knockoutPredictions, knockoutResults, knockoutData);
         const paymentConfirmed = isConfirmed(player);
 
         return {
