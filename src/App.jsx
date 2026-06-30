@@ -908,7 +908,6 @@ export default function App() {
         <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'calendar' ? 'active' : ''} onClick={() => { setTab('calendar'); refreshPrivateData(); }}>Calendario partidos</button>
         <button className={tab === 'realBracket' ? 'active' : ''} onClick={() => {setTab('realBracket'); refreshPrivateData();}}>Pronósticos fase eliminatoria</button>
-        <button className={tab === 'myElim' ? 'active' : ''} onClick={() => setTab('myElim')}>Mi eliminatoria (WIP)</button>
         <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
       </nav>
 
@@ -2209,7 +2208,7 @@ function KnockoutPredictionsPanel({
   );
 }
 
-function KnockoutMatchCard({ fixture, teams, pick, result, disabled, onScore, onAdvance, alwaysShowAdvance = false }) {
+function KnockoutMatchCard({ fixture, teams, pick, result, disabled, onScore, onAdvance, onClear, alwaysShowAdvance = false }) {
   const homeTeam = teams?.homeTeam || null;
   const awayTeam = teams?.awayTeam || null;
   const homeLabel = homeTeam || knockoutSourceLabel(fixture.home);
@@ -2292,6 +2291,17 @@ function KnockoutMatchCard({ fixture, teams, pick, result, disabled, onScore, on
             ? ` (pasa ${result.advance === 'home' ? 'local' : 'visitante'} en penaltis)`
             : ''}
         </p>
+      )}
+
+      {onClear && pick && (
+        <button
+          type="button"
+          className="knockoutClearBtn"
+          onClick={() => onClear(fixture.id)}
+          disabled={disabled}
+        >
+          Limpiar resultado
+        </button>
       )}
     </article>
   );
@@ -3485,6 +3495,14 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
     }));
   }
 
+  function clearKnockoutResult(matchId) {
+    setKnockoutResults((current) => {
+      const next = { ...current };
+      delete next[matchId];
+      return next;
+    });
+  }
+
   async function saveKnockoutResults() {
     setBusy(true);
     onStatus('');
@@ -3804,6 +3822,7 @@ function AdminPanel({ fixtures, groups, initialResults, knockoutFixtures = [], i
                       disabled={false}
                       onScore={updateKnockoutResult}
                       onAdvance={setKnockoutResultAdvance}
+                      onClear={clearKnockoutResult}
                       alwaysShowAdvance={true}
                     />
                   );
