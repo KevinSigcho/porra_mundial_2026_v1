@@ -1819,9 +1819,28 @@ function RealBracketPredictionList({
 }) {
   const officialMatches = useMemo(() => flattenOfficialKnockoutMatches(), []);
 
-  const matches = useMemo(
-    () => buildRealPredictionMatches(knockoutData, knockoutPredictions, officialMatches, knockoutResults),
-    [knockoutData, knockoutPredictions, officialMatches, knockoutResults]
+  const playerBracket = useMemo(
+    () => buildPlayerBracket(knockoutData, knockoutPredictions),
+    [knockoutData, knockoutPredictions]
+  );
+
+  const matches = useMemo(() =>
+    REAL_BRACKET_PREDICTION_ROUNDS.flatMap((round) =>
+      round.ids.map((matchId) => {
+        const b = playerBracket[matchId] || {};
+        const official = officialMatches[matchId] || {};
+        return {
+          id: matchId,
+          round: round.key,
+          date: official.date || '',
+          time: official.time || '',
+          homeTeam: b.homeTeam || '',
+          awayTeam: b.awayTeam || '',
+          available: Boolean(b.homeTeam && b.awayTeam)
+        };
+      })
+    ),
+    [playerBracket, officialMatches]
   );
 
   const matchesByRound = useMemo(() => {
