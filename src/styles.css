@@ -4311,6 +4311,95 @@ th {
   color: #bbb;
 }
 
+/* Mi eliminatoria panel */
+.myEliminatoriaPanel {
+  padding: 1.5rem;
+}
+
+.myElimRound {
+  margin: 1.5rem 0;
+}
+
+.myElimRound h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1565c0;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid rgba(25, 101, 192, 0.2);
+}
+
+.myElimMatchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.myElimMatchCard {
+  border: 1px solid rgba(25, 101, 192, 0.18);
+  border-radius: 12px;
+  padding: 0.6rem 0.75rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(15, 36, 68, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.myElimMatchId {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: 0.05em;
+}
+
+.myElimTeamRow {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.3rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  transition: background 0.15s;
+}
+
+.myElimTeamRow.myElimWinner {
+  background: rgba(34, 197, 94, 0.12);
+  font-weight: 700;
+  color: #166534;
+}
+
+.myElimTeamRow.myElimLoser {
+  opacity: 0.5;
+}
+
+.myElimTeamName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.myElimPassBadge {
+  font-size: 0.75rem;
+  color: #22c55e;
+  font-weight: 700;
+}
+
+.myElimScoreRow {
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 0.1rem 0;
+  color: #333;
+}
+
+.myElimHint {
+  font-size: 0.7rem;
+  color: #aaa;
+  margin: 0;
+  text-align: center;
+}
+
 .paymentPanelHeader {
   display: flex;
   justify-content: space-between;

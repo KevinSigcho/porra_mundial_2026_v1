@@ -466,6 +466,8 @@ function normalizeKnockoutForSave(scores) {
     if (Number.isInteger(homeGoals) && Number.isInteger(awayGoals) && homeGoals >= 0 && awayGoals >= 0) {
       const entry = { homeGoals, awayGoals };
       if (score.advance === 'home' || score.advance === 'away') entry.advance = score.advance;
+      if (typeof score.homeTeam === 'string' && score.homeTeam) entry.homeTeam = score.homeTeam;
+      if (typeof score.awayTeam === 'string' && score.awayTeam) entry.awayTeam = score.awayTeam;
       out[matchId] = entry;
     }
   }
@@ -819,7 +821,17 @@ export default function App() {
     setBusy(true);
     setStatus('');
     try {
-      const payload = normalizeKnockoutForSave(knockoutPredictions);
+      // Enrich each prediction with the team codes visible at save time
+      const officialMatches = flattenOfficialKnockoutMatches();
+      const allMatches = buildRealPredictionMatches(settings.knockoutData, knockoutPredictions, officialMatches, knockoutResults);
+      const matchesById = Object.fromEntries(allMatches.map((m) => [m.id, m]));
+      const enriched = Object.fromEntries(
+        Object.entries(knockoutPredictions).map(([matchId, pred]) => {
+          const m = matchesById[matchId];
+          return [matchId, { ...pred, homeTeam: m?.homeTeam || '', awayTeam: m?.awayTeam || '' }];
+        })
+      );
+      const payload = normalizeKnockoutForSave(enriched);
       const data = await apiFetch('/api/predictions', {
         method: 'POST',
         token,
@@ -896,6 +908,7 @@ export default function App() {
         <button className={tab === 'leaderboard' ? 'active' : ''} onClick={() => { setTab('leaderboard'); refreshPrivateData(); }}>Clasificación porra</button>
         <button className={tab === 'calendar' ? 'active' : ''} onClick={() => { setTab('calendar'); refreshPrivateData(); }}>Calendario partidos</button>
         <button className={tab === 'realBracket' ? 'active' : ''} onClick={() => {setTab('realBracket'); refreshPrivateData();}}>Pronósticos fase eliminatoria</button>
+        <button className={tab === 'myElim' ? 'active' : ''} onClick={() => setTab('myElim')}>Mi eliminatoria (WIP)</button>
         <button className={tab === 'predictions' ? 'active' : ''} onClick={() => setTab('predictions')}>Pronósticos fase de grupos</button>
       </nav>
 
@@ -983,6 +996,13 @@ export default function App() {
           groups={groups}
           predictions={predictions}
           fixtureCount={fixtures.length}
+        />
+      )}
+
+      {tab === 'myElim' && (
+        <MyEliminatoriaPanel
+          knockoutData={settings.knockoutData}
+          knockoutPredictions={knockoutPredictions}
         />
       )}
 
@@ -1110,6 +1130,114 @@ function flattenOfficialKnockoutMatches() {
   map[OFFICIAL_KNOCKOUT_BRACKET.thirdPlace.id] = OFFICIAL_KNOCKOUT_BRACKET.thirdPlace;
 
   return map;
+}
+
+function buildPlayerBracket(knockoutData, knockoutPredictions) {
+  const bracket = {};
+  const outcomes = {};
+  const allIds = REAL_BRACKET_PREDICTION_ROUNDS.flatMap((r) => r.ids);
+
+  for (const matchId of allIds) {
+    const source = REAL_BRACKET_MATCH_SOURCES[matchId];
+    const pred = knockoutPredictions?.[matchId] || null;
+
+    let homeTeam = '';
+    let awayTeam = '';
+
+    if (source?.real) {
+      const bm = knockoutData?.bracketMatches?.[matchId];
+      homeTeam = bm?.home?.team || pred?.homeTeam || '';
+      awayTeam = bm?.away?.team || pred?.awayTeam || '';
+    } else {
+      homeTeam = resolvePredictedSource(source?.home, outcomes);
+      awayTeam = resolvePredictedSource(source?.away, outcomes);
+    }
+
+    bracket[matchId] = { homeTeam, awayTeam, pick: pred };
+
+    if (homeTeam && awayTeam && pred) {
+      const outcome = predictedOutcomeForMatch({ homeTeam, awayTeam }, pred);
+      if (outcome) outcomes[matchId] = outcome;
+    }
+  }
+
+  return bracket;
+}
+
+function MyEliminatoriaPanel({ knockoutData, knockoutPredictions }) {
+  const bracket = useMemo(
+    () => buildPlayerBracket(knockoutData, knockoutPredictions),
+    [knockoutData, knockoutPredictions]
+  );
+
+  if (!knockoutData) {
+    return (
+      <section className="panel myEliminatoriaPanel">
+        <p className="eyebrow">Tu cuadro personal</p>
+        <h2>Mi eliminatoria (WIP)</h2>
+        <p className="muted">El cuadro oficial de eliminatorias aún no está disponible. El admin debe cargarlo primero.</p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="panel myEliminatoriaPanel">
+      <div className="toolbar">
+        <div>
+          <p className="eyebrow">Tu cuadro personal</p>
+          <h2>Mi eliminatoria (WIP)</h2>
+          <p className="muted small">Cuadro generado a partir de tus pronósticos. Los equipos de rondas posteriores se deducen de tus picks anteriores.</p>
+        </div>
+      </div>
+
+      {REAL_BRACKET_PREDICTION_ROUNDS.map((round) => (
+        <section className="myElimRound" key={round.key}>
+          <h3>{round.title}</h3>
+          <div className="myElimMatchGrid">
+            {round.ids.map((matchId) => {
+              const m = bracket[matchId];
+              if (!m) return null;
+              const { homeTeam, awayTeam, pick } = m;
+              const advance = pick?.advance;
+              const hasPick = pick && (pick.homeGoals !== undefined || advance);
+              const scoreStr = pick && pick.homeGoals !== undefined && pick.awayGoals !== undefined
+                ? `${pick.homeGoals} - ${pick.awayGoals}`
+                : null;
+
+              return (
+                <article key={matchId} className="myElimMatchCard">
+                  <div className="myElimMatchId">{matchId}</div>
+
+                  <div className={`myElimTeamRow ${advance === 'home' ? 'myElimWinner' : advance ? 'myElimLoser' : ''}`}>
+                    {homeTeam ? <TeamFlag team={homeTeam} /> : null}
+                    <span className="myElimTeamName">{homeTeam || '?'}</span>
+                    {advance === 'home' && <span className="myElimPassBadge">✓</span>}
+                  </div>
+
+                  <div className="myElimScoreRow">
+                    {scoreStr ? <strong>{scoreStr}</strong> : <span className="muted">—</span>}
+                  </div>
+
+                  <div className={`myElimTeamRow ${advance === 'away' ? 'myElimWinner' : advance ? 'myElimLoser' : ''}`}>
+                    {awayTeam ? <TeamFlag team={awayTeam} /> : null}
+                    <span className="myElimTeamName">{awayTeam || '?'}</span>
+                    {advance === 'away' && <span className="myElimPassBadge">✓</span>}
+                  </div>
+
+                  {!hasPick && homeTeam && awayTeam && (
+                    <p className="myElimHint">Sin pronóstico</p>
+                  )}
+                  {!homeTeam && (
+                    <p className="myElimHint">Pendiente de cruces anteriores</p>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </section>
+  );
 }
 
 function RealKnockoutBracketPanel({

@@ -53,6 +53,8 @@ function normalizeKnockout(input) {
     if (value?.advance === 'home' || value?.advance === 'away') {
       entry.advance = value.advance;
     }
+    if (typeof value?.homeTeam === 'string' && value.homeTeam) entry.homeTeam = String(value.homeTeam).slice(0, 60);
+    if (typeof value?.awayTeam === 'string' && value.awayTeam) entry.awayTeam = String(value.awayTeam).slice(0, 60);
     normalized[matchId] = entry;
   }
   return normalized;
