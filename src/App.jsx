@@ -3113,6 +3113,7 @@ function Leaderboard({ data, onRefresh }) {
       return prev?.rankMap || {};
     } catch { return {}; }
   });
+  const [showR32Breakdown, setShowR32Breakdown] = useState(false);
 
   useEffect(() => {
     if (!rows.length) return;
@@ -3308,6 +3309,73 @@ function Leaderboard({ data, onRefresh }) {
               </tbody>
             </table>
           </div>
+
+          <div className="r32BreakdownToggleRow">
+            <button
+              className="secondary r32BreakdownToggleBtn"
+              onClick={() => setShowR32Breakdown((v) => !v)}
+            >
+              {showR32Breakdown ? '▲ Ocultar desglose 16os' : '▼ Desglose 16os por jugador'}
+            </button>
+          </div>
+
+          {showR32Breakdown && (() => {
+            const r32MatchIds = data?.r32MatchIds || [];
+            const r32Teams = data?.r32Teams || {};
+            const confirmedRows = rows.filter((r) => r.paymentConfirmed);
+            return (
+              <div className="r32BreakdownPanel">
+                <div className="tableWrap r32BreakdownTableWrap">
+                  <table className="r32BreakdownTable">
+                    <thead>
+                      <tr>
+                        <th className="r32MatchTh">Partido</th>
+                        {confirmedRows.map((row) => (
+                          <th key={row.playerId} className="r32PlayerTh" title={row.name}>
+                            {row.name.length > 8 ? row.name.slice(0, 8) + '…' : row.name}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {r32MatchIds.map((matchId) => {
+                        const teams = r32Teams[matchId] || {};
+                        const homeTeam = teams.homeTeam;
+                        const awayTeam = teams.awayTeam;
+                        return (
+                          <tr key={matchId}>
+                            <td className="r32MatchTd">
+                              {homeTeam ? (
+                                <span className="r32MatchTeams">
+                                  <TeamFlag team={homeTeam} />
+                                  <span className="r32Code">{teamShortCode(homeTeam)}</span>
+                                  <span className="r32vs">vs</span>
+                                  <TeamFlag team={awayTeam} />
+                                  <span className="r32Code">{teamShortCode(awayTeam)}</span>
+                                </span>
+                              ) : (
+                                <span className="r32Unknown">{matchId}</span>
+                              )}
+                            </td>
+                            {confirmedRows.map((row) => {
+                              const bd = row.r32Breakdown?.[matchId];
+                              const pts = bd?.points ?? 0;
+                              const cls = pts === 7 ? 'r32PtsExact' : pts === 5 ? 'r32PtsWinner' : pts > 0 ? 'r32PtsPartial' : 'r32PtsZero';
+                              return (
+                                <td key={row.playerId} className={`r32PtsTd ${cls}`}>
+                                  {bd ? `${pts}` : '—'}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })()}
 
           <div className="notice softNotice rankingInfo">
             La zona sombreada desglosa los puntos que forman el total: posiciones de grupo, signos acertados y marcador exacto.

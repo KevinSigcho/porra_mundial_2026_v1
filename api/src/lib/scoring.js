@@ -356,7 +356,9 @@ function computeKnockoutScore(knockoutPred, knockoutResults, knockoutData) {
       winnerCorrect,
       exactCorrect: exactPoints > 0,
       predictedSide: predSide || null,
-      actualSide: realSide || null
+      actualSide: realSide || null,
+      homeTeam: rt?.homeTeam || null,
+      awayTeam: rt?.awayTeam || null
     };
   }
 

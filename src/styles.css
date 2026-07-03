@@ -4416,6 +4416,100 @@ th {
   text-align: center;
 }
 
+/* ───── Desglose 16os ───── */
+.r32BreakdownToggleRow {
+  display: flex;
+  justify-content: center;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.r32BreakdownToggleBtn {
+  font-size: 0.82rem;
+  padding: 0.35rem 1rem;
+}
+
+.r32BreakdownPanel {
+  margin: 0.5rem 0 0.75rem;
+}
+
+.r32BreakdownTableWrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.r32BreakdownTable {
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  min-width: 100%;
+}
+
+.r32BreakdownTable th,
+.r32BreakdownTable td {
+  border: 1px solid #e2e8f0;
+  padding: 0.3rem 0.4rem;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.r32BreakdownTable thead th {
+  background: #f8fafc;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: #475569;
+}
+
+.r32MatchTh {
+  text-align: left !important;
+  min-width: 140px;
+}
+
+.r32PlayerTh {
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.r32MatchTd {
+  text-align: left !important;
+  background: #f8fafc;
+  font-size: 0.74rem;
+}
+
+.r32MatchTeams {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.r32Code {
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: #1e293b;
+}
+
+.r32vs {
+  color: #94a3b8;
+  font-size: 0.68rem;
+  margin: 0 0.1rem;
+}
+
+.r32Unknown {
+  color: #94a3b8;
+  font-size: 0.72rem;
+}
+
+.r32PtsTd {
+  font-weight: 700;
+  font-size: 0.8rem;
+  min-width: 36px;
+}
+
+.r32PtsZero  { color: #94a3b8; background: #f8fafc; }
+.r32PtsWinner { color: #166534; background: rgba(34,197,94,0.12); }
+.r32PtsExact  { color: #854d0e; background: rgba(234,179,8,0.18); }
+.r32PtsPartial { color: #1d4ed8; background: rgba(59,130,246,0.1); }
+
 .paymentPanelHeader {
   display: flex;
   justify-content: space-between;
