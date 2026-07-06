@@ -3114,6 +3114,8 @@ function Leaderboard({ data, onRefresh }) {
     } catch { return {}; }
   });
   const [showR32Breakdown, setShowR32Breakdown] = useState(false);
+  const [showR16Breakdown, setShowR16Breakdown] = useState(false);
+  const [showQFBreakdown,  setShowQFBreakdown]  = useState(false);
 
   useEffect(() => {
     if (!rows.length) return;
@@ -3359,6 +3361,142 @@ function Leaderboard({ data, onRefresh }) {
                             </td>
                             {confirmedRows.map((row) => {
                               const bd = row.r32Breakdown?.[matchId];
+                              const pts = bd?.points ?? 0;
+                              const cls = pts === 7 ? 'r32PtsExact' : pts === 5 ? 'r32PtsWinner' : pts > 0 ? 'r32PtsPartial' : 'r32PtsZero';
+                              return (
+                                <td key={row.playerId} className={`r32PtsTd ${cls}`}>
+                                  {bd ? `${pts}` : '—'}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })()}
+
+          <div className="r32BreakdownToggleRow">
+            <button className="secondary r32BreakdownToggleBtn" onClick={() => setShowR16Breakdown((v) => !v)}>
+              {showR16Breakdown ? '▲ Ocultar desglose 8os' : '▼ Desglose 8os por jugador'}
+            </button>
+          </div>
+
+          {showR16Breakdown && (() => {
+            const r16MatchIds = data?.r16MatchIds || [];
+            const confirmedRows = rows.filter((r) => r.paymentConfirmed);
+            const getTeams = (matchId) => {
+              for (const row of confirmedRows) {
+                const bd = row.r16Breakdown?.[matchId];
+                if (bd?.homeTeam) return { homeTeam: bd.homeTeam, awayTeam: bd.awayTeam };
+              }
+              return {};
+            };
+            return (
+              <div className="r32BreakdownPanel">
+                <div className="tableWrap r32BreakdownTableWrap">
+                  <table className="r32BreakdownTable">
+                    <thead>
+                      <tr>
+                        <th className="r32MatchTh">Partido</th>
+                        {confirmedRows.map((row) => (
+                          <th key={row.playerId} className="r32PlayerTh" title={row.name}>
+                            {row.name.length > 8 ? row.name.slice(0, 8) + '…' : row.name}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {r16MatchIds.map((matchId) => {
+                        const { homeTeam, awayTeam } = getTeams(matchId);
+                        return (
+                          <tr key={matchId}>
+                            <td className="r32MatchTd">
+                              {homeTeam ? (
+                                <span className="r32MatchTeams">
+                                  <TeamFlag team={homeTeam} />
+                                  <span className="r32Code">{teamShortCode(homeTeam)}</span>
+                                  <span className="r32vs">vs</span>
+                                  <TeamFlag team={awayTeam} />
+                                  <span className="r32Code">{teamShortCode(awayTeam)}</span>
+                                </span>
+                              ) : (
+                                <span className="r32Unknown">{matchId}</span>
+                              )}
+                            </td>
+                            {confirmedRows.map((row) => {
+                              const bd = row.r16Breakdown?.[matchId];
+                              const pts = bd?.points ?? 0;
+                              const cls = pts === 7 ? 'r32PtsExact' : pts === 5 ? 'r32PtsWinner' : pts > 0 ? 'r32PtsPartial' : 'r32PtsZero';
+                              return (
+                                <td key={row.playerId} className={`r32PtsTd ${cls}`}>
+                                  {bd ? `${pts}` : '—'}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })()}
+
+          <div className="r32BreakdownToggleRow">
+            <button className="secondary r32BreakdownToggleBtn" onClick={() => setShowQFBreakdown((v) => !v)}>
+              {showQFBreakdown ? '▲ Ocultar desglose cuartos' : '▼ Desglose cuartos por jugador'}
+            </button>
+          </div>
+
+          {showQFBreakdown && (() => {
+            const qfMatchIds = data?.qfMatchIds || [];
+            const confirmedRows = rows.filter((r) => r.paymentConfirmed);
+            const getTeams = (matchId) => {
+              for (const row of confirmedRows) {
+                const bd = row.qfBreakdown?.[matchId];
+                if (bd?.homeTeam) return { homeTeam: bd.homeTeam, awayTeam: bd.awayTeam };
+              }
+              return {};
+            };
+            return (
+              <div className="r32BreakdownPanel">
+                <div className="tableWrap r32BreakdownTableWrap">
+                  <table className="r32BreakdownTable">
+                    <thead>
+                      <tr>
+                        <th className="r32MatchTh">Partido</th>
+                        {confirmedRows.map((row) => (
+                          <th key={row.playerId} className="r32PlayerTh" title={row.name}>
+                            {row.name.length > 8 ? row.name.slice(0, 8) + '…' : row.name}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {qfMatchIds.map((matchId) => {
+                        const { homeTeam, awayTeam } = getTeams(matchId);
+                        return (
+                          <tr key={matchId}>
+                            <td className="r32MatchTd">
+                              {homeTeam ? (
+                                <span className="r32MatchTeams">
+                                  <TeamFlag team={homeTeam} />
+                                  <span className="r32Code">{teamShortCode(homeTeam)}</span>
+                                  <span className="r32vs">vs</span>
+                                  <TeamFlag team={awayTeam} />
+                                  <span className="r32Code">{teamShortCode(awayTeam)}</span>
+                                </span>
+                              ) : (
+                                <span className="r32Unknown">{matchId}</span>
+                              )}
+                            </td>
+                            {confirmedRows.map((row) => {
+                              const bd = row.qfBreakdown?.[matchId];
                               const pts = bd?.points ?? 0;
                               const cls = pts === 7 ? 'r32PtsExact' : pts === 5 ? 'r32PtsWinner' : pts > 0 ? 'r32PtsPartial' : 'r32PtsZero';
                               return (

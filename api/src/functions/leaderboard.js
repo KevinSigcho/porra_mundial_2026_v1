@@ -7,6 +7,8 @@ const fixtureData = require('../data/fixtures.json');
 const { knockoutFixtures } = require('../lib/knockout');
 
 const r32MatchIds = knockoutFixtures.filter((f) => f.round === 'roundOf32').map((f) => f.id);
+const r16MatchIds = knockoutFixtures.filter((f) => f.round === 'roundOf16').map((f) => f.id);
+const qfMatchIds  = knockoutFixtures.filter((f) => f.round === 'quarter').map((f) => f.id);
 
 const ENTRY_FEE = 5;
 
@@ -230,6 +232,18 @@ app.http('leaderboard', {
               return [id, { points: entry?.points ?? 0, winnerCorrect: entry?.winnerCorrect ?? false, exactCorrect: entry?.exactCorrect ?? false, homeTeam: entry?.homeTeam || null, awayTeam: entry?.awayTeam || null }];
             })
           ),
+          r16Breakdown: Object.fromEntries(
+            r16MatchIds.map((id) => {
+              const entry = score.knockoutBreakdown?.[id];
+              return [id, { points: entry?.points ?? 0, winnerCorrect: entry?.winnerCorrect ?? false, exactCorrect: entry?.exactCorrect ?? false, homeTeam: entry?.homeTeam || null, awayTeam: entry?.awayTeam || null }];
+            })
+          ),
+          qfBreakdown: Object.fromEntries(
+            qfMatchIds.map((id) => {
+              const entry = score.knockoutBreakdown?.[id];
+              return [id, { points: entry?.points ?? 0, winnerCorrect: entry?.winnerCorrect ?? false, exactCorrect: entry?.exactCorrect ?? false, homeTeam: entry?.homeTeam || null, awayTeam: entry?.awayTeam || null }];
+            })
+          ),
           knockoutPredictions,
           predictionsMade: countComplete(predictions),
           knockoutMade: countComplete(knockoutPredictions),
@@ -281,6 +295,8 @@ app.http('leaderboard', {
         matchDetails,
         r32MatchIds,
         r32Teams,
+        r16MatchIds,
+        qfMatchIds,
         playerCount,
         confirmedPlayerCount,
         pendingPlayerCount,
